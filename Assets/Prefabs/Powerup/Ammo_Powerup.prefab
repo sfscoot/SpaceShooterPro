@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5739076842301302876}
   - component: {fileID: 5739076842301302877}
-  - component: {fileID: 5739076842301302874}
   - component: {fileID: -4155069984725262636}
   - component: {fileID: 5040923479614212888}
   - component: {fileID: 5560148595999163559}
@@ -85,25 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5739076842301302874
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5739076842301302875}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ab9387cd1f9019e4d8f396d2abfe897a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &-4155069984725262636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,10 +97,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerupSpeed: 3
-  _powerupClip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
-  _laserReloadClip: {fileID: 8300000, guid: 502a56491dedd6c40a90d2c421d1e2f3, type: 3}
-  _powerupAudioSource: {fileID: 0}
-  _laserReloadAudioSource: {fileID: 0}
   _powerupID: 3
 --- !u!61 &5040923479614212888
 BoxCollider2D:

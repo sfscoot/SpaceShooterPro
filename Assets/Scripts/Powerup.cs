@@ -6,13 +6,8 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _powerupSpeed = 3.0f;
-    [SerializeField]
-    private AudioClip _powerupClip;
-    [SerializeField]
-    private AudioClip _laserReloadClip;
-    [SerializeField]
+
     AudioSource _powerupAudioSource;
-    [SerializeField]
     AudioSource _laserReloadAudioSource;
 
     // IDs for powerups
@@ -44,25 +39,24 @@ public class Powerup : MonoBehaviour
             Player player = other.transform.GetComponent<Player>();
             if (player != null) 
             {
-                 _powerupAudioSource.clip = _powerupClip;
-                _powerupAudioSource.Play();
+                // AudioSource.PlayClipAtPoint(_powerupClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                 switch (_powerupID)
                 {
                     case 0:
+                        _powerupAudioSource.Play();
                         player.TripleShotActive();
-                        AudioSource.PlayClipAtPoint(_powerupClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                         break;
                     case 1:
+                        _powerupAudioSource.Play();
                         player.SpeedPowerupActive();
-                        AudioSource.PlayClipAtPoint(_powerupClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                         break;
                     case 2:
+                        _powerupAudioSource.Play();
                         player.ShieldPowerupActive();
-                        AudioSource.PlayClipAtPoint(_powerupClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                         break;
                     case 3:
+                        _laserReloadAudioSource.Play();
                         player.AmmoReload();
-                        AudioSource.PlayClipAtPoint(_laserReloadClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                         break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);

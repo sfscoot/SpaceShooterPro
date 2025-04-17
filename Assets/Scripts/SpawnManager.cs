@@ -52,5 +52,11 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
+        /*
+        foreach (Transform child in _enemyContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        */
     }
 }

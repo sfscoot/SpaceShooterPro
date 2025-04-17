@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _enemySpeed = 2.50f;
     private Player _player;
+    bool _playerDestroyed = false;
 
     // create handle to animator component
     private Animator _enemyAnimator;
@@ -59,8 +60,10 @@ public class Enemy : MonoBehaviour
                 _player.Damage();
             }
             _enemyAnimator.SetTrigger("OnEnemyDeath");
-            _enemySpeed = 0;
-            Destroy(this.gameObject, 2.8f);
+            _enemySpeed /= 1.25f;
+            Destroy(GetComponent<Collider2D>());
+            _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
+            Destroy(this.gameObject, 3.8f);
         }
 
         if (other.tag == "Laser")
@@ -85,10 +88,17 @@ public class Enemy : MonoBehaviour
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
         GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+        enemyLaser.transform.parent = this.transform;
+
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
         for (int i = 0; i < lasers.Length; i++)
         {
             lasers[i].AssignEnemyLaser();
         }
+    }
+
+    public void SetPlayerDestroyed()
+    {
+        _playerDestroyed = true;
     }
 }

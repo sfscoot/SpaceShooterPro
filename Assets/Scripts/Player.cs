@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _leftEngine;
 
+    private Animator _playerAnimator;
+
     private UIManager _uiManager;
     [SerializeField]
     private float _speed;
@@ -42,12 +44,10 @@ public class Player : MonoBehaviour
     private AudioClip _fireLaserAudio;
     [SerializeField]
     private AudioClip _explosion;
-    [SerializeField]
-    private AudioClip _powerUpAquiredAudio;
 
     [SerializeField]
     private AudioClip _ammoCountLow;
-    private AudioSource _audioSource;
+    private AudioSource _audioSource; // scj
 
     [SerializeField]
     private int _lives = 3;
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _thrusterReloadDuration = 10.0f;
 
-    private float _timeLeftOnThruster;
+    // private float _timeLeftOnThruster;
 
     void Start()
     {
@@ -136,6 +136,7 @@ public class Player : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _thrusterProgressBarImage = GameObject.Find("RadialProgressBar").GetComponent<Image>();
         _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        _playerAnimator = GetComponent<Animator>();
 
         InitializeThrusters();
 
@@ -223,10 +224,9 @@ public class Player : MonoBehaviour
             _ammoCount--;
         }
         _uiManager.UpdateAmmoCount(_ammoCount);
-        _audioSource.Play();
+        // _audioSource.Play();
         if (_ammoCount <= 3)
         {
-            Debug.Log("playing low ammo count warning");
             _externalAudioSource.clip = _ammoCountLow;
             _externalAudioSource.Play();
             _uiManager.SetLowAmmoWarning(true);
@@ -282,7 +282,6 @@ public class Player : MonoBehaviour
             _speed = _defaultSpeed;
         }
 
-
         // manage Thruster burndown and recharge
 
         if (_thrusterActive == true && _thrusterMaxChargeLevel > 0) 
@@ -330,7 +329,6 @@ public class Player : MonoBehaviour
                     _shieldVisualizer.transform.localScale = _shield50pct;
                     break;
                 case 1:
-                    //_shieldRenderer.color = Color.red;
                     _shieldVisualizer.transform.localScale = _shield25pct;
                     break;
                 case 0:
@@ -345,6 +343,10 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+        if (_lives < 0) 
+        {
+            _lives = 0;
+        }
 
         if (_lives == 2)
         {
@@ -358,9 +360,16 @@ public class Player : MonoBehaviour
 
         if (_lives == 0)
         {
+            _playerAnimator.SetTrigger("OnPlayerDeath");
             _spawnManager.OnPlayerDeath();
-            gameObject.GetComponent<SpriteRenderer>().enabled = false;
-            Destroy(gameObject, 0.1f);
+            _rightEngine.SetActive(false);
+            _leftEngine.SetActive(false);
+            gameObject.GetComponent<Collider2D>().enabled = false;
+            _speed /= 1.25f;
+            // call the enemy script to turn off enemy reuse/wrapping
+            // gameObject.GetComponent<SpriteRenderer>().enabled = false;
+
+            Destroy(gameObject, 2.4f);
         }
     }
 
