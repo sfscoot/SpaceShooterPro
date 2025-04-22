@@ -25,19 +25,29 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speedMultiplier = 2;
 
-    // laser variables
+    // Weapon variables
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotLaserPreFab;
     [SerializeField]
+    private GameObject _missilePreFab;
+    [SerializeField]
+    private GameObject _spaceMine;
+
+
+    [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
     [SerializeField]
     private float _laserOffset;
+    [SerializeField]
+    private float _missileOffset;
 
     [SerializeField]
     private int _ammoCount = 15;
+    [SerializeField]
+    private float _missilePowerupDuration;
 
     // laser audio
     [SerializeField]
@@ -69,6 +79,7 @@ public class Player : MonoBehaviour
     bool _tripleShotActive = false;
     [SerializeField]
     bool _shieldPowerupActive = false;
+    bool _missilePowerupActive = false;
 
     [SerializeField]
     int _shieldMaxLevel = 4;
@@ -170,13 +181,20 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("Thruster visualizer not found");
         }
+        if (_missilePreFab == null) 
+        {
+            Debug.LogError("Missile prefab not found or assigned");
+        }
     }
 
     void Update()
     {
         CalculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _missilePowerupActive == true)
+        {
+            FireMissile();
+        } else if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
         {
             FireLaser();
         }
@@ -210,6 +228,7 @@ public class Player : MonoBehaviour
     //***************************************************************************
     // Laser Code
     //***************************************************************************
+    
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
@@ -233,6 +252,36 @@ public class Player : MonoBehaviour
         {
             _uiManager.SetLowAmmoWarning(false);
         }
+    }
+
+    void FireMissile()
+    {
+        /* 
+        _canFire = Time.time + _fireRate;
+        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
+        */
+
+        for (int fireAngle = 0; fireAngle < 360; fireAngle+= 30)
+        {
+            var newSpaceMine = Instantiate(_spaceMine, transform.position, Quaternion.identity);
+            newSpaceMine.transform.eulerAngles = Vector3.forward * fireAngle;
+
+        }
+
+
+
+    }
+
+    public void MissilePowerupActive()
+    {
+        _missilePowerupActive = true;
+        StartCoroutine(MissilePowerupPowerdown());
+    }
+
+    IEnumerator MissilePowerupPowerdown()
+    {
+        yield return new WaitForSeconds(_missilePowerupDuration);
+        _missilePowerupActive = false;
     }
 
     public void TripleShotActive()

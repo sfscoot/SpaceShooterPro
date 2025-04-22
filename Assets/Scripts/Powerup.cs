@@ -71,6 +71,10 @@ public class Powerup : MonoBehaviour
                         _laserReloadAudioSource.Play();
                         player.LivesPowerup();
                         break;
+                    case 5:
+                        _powerupAudioSource.Play();
+                        player.MissilePowerupActive();
+                        break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);
                         break;

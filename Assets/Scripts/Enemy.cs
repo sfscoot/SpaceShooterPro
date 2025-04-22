@@ -59,6 +59,7 @@ public class Enemy : MonoBehaviour
             {
                 _player.Damage();
             }
+            PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Laser")
@@ -69,10 +70,27 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddToScore(10);
             }
+            PlayEnemyDeathSequence();
         }
+
+        if (other.tag == "Missile")
+        {
+            _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddToScore(10);
+            }
+            PlayEnemyDeathSequence();
+        }
+    }
+
+    void PlayEnemyDeathSequence()
+    {
         _enemyAnimator.SetTrigger("OnEnemyDeath");
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
+        Destroy(GetComponent<Rigidbody2D>());
         _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
         Destroy(gameObject, 2.8f);
     }
