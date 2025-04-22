@@ -59,11 +59,6 @@ public class Enemy : MonoBehaviour
             {
                 _player.Damage();
             }
-            _enemyAnimator.SetTrigger("OnEnemyDeath");
-            _enemySpeed /= 1.25f;
-            Destroy(GetComponent<Collider2D>());
-            _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
-            Destroy(this.gameObject, 3.8f);
         }
 
         if (other.tag == "Laser")
@@ -74,13 +69,12 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddToScore(10);
             }
-
-            _enemyAnimator.SetTrigger("OnEnemyDeath");
-            _enemySpeed /= 1.25f;
-            Destroy(GetComponent<Collider2D>());
-            _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
-            Destroy(gameObject, 2.8f);
         }
+        _enemyAnimator.SetTrigger("OnEnemyDeath");
+        _enemySpeed /= 1.25f;
+        Destroy(GetComponent<Collider2D>());
+        _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
+        Destroy(gameObject, 2.8f);
     }
     
     void FireLaser()

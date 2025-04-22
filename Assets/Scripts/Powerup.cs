@@ -21,7 +21,16 @@ public class Powerup : MonoBehaviour
     private void Start()
     {
         _powerupAudioSource = GameObject.Find("Powerup_AudioSource").GetComponent<AudioSource>();
+        if ( _powerupAudioSource == null )
+        {
+            Debug.LogError("Powerup: Powerup Audio Source not found");
+        }
         _laserReloadAudioSource = GameObject.Find("Laser_Reload_AudioSource").GetComponent <AudioSource>();
+
+        if ( _laserReloadAudioSource == null )
+        {
+            Debug.LogError("Powerup: laser reload audio source missing");
+        }
     }
     void Update()
     {
@@ -57,6 +66,10 @@ public class Powerup : MonoBehaviour
                     case 3:
                         _laserReloadAudioSource.Play();
                         player.AmmoReload();
+                        break;
+                    case 4:
+                        _laserReloadAudioSource.Play();
+                        player.LivesPowerup();
                         break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);

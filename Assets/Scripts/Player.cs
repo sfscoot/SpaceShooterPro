@@ -82,7 +82,7 @@ public class Player : MonoBehaviour
     private GameObject _shieldVisualizer;
     SpriteRenderer _shieldRenderer;
     private Vector3 _shield100pct = new Vector3(2, 2, 2);
-    private Vector3 _shield75pct = new Vector3(1.75f, 1.75f, 1.75f);
+    private Vector3 _shield75pct = new Vector3(1.65f, 1.65f, 1.65f);
     private Vector3 _shield50pct = new Vector3(1.5f, 1.5f, 1.5f);
     private Vector3 _shield25pct = new Vector3(1.25f, 1.25f, 1.25f);
 
@@ -224,11 +224,10 @@ public class Player : MonoBehaviour
             _ammoCount--;
         }
         _uiManager.UpdateAmmoCount(_ammoCount);
-        // _audioSource.Play();
         if (_ammoCount <= 3)
         {
-            _externalAudioSource.clip = _ammoCountLow;
-            _externalAudioSource.Play();
+            _audioSource.clip = _ammoCountLow;
+            _audioSource.Play();
             _uiManager.SetLowAmmoWarning(true);
         } else
         {
@@ -366,11 +365,26 @@ public class Player : MonoBehaviour
             _leftEngine.SetActive(false);
             gameObject.GetComponent<Collider2D>().enabled = false;
             _speed /= 1.25f;
-            // call the enemy script to turn off enemy reuse/wrapping
-            // gameObject.GetComponent<SpriteRenderer>().enabled = false;
-
             Destroy(gameObject, 2.4f);
         }
+    }
+
+    public void LivesPowerup()
+    {
+        switch (_lives)
+        {
+            case 1:
+                _leftEngine.SetActive(false);
+                break;
+            case 2:
+                _rightEngine.SetActive(false);
+                break;
+            default :
+                break;
+        }
+        _lives++;
+        if (_lives > 3) _lives = 3;
+        _uiManager.UpdateLivesImage(_lives);
     }
 
     public void SpeedPowerupActive()
