@@ -12,7 +12,7 @@ public class Missile : MonoBehaviour
     [SerializeField]
     private float _missileTimeDuration = 4.0f;
     [SerializeField]
-    private float _blastRadius = 9;
+    private float _missileBlastRadius = 9;
 
     [SerializeField]
     private GameObject _explosionPreFab;
@@ -34,10 +34,8 @@ public class Missile : MonoBehaviour
 
     void MoveUp()
     {
-        Debug.Log("missile moving up, missile timer is " + _missileTimer);
         transform.Translate(Vector3.up * _missileSpeed * Time.deltaTime);
         if (transform.position.y > 8.0f)  Destroy(gameObject);
-
     }
 
     void CheckTimer()
@@ -47,7 +45,7 @@ public class Missile : MonoBehaviour
         if (_missileTimer > _missileTimeDuration)
         {
             transform.GetComponent<CircleCollider2D>().enabled = true;
-            transform.GetComponent<CircleCollider2D>().radius = _blastRadius;
+            transform.GetComponent<CircleCollider2D>().radius = _missileBlastRadius;
             Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             Destroy(gameObject,0.5f);
         }

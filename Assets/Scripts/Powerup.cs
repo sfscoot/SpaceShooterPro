@@ -75,6 +75,10 @@ public class Powerup : MonoBehaviour
                         _powerupAudioSource.Play();
                         player.MissilePowerupActive();
                         break;
+                    case 6:
+                        _powerupAudioSource.Play();
+                        player.MineLauncherActive();
+                        break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);
                         break;

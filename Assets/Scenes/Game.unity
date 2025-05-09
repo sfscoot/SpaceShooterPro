@@ -2068,6 +2068,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bc1aa9b23455a24ab19f97217028ef9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _powerUps:
+  - name: Ammo
+    waveAvailable: 0
+    powerupPrefab: {fileID: 5739076842301302875, guid: 5b4a2c208d2cf0c4ba452fe9a551c247,
+      type: 3}
+    powerUpType: 0
+  - name: Life
+    waveAvailable: 1
+    powerupPrefab: {fileID: 9196400202554023363, guid: 424c6cbd3fc870642b81e4b9fd455aeb,
+      type: 3}
+    powerUpType: 0
+  - name: Missile
+    waveAvailable: 3
+    powerupPrefab: {fileID: 2552266171004621087, guid: 39047fcfc42d7a246bc559580e03882e,
+      type: 3}
+    powerUpType: 2
+  - name: Shield
+    waveAvailable: 0
+    powerupPrefab: {fileID: 6567097061483595740, guid: a280482caba7c504f9e1308f2cdbcee2,
+      type: 3}
+    powerUpType: 0
+  - name: SpaceMine
+    waveAvailable: 1
+    powerupPrefab: {fileID: 6279821483843370839, guid: 7dddfb1963b71964fb92d153feabb164,
+      type: 3}
+    powerUpType: 1
+  - name: Speed
+    waveAvailable: 0
+    powerupPrefab: {fileID: 5504695130383693362, guid: 884d6a3971fd36641a9f135bab670d54,
+      type: 3}
+    powerUpType: 0
+  - name: TripleShot
+    waveAvailable: 1
+    powerupPrefab: {fileID: 1288132875488408304, guid: d563ce36fe266a4449c007fdfa00a162,
+      type: 3}
+    powerUpType: 0
+  _commonPowerupsList: []
+  _rarePowerupsList: []
+  _epicPowerupsList: []
   _enemyPrefab: {fileID: 6954454519285969475, guid: 96603bdadd1ad3146ac605184e963ad8,
     type: 3}
   _enemyContainer: {fileID: 1233130381}
@@ -2078,6 +2117,7 @@ MonoBehaviour:
   - {fileID: 5739076842301302875, guid: 5b4a2c208d2cf0c4ba452fe9a551c247, type: 3}
   - {fileID: 9196400202554023363, guid: 424c6cbd3fc870642b81e4b9fd455aeb, type: 3}
   - {fileID: 2552266171004621087, guid: 39047fcfc42d7a246bc559580e03882e, type: 3}
+  - {fileID: 6279821483843370839, guid: 7dddfb1963b71964fb92d153feabb164, type: 3}
 --- !u!4 &1363013252
 Transform:
   m_ObjectHideFlags: 0
@@ -2268,6 +2308,36 @@ Transform:
   m_Father: {fileID: 1921514091}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1694874248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694874249}
+  m_Layer: 0
+  m_Name: PowerUpManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1694874249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694874248}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.03361188, y: 0.4505663, z: 0.0002117157}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1873013206
 GameObject:
   m_ObjectHideFlags: 0
@@ -2407,19 +2477,21 @@ MonoBehaviour:
   _speed: 5
   _defaultSpeed: 5
   _speedMultiplier: 2
+  _activeWeapon: 0
   _laserPrefab: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
     type: 3}
   _tripleShotLaserPreFab: {fileID: 4246894683809557744, guid: f5bd7688e91045c4c81149df9ca305b7,
     type: 3}
+  _laserOffset: 1.4
+  _ammoCount: 15
   _missilePreFab: {fileID: 3502003195532156235, guid: 9ed2a10a276f1c04782c4b7e3d10127e,
     type: 3}
-  _spaceMine: {fileID: 3502003195532156235, guid: 9ed2a10a276f1c04782c4b7e3d10127e,
-    type: 3}
-  _fireRate: 0.5
-  _laserOffset: 1.4
   _missileOffset: 1.4
-  _ammoCount: 15
-  _missilePowerupDuration: 60
+  _missilePowerupDuration: 5
+  _spaceMinePreFab: {fileID: 1972826828465267881, guid: 85eac64b90fb4ef4f9f378d09c948262,
+    type: 3}
+  _fireAngle: 0
+  _fireRate: 0.5
   _fireLaserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _explosion: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _ammoCountLow: {fileID: 8300000, guid: 7e377f6d19b9bc049a0452c5e63c13c6, type: 3}

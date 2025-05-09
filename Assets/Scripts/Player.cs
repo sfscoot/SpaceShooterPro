@@ -27,27 +27,39 @@ public class Player : MonoBehaviour
 
     // Weapon variables
     [SerializeField]
+    private char _activeWeapon;
+
+    [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _tripleShotLaserPreFab;
     [SerializeField]
+    private float _laserOffset;
+    [SerializeField]
+    private int _ammoCount = 15;
+
+    // Missile variables
+    [SerializeField]
     private GameObject _missilePreFab;
     [SerializeField]
-    private GameObject _spaceMine;
+    private float _missileOffset;
+    [SerializeField]
+    private float _missilePowerupDuration;
+    bool _missilePowerupActive = false;
+
+
+    [SerializeField]
+    private GameObject _spaceMinePreFab;
+    [SerializeField]
+    private int _fireAngle;
+    private bool _mineLauncherActive = false;
 
 
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
-    [SerializeField]
-    private float _laserOffset;
-    [SerializeField]
-    private float _missileOffset;
 
-    [SerializeField]
-    private int _ammoCount = 15;
-    [SerializeField]
-    private float _missilePowerupDuration;
+
 
     // laser audio
     [SerializeField]
@@ -79,7 +91,7 @@ public class Player : MonoBehaviour
     bool _tripleShotActive = false;
     [SerializeField]
     bool _shieldPowerupActive = false;
-    bool _missilePowerupActive = false;
+
 
     [SerializeField]
     int _shieldMaxLevel = 4;
@@ -142,6 +154,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
+
+        // scj - need to move the prefab assignment and checks to a separate function
+
+
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
@@ -190,6 +206,9 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        CheckForWeaponFire();
+
+        /*
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _missilePowerupActive == true)
         {
@@ -198,6 +217,7 @@ public class Player : MonoBehaviour
         {
             FireLaser();
         }
+        */
 
         CheckForThruster();
     }
@@ -225,10 +245,36 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _downBound, _upBound), 0);
     }
 
+
+    //***************************************************************************
+    // Check for weapon fire
+    //***************************************************************************
+    private void CheckForWeaponFire()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+            if (_missilePowerupActive == true) FireMissile();
+            else if (_mineLauncherActive == true) DeployMines();
+            else if (_ammoCount > 0) FireLaser();
+        }
+
+        /*
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _missilePowerupActive == true)
+        {
+            FireMissile();
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
+        {
+            FireLaser();
+        }
+        */
+    }
+
+
     //***************************************************************************
     // Laser Code
     //***************************************************************************
-    
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
@@ -243,6 +289,7 @@ public class Player : MonoBehaviour
             _ammoCount--;
         }
         _uiManager.UpdateAmmoCount(_ammoCount);
+
         if (_ammoCount <= 3)
         {
             _audioSource.clip = _ammoCountLow;
@@ -252,37 +299,7 @@ public class Player : MonoBehaviour
         {
             _uiManager.SetLowAmmoWarning(false);
         }
-    }
-
-    void FireMissile()
-    {
-        /* 
-        _canFire = Time.time + _fireRate;
-        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
-        */
-
-        for (int fireAngle = 0; fireAngle < 360; fireAngle+= 30)
-        {
-            var newSpaceMine = Instantiate(_spaceMine, transform.position, Quaternion.identity);
-            newSpaceMine.transform.eulerAngles = Vector3.forward * fireAngle;
-
-        }
-
-
-
-    }
-
-    public void MissilePowerupActive()
-    {
-        _missilePowerupActive = true;
-        StartCoroutine(MissilePowerupPowerdown());
-    }
-
-    IEnumerator MissilePowerupPowerdown()
-    {
-        yield return new WaitForSeconds(_missilePowerupDuration);
-        _missilePowerupActive = false;
-    }
+    }   
 
     public void TripleShotActive()
     {
@@ -302,6 +319,109 @@ public class Player : MonoBehaviour
         _uiManager.UpdateAmmoCount(_ammoCount);
         _uiManager.SetLowAmmoWarning(false);
     }
+
+    //***************************************************************************
+    // Missile Code
+    //***************************************************************************
+    void FireMissile()
+    {
+        /* 
+        _canFire = Time.time + _fireRate;
+        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
+        */
+
+        for (int fireAngle = 0; fireAngle < 360; fireAngle+= 30)
+        {
+            var newSpaceMissile = Instantiate(_missilePreFab, transform.position, Quaternion.identity);
+            newSpaceMissile.transform.eulerAngles = Vector3.forward * fireAngle;
+
+        }
+    }
+
+    public void MissilePowerupActive()
+    {
+        _missilePowerupActive = true;
+        StartCoroutine(MissilePowerupPowerdown());
+    }
+
+    IEnumerator MissilePowerupPowerdown()
+    {
+        yield return new WaitForSeconds(_missilePowerupDuration);
+        _missilePowerupActive = false;
+    }
+
+    //***************************************************************************
+    // Mine Code
+    //***************************************************************************
+    void DeployMines()
+    {
+        /* 
+        _canFire = Time.time + _fireRate;
+        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
+        */
+        StartCoroutine(DeployMinesTimed());
+
+        /*
+        for (int i = 1; i < 6; i++)
+        {
+            var newSpaceMine = Instantiate(_spaceMinePreFab, transform.position, Quaternion.identity);
+            switch (i)
+            {
+                case 1:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 0;
+                    break;
+                case 2:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 30;
+                    break;
+                case 3:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 60;
+                    break;
+                case 4:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 330;
+                    break;
+                case 5:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 300;
+                    break;
+            }
+            // newSpaceMine.transform.eulerAngles = Vector3.forward * fireAngle;
+        }
+        */
+        _mineLauncherActive = false;
+    }
+
+    public void MineLauncherActive()
+    {
+        _mineLauncherActive = true;
+    }
+
+    IEnumerator DeployMinesTimed()
+    {
+        for (int i = 1; i < 6; i++)
+        {
+            var newSpaceMine = Instantiate(_spaceMinePreFab, transform.position, Quaternion.identity);
+            switch (i)
+            {
+                case 1:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 0;
+                    break;
+                case 2:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 30;
+                    break;
+                case 3:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 60;
+                    break;
+                case 4:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 330;
+                    break;
+                case 5:
+                    newSpaceMine.transform.eulerAngles = Vector3.forward * 300;
+                    break;
+            }
+            yield return new WaitForSeconds(Random.Range(0.0f, 1.0f));
+            // newSpaceMine.transform.eulerAngles = Vector3.forward * fireAngle;
+        }
+    }
+
     //***************************************************************************
     // Thruster Code
     //***************************************************************************

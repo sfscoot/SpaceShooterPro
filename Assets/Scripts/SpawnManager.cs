@@ -1,10 +1,23 @@
 ﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    
+    [SerializeField]
+    private PowerUpClass[] _powerUps;
+
+    [SerializeField]
+    private List<PowerUpClass> _commonPowerupsList;
+    [SerializeField]
+    private List<PowerUpClass> _rarePowerupsList;
+    [SerializeField]
+    private List<PowerUpClass> _epicPowerupsList;
+
+
     [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
@@ -20,6 +33,10 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine(SpawnPowerupRoutine());
     }
 
+    public void Start()
+    {
+        LevelStartup(1);
+    }
     public void ReStart()
     {
         StartCoroutine(SpawnEnemy());
@@ -43,7 +60,7 @@ public class SpawnManager : MonoBehaviour
         while (_stopSpawning == false)
         {
             Vector3 powerupSpawnPosition = new Vector3(Random.Range(-9.5f, 9.5f), 7.0f, 0.0f);
-            int _powerupToSpawn = Random.Range(0, 6);
+            int _powerupToSpawn = Random.Range(0, 7);
             Instantiate(_powerups[_powerupToSpawn], powerupSpawnPosition, Quaternion.identity);
             yield return new WaitForSeconds(5);
         }
@@ -58,5 +75,53 @@ public class SpawnManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         */
+    }
+    //
+    // Powerup Availability System
+    //
+    public void LevelStartup(int currentWave)
+    {
+        _commonPowerupsList.Clear();
+        _rarePowerupsList.Clear();
+        _epicPowerupsList.Clear();
+
+
+        for (int i = 0; i < _powerUps.Length; i++)
+        {
+            Debug.Log(_powerUps[i].powerUpType);
+            switch ((_powerUps[i].powerUpType).ToString()) 
+            {
+                case "common":
+                    if (_powerUps[i].waveAvailable <= currentWave)
+                    {
+                        _commonPowerupsList.Add(_powerUps[i]);
+                    }
+                    break;
+                case "rare":
+                    if (_powerUps[i].waveAvailable <= currentWave)
+                    {
+                        //   _rarePowerups[_rareIdx] = _powerUps[i];
+                        _rarePowerupsList.Add(_powerUps[i]);
+                    }
+                    break;
+                case "epic":
+                    if (_powerUps[i].waveAvailable <= currentWave)
+                    {
+                        _epicPowerupsList.Add(_powerUps[i]);
+                    }
+                    break;
+                default:
+                    Debug.LogError("unknown powerup type found: " +  _powerUps[i].name);
+                    break;
+            }
+        }
+
+        Debug.Log("current wave is: " + currentWave);
+        Debug.Log("common powerups found: " + _commonPowerupsList.Count);
+        Debug.Log("rare powerups found: " +  _rarePowerupsList.Count);
+        Debug.Log("epic powerups found: " + _epicPowerupsList.Count);
+       
+
+
     }
 }

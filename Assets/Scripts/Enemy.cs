@@ -83,6 +83,17 @@ public class Enemy : MonoBehaviour
             }
             PlayEnemyDeathSequence();
         }
+
+        if (other.tag == "Mine")
+        {
+            _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddToScore(10);
+            }
+            PlayEnemyDeathSequence();
+        }
     }
 
     void PlayEnemyDeathSequence()
