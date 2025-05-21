@@ -17,6 +17,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private List<PowerUpClass> _epicPowerupsList;
 
+    [SerializeField]
+    private PowerUpTypeClass[] _powerUpTypes;
+
 
     [SerializeField]
     private GameObject _enemyPrefab;
@@ -27,10 +30,15 @@ public class SpawnManager : MonoBehaviour
 
     private bool _stopSpawning = false;
 
-    public void StartSpawining()
+
+    // random powerup variables
+    private PowerUpType _tmpPowerUpType;
+
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemy());
-        StartCoroutine(SpawnPowerupRoutine());
+       // StartCoroutine(SpawnPowerupRoutine());
+        StartCoroutine(NewSpawnPowerupRoutine());
     }
 
     public void Start()
@@ -66,6 +74,31 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    IEnumerator NewSpawnPowerupRoutine()
+    {
+        yield return new WaitForSeconds(3.0f);
+        while (_stopSpawning == false)
+        {
+            _tmpPowerUpType = PowerUpPicker();
+            Vector3 powerupSpawnPosition = new Vector3(Random.Range(-9.5f, 9.5f), 7.0f, 0.0f);
+            switch (_tmpPowerUpType)
+            {
+                case PowerUpType.common:
+                    Instantiate(_commonPowerupsList[Random.Range (0,_commonPowerupsList.Count)].powerupPrefab, powerupSpawnPosition, Quaternion.identity);
+                    break;
+                case PowerUpType.rare:
+                    Instantiate(_rarePowerupsList[Random.Range(0, _rarePowerupsList.Count)].powerupPrefab, powerupSpawnPosition, Quaternion.identity);
+                    break;
+                case PowerUpType.epic:
+                    Instantiate(_epicPowerupsList[Random.Range(0, _epicPowerupsList.Count)].powerupPrefab, powerupSpawnPosition, Quaternion.identity);
+                    break;
+                default:
+                    break;
+            }
+            yield return new WaitForSeconds(5);
+        }
+    }
+
     public void OnPlayerDeath()
     {
         _stopSpawning = true;
@@ -88,7 +121,6 @@ public class SpawnManager : MonoBehaviour
 
         for (int i = 0; i < _powerUps.Length; i++)
         {
-            Debug.Log(_powerUps[i].powerUpType);
             switch ((_powerUps[i].powerUpType).ToString()) 
             {
                 case "common":
@@ -115,13 +147,22 @@ public class SpawnManager : MonoBehaviour
                     break;
             }
         }
+    }
+    private PowerUpType PowerUpPicker()
+    {
+        float RNG = Random.value;
+        float runningTotal = 0;
 
-        Debug.Log("current wave is: " + currentWave);
-        Debug.Log("common powerups found: " + _commonPowerupsList.Count);
-        Debug.Log("rare powerups found: " +  _rarePowerupsList.Count);
-        Debug.Log("epic powerups found: " + _epicPowerupsList.Count);
-       
+        for (int i = 0; i < _powerUpTypes.Length; i++)
+        {
+            runningTotal += _powerUpTypes[i].frequency;
+            if (RNG <= runningTotal)
+            {
+                return _powerUpTypes[i].powerUpType;
+            }
+                
+        }
 
-
+        return _powerUpTypes[0].powerUpType;
     }
 }

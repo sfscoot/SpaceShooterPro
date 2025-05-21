@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1394,6 +1394,7 @@ GameObject:
   - component: {fileID: 829215331}
   - component: {fileID: 829215330}
   - component: {fileID: 829215333}
+  - component: {fileID: 829215334}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1460,7 +1461,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829215329}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1526,6 +1527,21 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &829215334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829215329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f0611d08c8444e43a99ddbb32c57eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _shakeAmount: 0.2
+  _shakeDuration: 0.2
+  _decreaseFactor: 1
 --- !u!1 &862691693
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,12 +2091,12 @@ MonoBehaviour:
       type: 3}
     powerUpType: 0
   - name: Life
-    waveAvailable: 1
+    waveAvailable: 0
     powerupPrefab: {fileID: 9196400202554023363, guid: 424c6cbd3fc870642b81e4b9fd455aeb,
       type: 3}
     powerUpType: 0
   - name: Missile
-    waveAvailable: 3
+    waveAvailable: 0
     powerupPrefab: {fileID: 2552266171004621087, guid: 39047fcfc42d7a246bc559580e03882e,
       type: 3}
     powerUpType: 2
@@ -2090,7 +2106,7 @@ MonoBehaviour:
       type: 3}
     powerUpType: 0
   - name: SpaceMine
-    waveAvailable: 1
+    waveAvailable: 0
     powerupPrefab: {fileID: 6279821483843370839, guid: 7dddfb1963b71964fb92d153feabb164,
       type: 3}
     powerUpType: 1
@@ -2100,13 +2116,20 @@ MonoBehaviour:
       type: 3}
     powerUpType: 0
   - name: TripleShot
-    waveAvailable: 1
+    waveAvailable: 0
     powerupPrefab: {fileID: 1288132875488408304, guid: d563ce36fe266a4449c007fdfa00a162,
       type: 3}
     powerUpType: 0
   _commonPowerupsList: []
   _rarePowerupsList: []
   _epicPowerupsList: []
+  _powerUpTypes:
+  - powerUpType: 0
+    frequency: 0.7
+  - powerUpType: 1
+    frequency: 0.2
+  - powerUpType: 2
+    frequency: 0.1
   _enemyPrefab: {fileID: 6954454519285969475, guid: 96603bdadd1ad3146ac605184e963ad8,
     type: 3}
   _enemyContainer: {fileID: 1233130381}
@@ -2569,7 +2592,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1894934404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.43, z: 0}
+  m_LocalPosition: {x: 0.1, y: -3.43, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 140877969}
@@ -3229,3 +3252,77 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1357da76f8253458a0b0b08d6fd859, type: 3}
+--- !u!1001 &4436826093761825837
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1618956311686939816, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: _player
+      value: 
+      objectReference: {fileID: 1894934405}
+    - target: {fileID: 1618956311686939820, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_Name
+      value: Horizonal_Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1618956311686939822, guid: 9b6a52b7b9515a04990f88a27aca14f8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9b6a52b7b9515a04990f88a27aca14f8, type: 3}

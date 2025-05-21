@@ -1,31 +1,40 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class HorizonalEnemy : MonoBehaviour
 {
     [SerializeField]
     private float _enemySpeed = 2.50f;
-    private Player _player;
-    bool _playerDestroyed = false;
+
+    private int _direction = 1;
+
+    [Header("Screen Boundaries")]
+    [SerializeField] private float _rightBound = 11f;
+    [SerializeField] private float _leftBound = -11f;
+    [SerializeField] private float _topBound = 11f;
+    [SerializeField] private float _bottomBound = -10.5f;
+    [SerializeField] private float _topBoundOffset = 5;
+    [SerializeField] private GameObject _explosionPreFab;
+
+    private float _randomY;
 
     // create handle to animator component
-    private Animator _enemyAnimator; // clean this up? 
+    private Animator _enemyAnimator;
     private AudioSource _explosionAudioSource;
 
     [SerializeField]
-    private GameObject _laserPrefab;
+    private Player _player;
+
+    [SerializeField]
+    private GameObject _laserPrefab; // leaving this in for later implementation of this enemy destroying powerups.
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
     private void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
-        if (_player == null)
-        {
-            Debug.LogError("player is null");
-        }
         _explosionAudioSource = GetComponent<AudioSource>();
-        _enemyAnimator = GetComponent<Animator>();
+
     }
 
     void Update()
@@ -33,38 +42,52 @@ public class Enemy : MonoBehaviour
         CalculateMovement();
         if (Time.time > _canFire)
         {
+            Debug.Log("firing laser");
             FireLaser();
         }
     }
 
     void CalculateMovement()
     {
-        // move  _enemySpeed meters per second
-        transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
-        if (transform.position.y <= -5.44f) // if moving off the bottom of screen, respawn at random x pos at top 
+        Debug.Log("calc movement");
+        // transform.Translate(Vector3.right * (2 * Time.deltaTime));
+        transform.Translate(Vector3.right * (_enemySpeed * Time.deltaTime) * _direction);
+        Debug.Log("just transformed");
+        if (transform.position.x <= _leftBound)
         {
-            float randomX = Random.Range(-9.5f, 9.5f);
-            transform.position = new Vector3(randomX, 7.5f, 0);
+            Debug.Log("past the left bound " + transform.position.x);
+            _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
+            transform.position = new Vector3(_leftBound, _randomY, 0);
+            _direction = 1;
         }
+        else if (transform.position.x >= _rightBound)
+        {
+            Debug.Log("past the right bound " + transform.position.x);
+            _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
+            transform.position = new Vector3(_rightBound, _randomY, 0);
+            _direction = -1;
+        }
+        Debug.Log("leaving calculating movement");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _explosionAudioSource.Play();
+        Debug.Log("just collided with: " +  other);
+        // _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
             Player player = other.transform.GetComponent<Player>();
 
-            if (_player != null)
+            if (player != null)
             {
-                _player.Damage();
+                player.Damage();
             }
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Laser")
         {
-            _explosionAudioSource.Play();
+            // _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
@@ -86,7 +109,7 @@ public class Enemy : MonoBehaviour
 
         if (other.tag == "Mine")
         {
-            _explosionAudioSource.Play();
+            // _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
@@ -98,14 +121,19 @@ public class Enemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
+        Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        /* Debug.Log("Playing enemy death sequence");
         _enemyAnimator.SetTrigger("OnEnemyDeath");
+        Debug.Log("should have started the animator");
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());
         _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
-        Destroy(gameObject, 2.8f);
+        */
+        Destroy(gameObject);
+
     }
-    
+
     void FireLaser()
     {
         _fireRate = Random.Range(3f, 7f);
@@ -122,6 +150,6 @@ public class Enemy : MonoBehaviour
 
     public void SetPlayerDestroyed()
     {
-        _playerDestroyed = true;
+        // _playerDestroyed = true;
     }
 }

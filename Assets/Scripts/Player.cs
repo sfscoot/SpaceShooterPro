@@ -9,13 +9,18 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 
 {
+
+    private CameraShake _cameraShake;
+
+
+    [Header ("Player Variables")]
     // player related variables
     [SerializeField]
     private GameObject _rightEngine;
     [SerializeField]
     private GameObject _leftEngine;
-
     private Animator _playerAnimator;
+
 
     private UIManager _uiManager;
     [SerializeField]
@@ -59,9 +64,7 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
 
-
-
-    // laser audio
+   // laser audio
     [SerializeField]
     private AudioClip _fireLaserAudio;
     [SerializeField]
@@ -164,6 +167,7 @@ public class Player : MonoBehaviour
         _thrusterProgressBarImage = GameObject.Find("RadialProgressBar").GetComponent<Image>();
         _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
         _playerAnimator = GetComponent<Animator>();
+        _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
 
         InitializeThrusters();
 
@@ -484,6 +488,7 @@ public class Player : MonoBehaviour
     {
         _externalAudioSource.clip = _explosionClip;
         _externalAudioSource.Play();
+        _cameraShake.ShakeCamera();
 
         if (_shieldPowerupActive == true)
         {
