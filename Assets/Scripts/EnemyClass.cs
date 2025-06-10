@@ -9,4 +9,5 @@ public class EnemyClass
     public int waveAvailable;
     public GameObject enemyPrefab;
     public EnemyType _enemyType;
+    public EnemyMovementType _enemyMovementType;
 }

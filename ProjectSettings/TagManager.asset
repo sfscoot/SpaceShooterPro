@@ -9,6 +9,10 @@ TagManager:
   - EnemyLaser
   - Missile
   - Mine
+  - HorizonalEnemy
+  - Powerup
+  - PlayerLaser
+  - EnemyMissile
   layers:
   - Default
   - TransparentFX

@@ -29,4 +29,13 @@ public class SpaceMine : MonoBehaviour
 
         _mineCurrentDistance++;
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "PlayerLaser" || other.tag == "EnemyLaser")
+        {
+            Destroy(other.gameObject);
+            Destroy(gameObject);
+        }
+    }
 }

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2518752330507207728}
   m_Layer: 0
   m_Name: Horizonal_Enemy
-  m_TagString: Untagged
+  m_TagString: HorizonalEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

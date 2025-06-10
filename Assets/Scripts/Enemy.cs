@@ -3,29 +3,45 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private float _enemySpeed = 2.50f;
+    [SerializeField] private float _enemySpeed = 2.50f;
     private Player _player;
-    bool _playerDestroyed = false;
+
+    [SerializeField] private SpawnManager _spawnManager;
 
     // create handle to animator component
     private Animator _enemyAnimator; // clean this up? 
     private AudioSource _explosionAudioSource;
+    [SerializeField] private GameObject _explosionPreFab;
 
-    [SerializeField]
-    private GameObject _laserPrefab;
+    [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
+    private bool _playerDestroyed;
+
+    private void Awake()
+    {
+
+    }
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_player == null)
         {
-            Debug.LogError("player is null");
+            Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
+        }
+        if (_spawnManager == null)
+        {
+            Debug.LogError("SpawnManager not assigned");
         }
         _explosionAudioSource = GetComponent<AudioSource>();
+        if (_explosionAudioSource == null)
+        {
+            Debug.LogError("Error: Explosion Audio Source not found");
+        }
         _enemyAnimator = GetComponent<Animator>();
+        if (_enemyAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
     }
 
     void Update()
@@ -59,10 +75,11 @@ public class Enemy : MonoBehaviour
             {
                 _player.Damage();
             }
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "Laser")
+        if (other.tag == "PlayerLaser")
         {
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
@@ -70,6 +87,7 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddToScore(10);
             }
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             PlayEnemyDeathSequence();
         }
 
@@ -81,6 +99,7 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddToScore(10);
             }
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             PlayEnemyDeathSequence();
         }
 
@@ -92,6 +111,7 @@ public class Enemy : MonoBehaviour
             {
                 _player.AddToScore(10);
             }
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             PlayEnemyDeathSequence();
         }
     }
@@ -99,6 +119,7 @@ public class Enemy : MonoBehaviour
     void PlayEnemyDeathSequence()
     {
         _enemyAnimator.SetTrigger("OnEnemyDeath");
+        // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());
@@ -111,6 +132,7 @@ public class Enemy : MonoBehaviour
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
         GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+        enemyLaser.tag = "EnemyLaser";
         enemyLaser.transform.parent = this.transform;
 
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();

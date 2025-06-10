@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HorizonalEnemy : MonoBehaviour
 {
+    [SerializeField] private SpawnManager _spawnManager;
+
     [SerializeField]
     private float _enemySpeed = 2.50f;
 
@@ -12,9 +14,9 @@ public class HorizonalEnemy : MonoBehaviour
     [Header("Screen Boundaries")]
     [SerializeField] private float _rightBound = 11f;
     [SerializeField] private float _leftBound = -11f;
-    [SerializeField] private float _topBound = 11f;
+    [SerializeField] private float _topBound = 5f;
     [SerializeField] private float _bottomBound = -10.5f;
-    [SerializeField] private float _topBoundOffset = 5;
+    [SerializeField] private float _topBoundOffset = 3;
     [SerializeField] private GameObject _explosionPreFab;
 
     private float _randomY;
@@ -22,7 +24,7 @@ public class HorizonalEnemy : MonoBehaviour
     // create handle to animator component
     private Animator _enemyAnimator;
     private AudioSource _explosionAudioSource;
-
+    
     [SerializeField]
     private Player _player;
 
@@ -34,7 +36,7 @@ public class HorizonalEnemy : MonoBehaviour
     private void Start()
     {
         _explosionAudioSource = GetComponent<AudioSource>();
-
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
     }
 
     void Update()
@@ -42,37 +44,30 @@ public class HorizonalEnemy : MonoBehaviour
         CalculateMovement();
         if (Time.time > _canFire)
         {
-            Debug.Log("firing laser");
             FireLaser();
         }
     }
 
     void CalculateMovement()
     {
-        Debug.Log("calc movement");
         // transform.Translate(Vector3.right * (2 * Time.deltaTime));
         transform.Translate(Vector3.right * (_enemySpeed * Time.deltaTime) * _direction);
-        Debug.Log("just transformed");
         if (transform.position.x <= _leftBound)
         {
-            Debug.Log("past the left bound " + transform.position.x);
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_leftBound, _randomY, 0);
             _direction = 1;
         }
         else if (transform.position.x >= _rightBound)
         {
-            Debug.Log("past the right bound " + transform.position.x);
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_rightBound, _randomY, 0);
             _direction = -1;
         }
-        Debug.Log("leaving calculating movement");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("just collided with: " +  other);
         // _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
@@ -85,7 +80,7 @@ public class HorizonalEnemy : MonoBehaviour
             PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "Laser")
+        if (other.tag == "PlayerLaser")
         {
             // _explosionAudioSource.Play();
             Destroy(other.gameObject);
@@ -117,6 +112,7 @@ public class HorizonalEnemy : MonoBehaviour
             }
             PlayEnemyDeathSequence();
         }
+        _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
     }
 
     void PlayEnemyDeathSequence()
@@ -139,6 +135,7 @@ public class HorizonalEnemy : MonoBehaviour
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
         GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+        enemyLaser.tag = "EnemyLaser";
         enemyLaser.transform.parent = this.transform;
 
         Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();

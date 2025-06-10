@@ -7,3 +7,8 @@ public enum EnemyType
 {
     normal, aggressive, evil, boss
 }
+
+public enum EnemyMovementType
+{
+    vertical, horizonal 
+}

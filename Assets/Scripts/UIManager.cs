@@ -8,35 +8,25 @@ using UnityEditorInternal;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField]
-    private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _ammoCountTxt;
+    [SerializeField] private TMP_Text _waveEnemyDeathCount;
 
-    [SerializeField]
-    private TMP_Text _ammoCountTxt;
     private bool _lowAmmoWarning = false;
     private bool _lowAmmoFlicker = false;
     private int _ammoCount;
 
-    [SerializeField]
-    private TMP_Text _gameOverText;
+    [SerializeField] private TMP_Text _gameOverText;
+    [SerializeField] private TMP_Text _gameRestartText;
+    [SerializeField] private TMP_Text _waveText;
 
-    [SerializeField]
-    private TMP_Text _gameRestartText;
-
-    [SerializeField]
-    private TMP_Text _thrusterPowerLevelText;
-    [SerializeField]
-    private Image _thrusterLevelImg;
+    [SerializeField] private TMP_Text _thrusterPowerLevelText;
+    [SerializeField] private Image _thrusterLevelImg;
     private float _powerLevelPct;
 
-    [SerializeField]
-    private Image _livesImage;
-
-    [SerializeField]
-    private Sprite[] _liveSprites;
-
-    [SerializeField]
-    private GameObject _player;
+    [SerializeField] private Image _livesImage;
+    [SerializeField] private Sprite[] _liveSprites;
+    [SerializeField] private GameObject _player;
 
     private GameManager _gameManager;
 
@@ -47,11 +37,12 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
         _gameRestartText.gameObject.SetActive(false);
+        _waveText.gameObject.SetActive(false);
+
+        if (_waveText == null) Debug.LogError("level text not assigned");
+
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        if (_gameManager == null)
-        {
-            Debug.LogError("ERROR! GameManager not found");
-        }
+        if (_gameManager == null)  Debug.LogError("ERROR! GameManager not found");
     }
 
     private void Update()
@@ -167,6 +158,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void UpdateKills(int currentKills, int killsNeeded)
+    {
+        _waveEnemyDeathCount.text = "Kills: " + currentKills + "|" + killsNeeded;
+    }
+
     void GameOverSequence()
     {
         _gameOverText.gameObject.SetActive(true);
@@ -184,5 +180,16 @@ public class UIManager : MonoBehaviour
             _gameOverText.text = "";
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    public void DisplayWaveOn (int level)
+    {
+        _waveText.gameObject.SetActive(true);
+        _waveText.text = "Wave " + level;
+    }
+
+    public void DisplayWaveOff()
+    {
+        _waveText.gameObject.SetActive(false);
     }
 }

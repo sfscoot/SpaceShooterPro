@@ -7,11 +7,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
-
 {
-
     private CameraShake _cameraShake;
-
 
     [Header ("Player Variables")]
     // player related variables
@@ -23,25 +20,19 @@ public class Player : MonoBehaviour
 
 
     private UIManager _uiManager;
-    [SerializeField]
-    private float _speed;
-    [SerializeField]
-    private float _defaultSpeed = 4.0f;
-    [SerializeField]
-    private float _speedMultiplier = 2;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _defaultSpeed = 4.0f;
+    [SerializeField] private float _speedMultiplier = 2;
 
     // Weapon variables
     [SerializeField]
     private char _activeWeapon;
 
-    [SerializeField]
-    private GameObject _laserPrefab;
-    [SerializeField]
-    private GameObject _tripleShotLaserPreFab;
-    [SerializeField]
-    private float _laserOffset;
-    [SerializeField]
-    private int _ammoCount = 15;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShotLaserPreFab;
+    private GameObject _tmpLaser;
+    [SerializeField] private float _laserOffset;
+    [SerializeField] private int _ammoCount = 15;
 
     // Missile variables
     [SerializeField]
@@ -52,7 +43,7 @@ public class Player : MonoBehaviour
     private float _missilePowerupDuration;
     bool _missilePowerupActive = false;
 
-
+    // space mine variables
     [SerializeField]
     private GameObject _spaceMinePreFab;
     [SerializeField]
@@ -88,12 +79,12 @@ public class Player : MonoBehaviour
     float _horizontalInput;
     float _verticalInput;
     private Vector3 _direction;
+    private int _directionModifier;
 
     // powerup variables
-    [SerializeField]
-    bool _tripleShotActive = false;
-    [SerializeField]
-    bool _shieldPowerupActive = false;
+    [SerializeField] bool _tripleShotActive = false;
+    [SerializeField] bool _shieldPowerupActive = false;
+    [SerializeField] int _leftRightSwapDuration;
 
 
     [SerializeField]
@@ -156,7 +147,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(0, -3, 0);
+        _directionModifier = 1;
 
         // scj - need to move the prefab assignment and checks to a separate function
 
@@ -233,7 +225,7 @@ public class Player : MonoBehaviour
         _horizontalInput = Input.GetAxis("Horizontal");
         _verticalInput = Input.GetAxis("Vertical");
 
-        _direction = new Vector3(_horizontalInput, _verticalInput, 0);
+        _direction = new Vector3(_horizontalInput * _directionModifier, _verticalInput, 0);
         transform.Translate(_direction * _speed * Time.deltaTime);
 
         // check horizontal boundaries - wrap player
@@ -284,12 +276,14 @@ public class Player : MonoBehaviour
         _canFire = Time.time + _fireRate;
         if (_tripleShotActive == true && _ammoCount >= 3)
         {
-            Instantiate(_tripleShotLaserPreFab, transform.position, Quaternion.identity);
+            _tmpLaser = Instantiate(_tripleShotLaserPreFab, transform.position, Quaternion.identity);
+            _tmpLaser.tag = "PlayerLaser";
             _ammoCount -= 3;
         }
         else
         {
-            Instantiate(_laserPrefab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
+            _tmpLaser = Instantiate(_laserPrefab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
+            _tmpLaser.tag = "PlayerLaser";
             _ammoCount--;
         }
         _uiManager.UpdateAmmoCount(_ammoCount);
@@ -479,6 +473,22 @@ public class Player : MonoBehaviour
     void InitializeThrusters()
     {
         _thrusterChargeLevel = _thrusterMaxChargeLevel;
+    }
+
+    //**********************************************************************************
+    // Negative Powerups
+    //**********************************************************************************
+    public void LeftRightSwapActive()
+    {
+        _directionModifier = -1;
+        Debug.Log("direction modifier is now " +  _directionModifier);
+        StartCoroutine(LeftRightSwapPowerDown());
+    }
+
+    IEnumerator LeftRightSwapPowerDown()
+    {
+        yield return new WaitForSeconds(_leftRightSwapDuration);
+        _directionModifier = 1;
     }
 
     //**********************************************************************************

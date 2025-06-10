@@ -6,7 +6,8 @@ using UnityEngine;
 public class PowerUpClass  
 {
     public string name;
-    public int waveAvailable;
     public GameObject powerupPrefab;
     public PowerUpType powerUpType;
+    public int waveAvailable;
+    public float frequency;
 }

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-    [SerializeField]
-    private float _powerupSpeed = 3.0f;
+    [SerializeField] private float _powerupSpeed = 3.0f;
 
     AudioSource _powerupAudioSource;
     AudioSource _laserReloadAudioSource;
@@ -78,6 +77,11 @@ public class Powerup : MonoBehaviour
                     case 6:
                         _powerupAudioSource.Play();
                         player.MineLauncherActive();
+                        break;
+                    case 7:
+                        _powerupAudioSource.Play();
+                        Debug.Log("in the powerup script - just grabbed a left right swap");
+                        player.LeftRightSwapActive();
                         break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);
