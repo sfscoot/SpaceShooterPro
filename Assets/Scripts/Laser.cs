@@ -5,14 +5,15 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
 
-    [SerializeField]
-    private float _laserSpeed = 8.0f;
+    [SerializeField] private float _laserSpeed = 8.0f;
+    [SerializeField] private float _horizonalLaserSpeed = 5.0f;
     private bool _isEnemyLaser = false;
     string _laserDirection = "down";
     void Update()
     {
         if (_isEnemyLaser)
         {
+            Debug.Log ("laser direction is " + _laserDirection);
             if (_laserDirection == "down")
             {
                 MoveDown();
@@ -33,6 +34,7 @@ public class Laser : MonoBehaviour
 
     void MoveUp()
     {
+        Debug.Log("laser moving up");
         transform.Translate(Vector3.up * _laserSpeed * Time.deltaTime);
 
         if (transform.position.y > 8)
@@ -46,6 +48,7 @@ public class Laser : MonoBehaviour
     }
     void MoveDown()
     {
+        Debug.Log("laser moving down");
         transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
 
         if (transform.position.y < -5.0)
@@ -60,10 +63,10 @@ public class Laser : MonoBehaviour
 
     void MoveLeft()
     {
-        transform.Rotate(0, 0, 90, Space.Self);
-        transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
+        Debug.Log("laser moving left");
+        transform.Translate(Vector3.up * _horizonalLaserSpeed * Time.deltaTime);
 
-        if (transform.position.y < -5.0)
+        if (transform.position.y < -11.0f)
         {
             if (transform.parent != null)
             {
@@ -75,10 +78,11 @@ public class Laser : MonoBehaviour
 
     void MoveRight()
     {
+        Debug.Log("laser moving right");
         transform.Rotate(0, 0, 90, Space.Self);
-        transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
+        transform.Translate(Vector3.right * _horizonalLaserSpeed * Time.deltaTime);
 
-        if (transform.position.y < -5.0)
+        if (transform.position.y < 11.0f)
         {
             if (transform.parent != null)
             {

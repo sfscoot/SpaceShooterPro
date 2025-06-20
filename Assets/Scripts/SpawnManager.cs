@@ -170,7 +170,7 @@ public class SpawnManager : MonoBehaviour
                     _xSpawnValue = 7;
                 }
 
-                Vector3 enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(0.0f, 3.5f), 0f);
+                Vector3 enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
                 _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
             }

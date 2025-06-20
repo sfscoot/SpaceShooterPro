@@ -116,5 +116,15 @@ public class HomingMissile : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+
+        if (other.tag == "PlayerLaser")
+        {
+            GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            Destroy(gameObject);
+        }
     }
 }

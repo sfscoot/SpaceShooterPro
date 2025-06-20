@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1271923955884047663}
   - component: {fileID: 3311201430562975312}
   - component: {fileID: 9167432486924138443}
-  - component: {fileID: 2791202403740510053}
   - component: {fileID: 1026029296222903638}
   - component: {fileID: 3946462780495036175}
+  - component: {fileID: 7863620978146174914}
   m_Layer: 0
   m_Name: Life_Powerup
   m_TagString: Powerup
@@ -101,27 +101,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.0000015894572}
   serializedVersion: 2
   m_Radius: 3.1708589
---- !u!50 &2791202403740510053
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9196400202554023363}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!114 &1026029296222903638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,3 +134,24 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!50 &7863620978146174914
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9196400202554023363}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 0.0001
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

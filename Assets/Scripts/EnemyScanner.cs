@@ -6,7 +6,9 @@ public class EnemyScanner : MonoBehaviour
 {
     [SerializeField] private GameObject _laserPrefab;
     private GameObject _enemyLaser;
+    private float _laserOffset = 3;
     private GameObject _enemyLaserScript;
+    private Vector3 _laserSpawnPosition;
 
 
     private void Start()
@@ -17,22 +19,25 @@ public class EnemyScanner : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Debug.Log("player is following " + this.name);
+            _laserSpawnPosition = transform.parent.position;
             if (this.name == "Left_Scanner")
             {
-                _enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+                _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
                 Laser _tmpLaser = _enemyLaser.GetComponent<Laser>();
                 _tmpLaser.AssignLaserDirection("left");
+                _tmpLaser.AssignEnemyLaser();
+                _tmpLaser.transform.Rotate(0, 0, 90, Space.Self);
                 _enemyLaser.tag = "EnemyLaser";
-            }
-            if (this.name == "Right_Scanner")
+            } else if (this.name == "Right_Scanner")
             {
-                _enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+                _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
                 Laser _tmpLaser = _enemyLaser.GetComponent<Laser>();
                 _tmpLaser.AssignLaserDirection("right");
+                _tmpLaser.AssignEnemyLaser();
+                _tmpLaser.transform.Rotate(0, 0, -90, Space.Self);
                 _enemyLaser.tag = "EnemyLaser";
             }
-            Debug.Log("should have fired a laser");
+
         }
     }
 }

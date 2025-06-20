@@ -22,7 +22,7 @@ public class HorizonalEnemy : MonoBehaviour
     [SerializeField] private float _leftBound = -11f;
     [SerializeField] private float _topBound = 5f;
     [SerializeField] private float _bottomBound = -10.5f;
-    [SerializeField] private float _topBoundOffset = 3;
+    [SerializeField] private float _topBoundOffset = 8;
 
 
     private float _randomY;
@@ -42,6 +42,10 @@ public class HorizonalEnemy : MonoBehaviour
     private void Start()
     {
         _explosionAudioSource = GetComponent<AudioSource>();
+        if (_explosionAudioSource == null )
+        {
+            Debug.LogError("explosion audio source not found");
+        }
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_shieldVisualizer == null)
@@ -56,7 +60,6 @@ public class HorizonalEnemy : MonoBehaviour
 
     void Update()
     {
-        CheckForPlayerBehind();
         CalculateMovement();
         if (Time.time > _canFire)
         {
@@ -96,6 +99,7 @@ public class HorizonalEnemy : MonoBehaviour
             if (_shieldRenderer.isVisible)
             {
                 _shieldRenderer.enabled = false;
+                _explosionAudioSource.Play();
             } else
             {
                 _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -108,12 +112,15 @@ public class HorizonalEnemy : MonoBehaviour
                 PlayEnemyDeathSequence();
             }
         }
+
+        if (other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine") Destroy(other.gameObject);
+
         /*
         if (other.tag == "PlayerLaser")
         {
             // _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            Destroy(other.gameObject);
+
             if (_player != null)
             {
                 _player.AddToScore(10);
@@ -149,14 +156,6 @@ public class HorizonalEnemy : MonoBehaviour
     void PlayEnemyDeathSequence()
     {
         Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-        /* Debug.Log("Playing enemy death sequence");
-        _enemyAnimator.SetTrigger("OnEnemyDeath");
-        Debug.Log("should have started the animator");
-        _enemySpeed /= 1.25f;
-        Destroy(GetComponent<Collider2D>());
-        Destroy(GetComponent<Rigidbody2D>());
-        _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
-        */
         Destroy(gameObject);
 
     }
