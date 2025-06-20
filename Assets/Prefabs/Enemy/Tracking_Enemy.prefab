@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3050945469616658785}
   m_Layer: 0
   m_Name: Tracking_Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 655819755216270188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.41, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1103453171
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 731feffb011b4fb49b42aefdcbe058d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -97,10 +97,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1aac0f52e5812645bbc1387792ae5df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemySpeed: 2.5
+  _rightBound: 11
+  _leftBound: -11
+  _topBound: 5
+  _bottomBound: -10.5
+  _enemySpeed: 3
+  _trackingCooldown: 5
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
-  _trackingTriggerDistance: 3
+  _trackingTriggerDistance: 4
   _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
     type: 3}
 --- !u!61 &6747895575927362980
@@ -161,7 +166,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

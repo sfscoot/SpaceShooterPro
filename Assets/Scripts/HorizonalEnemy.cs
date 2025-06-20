@@ -1,10 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class HorizonalEnemy : MonoBehaviour
 {
+    [Header("Related Game Objects")]
     [SerializeField] private SpawnManager _spawnManager;
+    [SerializeField] private GameObject _explosionPreFab;
+    [SerializeField] private GameObject _shieldVisualizer;
+    SpriteRenderer _shieldRenderer;
 
     [SerializeField]
     private float _enemySpeed = 2.50f;
@@ -17,7 +23,7 @@ public class HorizonalEnemy : MonoBehaviour
     [SerializeField] private float _topBound = 5f;
     [SerializeField] private float _bottomBound = -10.5f;
     [SerializeField] private float _topBoundOffset = 3;
-    [SerializeField] private GameObject _explosionPreFab;
+
 
     private float _randomY;
 
@@ -37,10 +43,20 @@ public class HorizonalEnemy : MonoBehaviour
     {
         _explosionAudioSource = GetComponent<AudioSource>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_shieldVisualizer == null)
+        {
+            Debug.LogError("Shield visualizer not initialized on HorizonalEnemy");
+        } else
+        {
+            _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+            _shieldRenderer.enabled = true;
+        }
     }
 
     void Update()
     {
+        CheckForPlayerBehind();
         CalculateMovement();
         if (Time.time > _canFire)
         {
@@ -48,6 +64,12 @@ public class HorizonalEnemy : MonoBehaviour
         }
     }
 
+    private void CheckForPlayerBehind()
+    {
+        var heading = transform.position - _player.transform.position;
+        float dot = Vector3.Dot(heading, _player.transform.forward);
+        Debug.Log("The value of DOT is " + dot);
+    }
     void CalculateMovement()
     {
         // transform.Translate(Vector3.right * (2 * Time.deltaTime));
@@ -69,20 +91,28 @@ public class HorizonalEnemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // _explosionAudioSource.Play();
-        if (other.tag == "Player")
+        if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
         {
-            Player player = other.transform.GetComponent<Player>();
-
-            if (player != null)
+            if (_shieldRenderer.isVisible)
             {
-                player.Damage();
-            }
-            PlayEnemyDeathSequence();
-        }
+                _shieldRenderer.enabled = false;
+            } else
+            {
+                _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+                Player player = other.transform.GetComponent<Player>();
 
+                if (player != null)
+                {
+                    player.Damage();
+                }
+                PlayEnemyDeathSequence();
+            }
+        }
+        /*
         if (other.tag == "PlayerLaser")
         {
             // _explosionAudioSource.Play();
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             Destroy(other.gameObject);
             if (_player != null)
             {
@@ -112,7 +142,8 @@ public class HorizonalEnemy : MonoBehaviour
             }
             PlayEnemyDeathSequence();
         }
-        _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+        //_spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+        */
     }
 
     void PlayEnemyDeathSequence()

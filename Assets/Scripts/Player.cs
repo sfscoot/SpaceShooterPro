@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-// using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEditor.UIElements;
@@ -12,22 +11,19 @@ public class Player : MonoBehaviour
 
     [Header ("Player Variables")]
     // player related variables
-    [SerializeField]
-    private GameObject _rightEngine;
-    [SerializeField]
-    private GameObject _leftEngine;
-    private Animator _playerAnimator;
-
-
-    private UIManager _uiManager;
+    [SerializeField] private GameObject _rightEngine;
+    [SerializeField] private GameObject _leftEngine;
     [SerializeField] private float _speed;
     [SerializeField] private float _defaultSpeed = 4.0f;
     [SerializeField] private float _speedMultiplier = 2;
+    
+    private Animator _playerAnimator;
+    private UIManager _uiManager;
+
 
     // Weapon variables
-    [SerializeField]
-    private char _activeWeapon;
-
+    [Header("Weapon Variables")]
+    [SerializeField] private char _activeWeapon;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotLaserPreFab;
     private GameObject _tmpLaser;
@@ -35,38 +31,29 @@ public class Player : MonoBehaviour
     [SerializeField] private int _ammoCount = 15;
 
     // Missile variables
-    [SerializeField]
-    private GameObject _missilePreFab;
-    [SerializeField]
-    private float _missileOffset;
-    [SerializeField]
-    private float _missilePowerupDuration;
+    [SerializeField] private GameObject _missilePreFab;
+    [SerializeField] private float _missileOffset;
+    [SerializeField] private float _missilePowerupDuration;
     bool _missilePowerupActive = false;
 
     // space mine variables
-    [SerializeField]
-    private GameObject _spaceMinePreFab;
-    [SerializeField]
-    private int _fireAngle;
+    [SerializeField] private GameObject _spaceMinePreFab;
+    [SerializeField] private int _fireAngle;
+
     private bool _mineLauncherActive = false;
 
 
-    [SerializeField]
-    private float _fireRate = 0.5f;
+    [SerializeField] private float _fireRate = 0.5f;
     private float _canFire = -1f;
 
-   // laser audio
-    [SerializeField]
-    private AudioClip _fireLaserAudio;
-    [SerializeField]
-    private AudioClip _explosion;
-
-    [SerializeField]
-    private AudioClip _ammoCountLow;
+    // laser audio
+    [Header("Audio Objects and Variables")]
+    [SerializeField] private AudioClip _fireLaserAudio;
+    [SerializeField] private AudioClip _explosion;
+    [SerializeField] private AudioClip _ammoCountLow;
     private AudioSource _audioSource; // scj
 
-    [SerializeField]
-    private int _lives = 3;
+    [SerializeField] private int _lives = 3;
 
     // screen bounding variables
     private float _rightBound = 11.3f;
@@ -203,18 +190,6 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
         CheckForWeaponFire();
-
-        /*
-
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _missilePowerupActive == true)
-        {
-            FireMissile();
-        } else if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
-        {
-            FireLaser();
-        }
-        */
-
         CheckForThruster();
     }
     //***************************************************************************

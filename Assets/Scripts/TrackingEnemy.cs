@@ -6,7 +6,16 @@ using static UnityEngine.GraphicsBuffer;
 
 public class TrackingEnemy : MonoBehaviour
 {
+
+    [Header("Screen Boundaries")]
+    [SerializeField] private float _rightBound = 11f;
+    [SerializeField] private float _leftBound = -11f;
+    [SerializeField] private float _topBound = 5f;
+    [SerializeField] private float _bottomBound = -10.5f;
+
+    [Header("Enemy Variables")]
     [SerializeField] private float _enemySpeed = 2.50f;
+    [SerializeField] private float _trackingCooldown = 4;
     private Player _player;
 
     private SpawnManager _spawnManager;
@@ -16,6 +25,7 @@ public class TrackingEnemy : MonoBehaviour
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
     private bool _targetAcquired = false;
+    private bool _targetReleased = false;
     [SerializeField] float _trackingTriggerDistance = 3.0f;
 
     [SerializeField] private GameObject _laserPrefab;
@@ -68,17 +78,26 @@ public class TrackingEnemy : MonoBehaviour
         if (distance <= _trackingTriggerDistance) 
         { 
             _targetAcquired = true;
+            StartCoroutine(TrackingCooldown());
         }
+    }
+
+    IEnumerator TrackingCooldown()
+    {
+        yield return new WaitForSeconds(_trackingCooldown);
+        _targetAcquired = false;
+        _targetReleased = true;
+        transform.eulerAngles = new Vector3(0f, 0f, 0f);
     }
 
     void CalculateMovement()
     {
-        if (_targetAcquired == false)
+        if (_targetAcquired == false || _targetReleased == true)
         {
             transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
         }
-        else {
-
+        else if (_targetAcquired == true && _targetReleased == false) 
+        {
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _enemySpeed * Time.deltaTime);
             transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
         }
@@ -98,56 +117,58 @@ public class TrackingEnemy : MonoBehaviour
         return Quaternion.Euler(0f, 0f, rot_z + 90);
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("tracking enemy has been hit by " +  other.tag);
         _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             Player player = other.transform.GetComponent<Player>();
 
             if (_player != null)
             {
                 _player.Damage();
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "PlayerLaser")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Missile")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Mine")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
     }
@@ -181,5 +202,6 @@ public class TrackingEnemy : MonoBehaviour
     public void SetPlayerDestroyed()
     {
         _playerDestroyed = true;
+
     }
 }

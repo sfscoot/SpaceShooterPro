@@ -4,57 +4,111 @@ using UnityEngine;
 
 public class HomingMissile : MonoBehaviour
 {
-    [SerializeField]
-    private float _laserSpeed = 8.0f;
-    private bool _isEnemyLaser = false;
-    void Update()
+    private bool _targetAcquired = false;
+    private bool _targetReleased = false;
+    [SerializeField] private float _trackingCooldown = 3.0f;
+    private GameObject _player;
+    [SerializeField] float _trackingTriggerDistance = 4.0f;
+    [SerializeField] private float _missileSpeed = 2.50f;
+    private AudioSource _explosionAudioSource;
+    [SerializeField] private GameObject _explosionPreFab;
+
+    private void Start()
     {
-        if (_isEnemyLaser)
+        _player = GameObject.Find("Player");
+        if (_player == null)
         {
-            MoveDown();
+            Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
         }
-        else
+        _explosionAudioSource = GetComponent<AudioSource>();
+        if (_explosionAudioSource == null)
         {
-            MoveUp();
+            Debug.LogError("Error: Explosion Audio Source not found");
         }
     }
-
-    void MoveUp()
+    void Update()
     {
-        transform.Translate(Vector3.up * _laserSpeed * Time.deltaTime);
+        CheckAttackPlayer();
+        CalculateMovement();
+    }
 
-        if (transform.position.y > 8)
+    void CalculateMovement()
+    {
+        if (_targetAcquired == false || _targetReleased == true)
         {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
+            transform.Translate(Vector3.down * _missileSpeed * Time.deltaTime);
+        }
+        else if (_targetAcquired == true && _targetReleased == false)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _missileSpeed * Time.deltaTime);
+            transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
+        }
+
+        if (transform.position.y < -5.0)
+        {
             Destroy(gameObject);
+        }
+    }
+    void TrackPlayer()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _missileSpeed * Time.deltaTime);
+        transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
+    }
+    public Quaternion LocalLookAt2D(Vector2 target, Vector2 center)
+    {
+        Vector3 diff = target - center; // gets a vector - distance and x/y direction 
+        diff.Normalize(); // on the curve of a circle with a radius of 1
+        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        return Quaternion.Euler(0f, 0f, rot_z + 90); // rot_z + 90
+    }
+
+
+    IEnumerator MissileCooldown()
+    {
+        Debug.Log("tracking cooldwon started");
+        yield return new WaitForSeconds(_trackingCooldown);
+        _targetReleased = true;
+        _targetAcquired = false;
+        transform.eulerAngles = new Vector3(0f, 0f, 0f);
+        Debug.Log("target is released - ");
+    }
+
+    void CheckAttackPlayer()
+    {
+        float distance = Vector3.Distance(transform.position, _player.transform.position);
+        if (distance <= _trackingTriggerDistance)
+        {
+            _targetAcquired = true;
+            _targetReleased = false;
+            StartCoroutine(MissileCooldown());
         }
     }
     void MoveDown()
     {
-        transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
+        transform.Translate(Vector3.down * _missileSpeed * Time.deltaTime);
 
         if (transform.position.y < -5.0)
         {
+            Destroy(gameObject);
+            /*
             if (transform.parent != null)
             {
                 Destroy(transform.parent.gameObject);
             }
             Destroy(gameObject);
+            */
         }
-    }
-
-    public void AssignEnemyLaser()
-    {
-        _isEnemyLaser = true;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (_isEnemyLaser == true && other.tag == "Player")
+        if (other.tag == "Player")
         {
+            GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosionAudioSource.Play();
+
             Player player = other.GetComponent<Player>();
             if (player != null)
             {

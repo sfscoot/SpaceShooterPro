@@ -14,6 +14,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _explosionPreFab;
 
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _homingMissilePrefab;
+    private GameObject _enemyWeapon;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
@@ -47,7 +49,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         CalculateMovement();
-        if (Time.time > _canFire)
+        if (Time.time > _canFire  && transform.position.x <= 7)
         {
             FireLaser();
         }
@@ -66,52 +68,56 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            _explosionAudioSource.Play();
             Player player = other.transform.GetComponent<Player>();
 
             if (_player != null)
             {
                 _player.Damage();
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "PlayerLaser")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Missile")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "Mine")
         {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
                 _player.AddToScore(10);
             }
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+
             PlayEnemyDeathSequence();
         }
     }
@@ -131,14 +137,21 @@ public class Enemy : MonoBehaviour
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
-        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
-        enemyLaser.tag = "EnemyLaser";
-        enemyLaser.transform.parent = this.transform;
 
-        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-        for (int i = 0; i < lasers.Length; i++)
+        if (gameObject.name == "Homing_Missile_Enemy")
         {
-            lasers[i].AssignEnemyLaser();
+            _enemyWeapon = Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity); // spawn outside the collider
+            _enemyWeapon.tag = "EnemyMissile";
+        } else
+        {
+            _enemyWeapon = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+            _enemyWeapon.tag = "EnemyLaser";
+            _enemyWeapon.transform.parent = this.transform;
+            Laser[] lasers = _enemyWeapon.GetComponentsInChildren<Laser>();
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
         }
     }
 
