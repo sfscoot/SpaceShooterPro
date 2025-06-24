@@ -30,7 +30,8 @@ public class HorizonalEnemy : MonoBehaviour
     // create handle to animator component
     private Animator _enemyAnimator;
     private AudioSource _explosionAudioSource;
-    
+    [SerializeField] private AudioSource _shieldDownAudioSource;
+
     [SerializeField]
     private Player _player;
 
@@ -38,6 +39,9 @@ public class HorizonalEnemy : MonoBehaviour
     private GameObject _laserPrefab; // leaving this in for later implementation of this enemy destroying powerups.
     private float _fireRate = 3.0f;
     private float _canFire = -1;
+    private Transform _enemyShield;
+    [SerializeField]  private GameObject _leftScanner;
+    [SerializeField]  private GameObject _rightScanner;
 
     private void Start()
     {
@@ -56,6 +60,12 @@ public class HorizonalEnemy : MonoBehaviour
             _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
             _shieldRenderer.enabled = true;
         }
+        _enemyShield = transform.Find("Model/Shield");
+        _shieldDownAudioSource = _enemyShield.GetComponent<AudioSource>();
+        this.transform.Find("Model/Left_Scanner");
+
+        _leftScanner.SetActive(true);
+        _rightScanner.SetActive(false);
     }
 
     void Update()
@@ -66,40 +76,38 @@ public class HorizonalEnemy : MonoBehaviour
             FireLaser();
         }
     }
-
-    private void CheckForPlayerBehind()
-    {
-        var heading = transform.position - _player.transform.position;
-        float dot = Vector3.Dot(heading, _player.transform.forward);
-        Debug.Log("The value of DOT is " + dot);
-    }
     void CalculateMovement()
     {
         // transform.Translate(Vector3.right * (2 * Time.deltaTime));
-        transform.Translate(Vector3.right * (_enemySpeed * Time.deltaTime) * _direction);
+
+        transform.Translate(Vector3.right * (_enemySpeed * Time.deltaTime * _direction));
         if (transform.position.x <= _leftBound)
         {
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_leftBound, _randomY, 0);
             _direction = 1;
+            _leftScanner.SetActive(true);
+            _rightScanner.SetActive(false);
+
         }
         else if (transform.position.x >= _rightBound)
         {
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_rightBound, _randomY, 0);
             _direction = -1;
+            _leftScanner.SetActive(false);
+            _rightScanner.SetActive(true);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // _explosionAudioSource.Play();
         if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
         {
             if (_shieldRenderer.isVisible)
             {
                 _shieldRenderer.enabled = false;
-                _explosionAudioSource.Play();
+                _shieldDownAudioSource.Play();
             } else
             {
                 _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();

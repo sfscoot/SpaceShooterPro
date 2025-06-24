@@ -33,6 +33,7 @@ public class SpawnManager : MonoBehaviour
     private EnemyType _tmpEnemyType;
     private GameObject _tmpNewEnemy;
     private EnemyClass _tmpRandomEnemy;
+    private Vector3 _enemySpawnPosition;
 
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _enemyContainer;
@@ -130,12 +131,9 @@ public class SpawnManager : MonoBehaviour
     {
         _waveEnemiesSpawned = 0;
         yield return new WaitForSeconds(_enemySpawnRate);
-        // while (_waveEnemiesSpawned < _waveEnemiesToSpawn && _stopSpawning == false)
-        // while (_waveEnemiesSpawned < _waveEnemiesToSpawn)
 
         for (int i = 1; i <= _waveEnemiesToSpawn; i++) 
         {
-
             _tmpEnemyType = EnemyTypePicker();
 
             switch (_tmpEnemyType)
@@ -160,18 +158,20 @@ public class SpawnManager : MonoBehaviour
                 _waveEnemiesSpawned++;
             } else
             {
-                _leftOrRight = Random.Range(0, 1);
+                _leftOrRight = Random.Range(0f, 1f);
+
                 if (_leftOrRight < 0.5f)
                 {
-                    _xSpawnValue = -7;
+                    _xSpawnValue = -11.25f;
                 }
                 else
                 {
-                    _xSpawnValue = 7;
+                    _xSpawnValue =11.25f;
                 }
 
-                Vector3 enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
-                _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, enemySpawnPosition, Quaternion.identity);
+                //Vector3 enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
+                _enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
+                _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, _enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
             }
 

@@ -20,7 +20,7 @@ public class EnemyScanner : MonoBehaviour
         if (other.tag == "Player")
         {
             _laserSpawnPosition = transform.parent.position;
-            if (this.name == "Left_Scanner")
+            if (this.name == "Left_Scanner" && this.isActiveAndEnabled)
             {
                 _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
                 Laser _tmpLaser = _enemyLaser.GetComponent<Laser>();
@@ -28,7 +28,7 @@ public class EnemyScanner : MonoBehaviour
                 _tmpLaser.AssignEnemyLaser();
                 _tmpLaser.transform.Rotate(0, 0, 90, Space.Self);
                 _enemyLaser.tag = "EnemyLaser";
-            } else if (this.name == "Right_Scanner")
+            } else if (this.name == "Right_Scanner" && this.isActiveAndEnabled)
             {
                 _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
                 Laser _tmpLaser = _enemyLaser.GetComponent<Laser>();
@@ -37,7 +37,6 @@ public class EnemyScanner : MonoBehaviour
                 _tmpLaser.transform.Rotate(0, 0, -90, Space.Self);
                 _enemyLaser.tag = "EnemyLaser";
             }
-
         }
     }
 }

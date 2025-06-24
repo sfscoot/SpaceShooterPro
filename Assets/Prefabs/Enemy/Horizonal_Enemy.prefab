@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1564423583849654027}
   - component: {fileID: 5146779116498982146}
+  - component: {fileID: 6606202165147549001}
   m_Layer: 0
   m_Name: Shield
   m_TagString: Untagged
@@ -81,6 +82,102 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!82 &6606202165147549001
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827641930037138730}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 80f9488402cbf07459175756b5745d9c, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1618956311686939820
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,7 +189,6 @@ GameObject:
   - component: {fileID: 1618956311686939822}
   - component: {fileID: 1618956311686939816}
   - component: {fileID: 2518752330507207728}
-  - component: {fileID: 1687419328381317025}
   - component: {fileID: 150207832699074647}
   m_Layer: 0
   m_Name: Horizonal_Enemy
@@ -138,9 +234,12 @@ MonoBehaviour:
   _topBound: 11
   _bottomBound: -10.5
   _topBoundOffset: 6
+  _shieldDownAudioSource: {fileID: 0}
   _player: {fileID: 0}
   _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
     type: 3}
+  _leftScanner: {fileID: 8568052783833358866}
+  _rightScanner: {fileID: 7183923209133810037}
 --- !u!61 &2518752330507207728
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -167,27 +266,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6.6690044, y: 2.074911}
   m_EdgeRadius: 0
---- !u!50 &1687419328381317025
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618956311686939820}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!82 &150207832699074647
 AudioSource:
   m_ObjectHideFlags: 0
@@ -199,7 +277,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -399,6 +477,7 @@ GameObject:
   - component: {fileID: 8796193197746709474}
   - component: {fileID: 2252926514439674734}
   - component: {fileID: 3892541687935517565}
+  - component: {fileID: 4079190721563842689}
   m_Layer: 0
   m_Name: Right_Scanner
   m_TagString: Untagged
@@ -460,6 +539,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _laserPrefab: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
     type: 3}
+--- !u!50 &4079190721563842689
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7183923209133810037}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &8568052783833358866
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,13 +571,14 @@ GameObject:
   - component: {fileID: 6673403835710632363}
   - component: {fileID: 469214494743941965}
   - component: {fileID: 6133069192497671163}
+  - component: {fileID: 3360956106178112142}
   m_Layer: 0
   m_Name: Left_Scanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6673403835710632363
 Transform:
   m_ObjectHideFlags: 0
@@ -532,3 +633,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _laserPrefab: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
     type: 3}
+--- !u!50 &3360956106178112142
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8568052783833358866}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
