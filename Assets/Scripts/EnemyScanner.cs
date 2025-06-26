@@ -6,15 +6,10 @@ public class EnemyScanner : MonoBehaviour
 {
     [SerializeField] private GameObject _laserPrefab;
     private GameObject _enemyLaser;
-    private float _laserOffset = 3;
-    private GameObject _enemyLaserScript;
+    // private float _laserOffset = 3;
+    // private GameObject _enemyLaserScript;
     private Vector3 _laserSpawnPosition;
 
-
-    private void Start()
-    {
-
-    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")

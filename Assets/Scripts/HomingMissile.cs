@@ -65,7 +65,6 @@ public class HomingMissile : MonoBehaviour
 
     IEnumerator MissileCooldown()
     {
-        Debug.Log("tracking cooldwon started");
         yield return new WaitForSeconds(_trackingCooldown);
         _targetReleased = true;
         _targetAcquired = false;

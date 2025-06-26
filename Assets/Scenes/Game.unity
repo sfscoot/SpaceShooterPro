@@ -2357,20 +2357,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - waveNumber: 0
-    enemyCount: 4
-    powerUpSpawnRate: 3
+    enemyCount: 5
+    powerUpSpawnRate: 5
     enemySpawnRate: 3
   - waveNumber: 1
-    enemyCount: 4
-    powerUpSpawnRate: 3
+    enemyCount: 5
+    powerUpSpawnRate: 5
     enemySpawnRate: 2.5
   - waveNumber: 2
-    enemyCount: 4
-    powerUpSpawnRate: 3
+    enemyCount: 5
+    powerUpSpawnRate: 5
     enemySpawnRate: 2
-  - waveNumber: 4
+  - waveNumber: 5
     enemyCount: 1
-    powerUpSpawnRate: 0
+    powerUpSpawnRate: 5
     enemySpawnRate: 0
   _waveTransitionDelay: 10
   _powerUpTypes:
@@ -2390,20 +2390,20 @@ MonoBehaviour:
   - name: Life
     powerupPrefab: {fileID: 9196400202554023363, guid: 424c6cbd3fc870642b81e4b9fd455aeb,
       type: 3}
-    powerUpType: 1
-    waveAvailable: 3
+    powerUpType: 0
+    waveAvailable: 0
     frequency: 10
   - name: Missile
     powerupPrefab: {fileID: 2552266171004621087, guid: 39047fcfc42d7a246bc559580e03882e,
       type: 3}
-    powerUpType: 2
-    waveAvailable: 3
+    powerUpType: 0
+    waveAvailable: 0
     frequency: 5
   - name: Shield
     powerupPrefab: {fileID: 6567097061483595740, guid: a280482caba7c504f9e1308f2cdbcee2,
       type: 3}
     powerUpType: 1
-    waveAvailable: 3
+    waveAvailable: 0
     frequency: 25
   - name: SpaceMine
     powerupPrefab: {fileID: 6279821483843370839, guid: 7dddfb1963b71964fb92d153feabb164,
@@ -2421,13 +2421,13 @@ MonoBehaviour:
     powerupPrefab: {fileID: 1288132875488408304, guid: d563ce36fe266a4449c007fdfa00a162,
       type: 3}
     powerUpType: 0
-    waveAvailable: 3
+    waveAvailable: 0
     frequency: 10
   - name: LeftRIghtSwap
     powerupPrefab: {fileID: 2200210911132098070, guid: 152b9da75da9d7544b186460380a6915,
       type: 3}
-    powerUpType: 1
-    waveAvailable: 3
+    powerUpType: 0
+    waveAvailable: 0
     frequency: 25
   _commonPowerUpsList: []
   _rarePowerUpsList: []
@@ -2447,7 +2447,7 @@ MonoBehaviour:
     _enemyType: 0
     _enemyMovementType: 0
   - name: Horizonal Enemy
-    waveAvailable: 0
+    waveAvailable: 4
     enemyPrefab: {fileID: 1618956311686939820, guid: 9b6a52b7b9515a04990f88a27aca14f8,
       type: 3}
     _enemyType: 0
@@ -2467,6 +2467,12 @@ MonoBehaviour:
   - name: Homing Missile Enemy
     waveAvailable: 4
     enemyPrefab: {fileID: 5139568104275189995, guid: 7872f65fd3aaf2845ba594c2b7dbcda1,
+      type: 3}
+    _enemyType: 0
+    _enemyMovementType: 0
+  - name: Evasive Enemy
+    waveAvailable: 0
+    enemyPrefab: {fileID: 6182276707073747038, guid: 373512e5fe6ae4a48a8f2466d06b5601,
       type: 3}
     _enemyType: 0
     _enemyMovementType: 0
@@ -2819,6 +2825,7 @@ GameObject:
   - component: {fileID: 1894934408}
   - component: {fileID: 1894934409}
   - component: {fileID: 1894934410}
+  - component: {fileID: 1894934411}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2858,6 +2865,7 @@ MonoBehaviour:
     type: 3}
   _fireAngle: 0
   _fireRate: 0.5
+  _canCollectPowerupsRate: 6
   _fireLaserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _explosion: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _ammoCountLow: {fileID: 8300000, guid: 7e377f6d19b9bc049a0452c5e63c13c6, type: 3}
@@ -2937,7 +2945,7 @@ Transform:
   m_GameObject: {fileID: 1894934404}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.1, y: -2.29, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
   - {fileID: 140877969}
   - {fileID: 1254404194}
@@ -3087,6 +3095,27 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!50 &1894934411
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894934404}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1921514090
 GameObject:
   m_ObjectHideFlags: 0

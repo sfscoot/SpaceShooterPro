@@ -37,10 +37,6 @@ public class TrackingEnemy : MonoBehaviour
     private float _rotationSpeed = .05f;
     private Transform _tmpTransform;
 
-    private void Awake()
-    {
-
-    }
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();

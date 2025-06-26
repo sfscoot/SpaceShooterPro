@@ -25,6 +25,7 @@ public class Asteroid : MonoBehaviour
     {
         if (other.tag == "PlayerLaser")
         {
+            _explosionPreFab.transform.localScale = Vector3.one;
             Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();

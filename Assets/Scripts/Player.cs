@@ -41,10 +41,13 @@ public class Player : MonoBehaviour
     [SerializeField] private int _fireAngle;
 
     private bool _mineLauncherActive = false;
+    private GameObject[] _activePowerups;
 
 
     [SerializeField] private float _fireRate = 0.5f;
     private float _canFire = -1f;
+    [SerializeField] private float _canCollectPowerupsRate = 6.0f;
+    private float _canCollectPowerups = -1f;
 
     // laser audio
     [Header("Audio Objects and Variables")]
@@ -191,6 +194,7 @@ public class Player : MonoBehaviour
         CalculateMovement();
         CheckForWeaponFire();
         CheckForThruster();
+        CheckForPowerupCollection();
     }
     //***************************************************************************
     // Player Movement Code
@@ -216,6 +220,20 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _downBound, _upBound), 0);
     }
 
+
+    private void CheckForPowerupCollection()
+    {
+        if (Input.GetKeyDown(KeyCode.C) && Time.time > _canCollectPowerups)
+        {
+            _canCollectPowerups = Time.time + _canCollectPowerupsRate;
+            _activePowerups = GameObject.FindGameObjectsWithTag("Powerup");
+            for (int i=0; i < _activePowerups.Length; i++)
+            {
+                // Debug.Log("powerup found: " + _activePowerups[i].name + " and there are " + _activePowerups.Length + " powerups on the screen");
+                _activePowerups[i].transform.GetComponent<Powerup>().SetMoveTowardPlayer();
+            }
+        }
+    }
 
     //***************************************************************************
     // Check for weapon fire

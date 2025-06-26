@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5739076842301302877}
   - component: {fileID: -4155069984725262636}
   - component: {fileID: 5040923479614212888}
-  - component: {fileID: 5560148595999163559}
+  - component: {fileID: 6270266982117917438}
   m_Layer: 0
   m_Name: Ammo_Powerup
   m_TagString: Powerup
@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerupSpeed: 3
+  _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
+    type: 3}
   _powerupID: 3
 --- !u!61 &5040923479614212888
 BoxCollider2D:
@@ -124,7 +126,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.4, y: 2.4}
   m_EdgeRadius: 0
---- !u!50 &5560148595999163559
+--- !u!50 &6270266982117917438
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0

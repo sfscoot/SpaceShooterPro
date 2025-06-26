@@ -132,7 +132,6 @@ public class CorkscrewEnemy : MonoBehaviour
         }
         
     }
-
     public void SetPlayerDestroyed()
     {
         _playerDestroyed = true;
