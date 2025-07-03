@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] private char _activeWeapon;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotLaserPreFab;
+    [SerializeField] private GameObject _playerHomingMissilePreFab;
     private GameObject _tmpLaser;
     [SerializeField] private float _laserOffset;
     [SerializeField] private int _ammoCount = 15;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _missileOffset;
     [SerializeField] private float _missilePowerupDuration;
     bool _missilePowerupActive = false;
+    bool _homingMissileActive = false;
 
     // space mine variables
     [SerializeField] private GameObject _spaceMinePreFab;
@@ -57,6 +59,12 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource; // scj
 
     [SerializeField] private int _lives = 3;
+    private GameObject[] _activeEnemies;
+    private GameObject _closestEnemy;
+    private float _distanceToClosestEnemy = 100;
+    private float _enemyDistanceFromPlayer;
+    private Transform _enemyTransform;
+    private GameObject _homingMissile;
 
     // screen bounding variables
     private float _rightBound = 11.3f;
@@ -229,7 +237,6 @@ public class Player : MonoBehaviour
             _activePowerups = GameObject.FindGameObjectsWithTag("Powerup");
             for (int i=0; i < _activePowerups.Length; i++)
             {
-                // Debug.Log("powerup found: " + _activePowerups[i].name + " and there are " + _activePowerups.Length + " powerups on the screen");
                 _activePowerups[i].transform.GetComponent<Powerup>().SetMoveTowardPlayer();
             }
         }
@@ -248,18 +255,38 @@ public class Player : MonoBehaviour
             else if (_ammoCount > 0) FireLaser();
         }
 
-        /*
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _missilePowerupActive == true)
+        if (Input.GetKeyDown(KeyCode.H) && _homingMissileActive)
         {
-            FireMissile();
+            Debug.Log("firing homing missile");
+            FireHomingMissile();
+            _homingMissileActive = false;
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _ammoCount > 0)
-        {
-            FireLaser();
-        }
-        */
     }
 
+    public void HomingMissileActive() // scj
+    {
+        _homingMissileActive = true;
+        Debug.Log("homing  missile is active");
+        _uiManager.HomingMissileActive();
+    }
+    void FireHomingMissile()
+    {
+        _distanceToClosestEnemy = 100;
+        _activeEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < _activeEnemies.Length; i++)
+        {
+            _enemyTransform = _activeEnemies[i].transform;
+            _enemyDistanceFromPlayer = Vector3.Distance(_enemyTransform.position, transform.position);
+            if (_enemyDistanceFromPlayer < _distanceToClosestEnemy) 
+            {
+                _closestEnemy = _activeEnemies[i];
+                _distanceToClosestEnemy = _enemyDistanceFromPlayer;
+            }
+        }
+        _homingMissile = Instantiate(_playerHomingMissilePreFab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
+        _homingMissile.GetComponent<HomingMissile_Player>().MissileTarget(_closestEnemy);
+        _uiManager.HomingMissileInactive();
+    }
 
     //***************************************************************************
     // Laser Code

@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class EvasiveEnemy : MonoBehaviour
 {
+    // tmp vars
+    private bool _canMove = true;
+
     [Header("Screen Boundaries")]
     [SerializeField] private float _rightBound = 11f;
     [SerializeField] private float _leftBound = -11f;
@@ -56,13 +59,19 @@ public class EvasiveEnemy : MonoBehaviour
 
     void Update()
     {
+
         CalculateMovement();
+
         if (Time.time > _canFire)
         {
             FireLaser();
         }
     }
 
+    public void StopMoving()
+    {
+        _canMove = false;
+    }
     void CalculateMovement()
     {
         if (!_evading) 
@@ -89,7 +98,6 @@ public class EvasiveEnemy : MonoBehaviour
 
     public void TakeEvasiveAction(string direction)
     {
-        Debug.Log("taking evasive action");
         if (_evading == false) 
         {
             _evading = true;
@@ -125,6 +133,7 @@ public class EvasiveEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("evasive enemy just hit by " + other.tag);
         _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
@@ -166,6 +175,18 @@ public class EvasiveEnemy : MonoBehaviour
         }
 
         if (other.tag == "Mine")
+        {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddToScore(10);
+            }
+
+            PlayEnemyDeathSequence();
+        }
+        if (other.tag == "PlayerWeapon")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();

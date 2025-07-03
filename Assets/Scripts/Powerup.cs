@@ -116,8 +116,12 @@ public class Powerup : MonoBehaviour
                         break;
                     case 7:
                         _powerupAudioSource.Play();
-                        Debug.Log("in the powerup script - just grabbed a left right swap");
                         player.LeftRightSwapActive();
+                        break;
+                    case 8:
+                        _powerupAudioSource.Play();
+                        Debug.Log("homing missile powerup picked up");
+                        player.HomingMissileActive();
                         break;
                     default:
                         Debug.LogError("unknown powerup encountered" + _powerupID);

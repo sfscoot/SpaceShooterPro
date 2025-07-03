@@ -9,18 +9,15 @@ public class EvasiveEnemyScanner : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("evasive enemy just hit something " +  other.tag);
-        if (other.tag == "Player" || other.tag == "PlayerLaser")
+        if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "PlayerWeapon")
 
         {
-            Debug.Log("just hit by player or laser and we are " + this.name);
             if (this.name == "Forward_Left_Sensor")
             {
-                Debug.Log("calling parent code from left scanner");
                 transform.parent.GetComponent<EvasiveEnemy>().TakeEvasiveAction("right");
             }
             else if (this.name == "Forward_Right_Sensor")
             {
-                Debug.Log("calling parent code from right scanner");
                 transform.parent.GetComponent<EvasiveEnemy>().TakeEvasiveAction("left");
             }
         }

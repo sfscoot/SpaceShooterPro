@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private TMP_Text _ammoCountTxt;
     [SerializeField] private TMP_Text _waveEnemyDeathCount;
+    [SerializeField] private TMP_Text _homingMissileActiveTxt;
 
     private bool _lowAmmoWarning = false;
     private bool _lowAmmoFlicker = false;
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _player;
 
     private GameManager _gameManager;
+    private bool _displayHomingMissileActiveMessage = false;
 
 
     // Start is called before the first frame update
@@ -43,6 +45,8 @@ public class UIManager : MonoBehaviour
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         if (_gameManager == null)  Debug.LogError("ERROR! GameManager not found");
+
+        _homingMissileActiveTxt.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -191,5 +195,29 @@ public class UIManager : MonoBehaviour
     public void DisplayWaveOff()
     {
         _waveText.gameObject.SetActive(false);
+    }
+
+    public void HomingMissileActive()
+    {
+        _displayHomingMissileActiveMessage = true;
+        StartCoroutine(zzzHomingMissileActive());
+    }
+
+    public void HomingMissileInactive()
+    {
+        // _homingMissileActiveTxt.gameObject.SetActive(false);
+        _displayHomingMissileActiveMessage = false;
+    }
+
+    IEnumerator zzzHomingMissileActive()
+    {
+        while (_displayHomingMissileActiveMessage == true)
+        {
+
+            yield return new WaitForSeconds(0.25f);
+            _homingMissileActiveTxt.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.25f);
+            _homingMissileActiveTxt.gameObject.SetActive(false);
+        }
     }
 }
