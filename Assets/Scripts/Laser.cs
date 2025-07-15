@@ -11,6 +11,7 @@ public class Laser : MonoBehaviour
     string _laserDirection = "down";
     void Update()
     {
+        Debug.Log ("_isEnemyLaser is " + _isEnemyLaser + " and the direction is " + _laserDirection);
         if (_isEnemyLaser)
         {
             if (_laserDirection == "down")
@@ -90,6 +91,7 @@ public class Laser : MonoBehaviour
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+        Debug.Log("just assigned laser as enemy");
     }
 
     public void AssignLaserDirection(string direction)
