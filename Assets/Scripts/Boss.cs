@@ -29,6 +29,7 @@ public class Boss : MonoBehaviour
 
     private void Start()
     {
+        transform.position = new Vector3(17.5f, 5.5f, 0f);
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_player == null)

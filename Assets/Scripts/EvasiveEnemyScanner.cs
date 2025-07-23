@@ -8,7 +8,6 @@ public class EvasiveEnemyScanner : MonoBehaviour
     private Enemy _parent;
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("evasive enemy just hit something " +  other.tag);
         if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "PlayerWeapon")
 
         {

@@ -266,7 +266,6 @@ public class Player : MonoBehaviour
     public void HomingMissileActive() // scj
     {
         _homingMissileActive = true;
-        Debug.Log("homing  missile is active");
         _uiManager.HomingMissileActive();
     }
     void FireHomingMissile()

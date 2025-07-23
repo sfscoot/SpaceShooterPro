@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
+using static UnityEditor.LightmapEditorSettings;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _enemySpeed = 2.50f;
     private Player _player;
-
-    [SerializeField] private SpawnManager _spawnManager;
+    private SpawnManager _spawnManager;
 
     // create handle to animator component
     private Animator _enemyAnimator; // clean this up? 
@@ -16,10 +16,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _homingMissilePrefab;
     private GameObject _enemyWeapon;
-    private float _fireRate = 3.0f;
+    [SerializeField]  private float _fireRate = 3.0f;
     private float _canFire = -1;
 
+    [SerializeField] private float _raycastRange = 5.0f;
+
     private bool _playerDestroyed;
+
 
     private void Start()
     {
@@ -40,6 +43,8 @@ public class Enemy : MonoBehaviour
         }
         _enemyAnimator = GetComponent<Animator>();
         if (_enemyAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
+
+
     }
 
     void Update()
@@ -49,7 +54,20 @@ public class Enemy : MonoBehaviour
         {
             FireLaser();
         }
+
+        CheckForPowerupsInSights();
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, _raycastRange);
+        Debug.DrawRay(transform.position, Vector2.down * _raycastRange, Color.red);
+
+        // If it detects something...
+        if (hit && hit.collider.gameObject.tag == "Powerup")
+        {
+            FireLaser();
+            Debug.Log("just hit " + hit.collider.gameObject.name);
+        }
     }
+
 
     void CalculateMovement()
     {
@@ -61,9 +79,20 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void CheckForPowerupsInSights()
+    { 
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, _raycastRange);
+        Debug.DrawRay(transform.position, Vector2.down* _raycastRange, Color.red);
+
+        // If it detects something...
+        if (hit && hit.collider.gameObject.tag == "Powerup")
+        {
+            FireLaser();
+            Debug.Log("just hit " + hit.collider.gameObject.name);
+        }
+    }
+private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("evasive enemy just hit " + other.name);
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -105,6 +134,19 @@ public class Enemy : MonoBehaviour
         }
 
         if (other.tag == "Mine")
+        {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            if (_player != null)
+            {
+                _player.AddToScore(10);
+            }
+
+            PlayEnemyDeathSequence();
+        }
+
+        if (other.tag == "PlayerWeapon")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();

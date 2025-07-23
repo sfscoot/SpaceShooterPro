@@ -27,7 +27,7 @@ public class EvasiveEnemy : MonoBehaviour
     private Animator _enemyAnimator; // clean this up? 
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
-    [SerializeField] float _trackingTriggerDistance = 3.0f;
+   // [SerializeField] float _trackingTriggerDistance = 3.0f;
 
     [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
@@ -133,7 +133,6 @@ public class EvasiveEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("evasive enemy just hit by " + other.tag);
         _explosionAudioSource.Play();
         if (other.tag == "Player")
         {

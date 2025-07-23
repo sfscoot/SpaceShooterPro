@@ -120,7 +120,6 @@ public class Powerup : MonoBehaviour
                         break;
                     case 8:
                         _powerupAudioSource.Play();
-                        Debug.Log("homing missile powerup picked up");
                         player.HomingMissileActive();
                         break;
                     default:

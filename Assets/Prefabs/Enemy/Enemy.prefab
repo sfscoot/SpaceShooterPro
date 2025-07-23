@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4725046404341925983
 Transform:
   m_ObjectHideFlags: 0
@@ -127,6 +127,7 @@ MonoBehaviour:
   _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
     type: 3}
   _homingMissilePrefab: {fileID: 0}
+  _raycastRange: 5
 --- !u!212 &5441148295386992331
 SpriteRenderer:
   m_ObjectHideFlags: 0
