@@ -5,27 +5,23 @@ using UnityEngine;
 public class PlasmaLaser : MonoBehaviour
 {
     [SerializeField] private float _laserSpeed = 8.0f;
-    [SerializeField] private float _horizonalLaserSpeed = 5.0f;
-    private bool _isEnemyLaser = false;
-
-    string _laserDirection = "down";
+    private bool _isEnemyLaser = true;
+    [SerializeField] private float _screenYBoundary = -3.65f;
+    [SerializeField] private float _screenXBoundary = 10.5f;
     void Update()
     {
-                MoveDown();
+         MoveDown();
     }
 
     void MoveDown()
     {
         transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
 
-        if (transform.position.y < -5.0)
+        if (transform.position.y < _screenYBoundary || transform.position.x > _screenXBoundary)
         {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
             Destroy(gameObject);
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)

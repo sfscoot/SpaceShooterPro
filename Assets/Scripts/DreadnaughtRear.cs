@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DreadnaughtFront : MonoBehaviour
+public class DreadnaughtRear : MonoBehaviour
 {
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _rotationDistance = 5.0f;
@@ -44,7 +44,7 @@ public class DreadnaughtFront : MonoBehaviour
         while (_sweepAttack)
         {
             _eulerZ = Mathf.PingPong(Time.time * _rotationSpeed, _minSweepAngle + _maxSweepAngle) - (_minSweepAngle + _maxSweepAngle) / 2;
-            Debug.Log($"eulerz =  { _eulerZ}");
+            Debug.Log($"eulerz =  {_eulerZ}");
             foreach (DreadnaughtLaserCannon dlc in _laserCannons)
             {
 

@@ -8,10 +8,10 @@ public class TrackingEnemy : MonoBehaviour
 {
 
     [Header("Screen Boundaries")]
-    [SerializeField] private float _rightBound = 11f;
-    [SerializeField] private float _leftBound = -11f;
-    [SerializeField] private float _topBound = 5f;
-    [SerializeField] private float _bottomBound = -10.5f;
+    // [SerializeField] private float _rightBound = 11f;
+    // [SerializeField] private float _leftBound = -11f;
+    // [SerializeField] private float _topBound = 5f;
+    // [SerializeField] private float _bottomBound = -10.5f;
 
     [Header("Enemy Variables")]
     [SerializeField] private float _enemySpeed = 2.50f;
