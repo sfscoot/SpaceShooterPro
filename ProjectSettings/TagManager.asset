@@ -15,6 +15,7 @@ TagManager:
   - EnemyMissile
   - PlayerWeapon
   - Boss
+  - EnemyWeapon
   layers:
   - Default
   - TransparentFX

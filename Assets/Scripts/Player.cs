@@ -135,11 +135,9 @@ public class Player : MonoBehaviour
     private float _thrusterRechargeRate = 0.5f;
     private float _thrusterChargeLevel;
 
-    private float _canOverrideSpeed = -1;
-    [SerializeField]
-    private float _thrusterDuration = 5.0f;
-    [SerializeField]
-    private float _thrusterReloadDuration = 10.0f;
+    // private float _canOverrideSpeed = -1;
+    // [SerializeField] private float _thrusterDuration = 5.0f;
+    [SerializeField] private float _thrusterReloadDuration = 10.0f;
 
     // private float _timeLeftOnThruster;
 

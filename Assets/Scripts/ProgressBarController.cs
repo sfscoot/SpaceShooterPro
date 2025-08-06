@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class ProgressBarController : MonoBehaviour
 {
-    private float _fillSpeed = 0.5f;
+    // private float _fillSpeed = 0.5f;
 
     void Start()
     {

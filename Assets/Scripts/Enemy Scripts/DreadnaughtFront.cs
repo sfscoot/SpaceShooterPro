@@ -21,22 +21,9 @@ public class DreadnaughtFront : MonoBehaviour
 
     void Update()
     {
-        /*
-        _eulerZ = Mathf.PingPong(Time.time * _rotationSpeed, _minSweepAngle + _maxSweepAngle) - (_minSweepAngle+_maxSweepAngle)/2;
-        foreach (DreadnaughtLaserCannon dlc in _laserCannons)
-        {
-
-            dlc.transform.eulerAngles = new Vector3(0, 0, _eulerZ);
-            // dlc.RotateLaserCannon(_eulerZ, 1);
-
-        }
-        Debug.Log(" euler z is " +  _eulerZ);
-        */
         if (Input.GetKeyDown(KeyCode.M))
         {
             StartCoroutine(SweepAndShoot());
-
-
         }
     }
     IEnumerator SweepAndShoot()
@@ -44,7 +31,6 @@ public class DreadnaughtFront : MonoBehaviour
         while (_sweepAttack)
         {
             _eulerZ = Mathf.PingPong(Time.time * _rotationSpeed, _minSweepAngle + _maxSweepAngle) - (_minSweepAngle + _maxSweepAngle) / 2;
-            Debug.Log($"eulerz =  { _eulerZ}");
             foreach (DreadnaughtLaserCannon dlc in _laserCannons)
             {
 

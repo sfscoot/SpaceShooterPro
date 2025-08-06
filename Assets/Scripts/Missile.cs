@@ -41,7 +41,6 @@ public class Missile : MonoBehaviour
     void CheckTimer()
     {
         _missileTimer++;
-        // Debug.Log("Missile timer " + _missileTimer);
         if (_missileTimer > _missileTimeDuration)
         {
             transform.GetComponent<CircleCollider2D>().enabled = true;
