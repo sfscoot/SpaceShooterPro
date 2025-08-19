@@ -10,6 +10,7 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private WaveClass[] _waves;
     [SerializeField] private int _waveTransitionDelay = 10;
+    [SerializeField] private int _bossLevel = 4;
     private int _currentWave;
     private int _currentWaveIndex;
     private int _waveEnemiesToSpawn = 99;
@@ -39,6 +40,9 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private GameObject[] _powerups;
 
+    [SerializeField] private GameObject _bossGameObject;
+    private Boss _boss;
+
     private bool _stopSpawning = false;
 
     private UIManager _uiManager;
@@ -59,6 +63,7 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = true;
         _currentWave = 1;
         _uiManager.DisplayWaveOn(_currentWave);
+        _boss = _bossGameObject.GetComponent<Boss>();
     }
     public void StartSpawning()
     {
@@ -71,8 +76,6 @@ public class SpawnManager : MonoBehaviour
 
     public void Update()
     {
-        // Debug.Log("wave enemies to spawn: " + _waveEnemiesToSpawn + " wave enemies defeated: " + _waveEnemiesDefeated);
-
         if (_waveEnemiesDefeated == _waveEnemiesToSpawn)
         {
             Debug.Log("all enemies defeated");
@@ -80,7 +83,8 @@ public class SpawnManager : MonoBehaviour
 
             WaveInitialize();
             _currentWave++;
-            StartCoroutine("WaveTransition");
+            if (_currentWave == _bossLevel) StartCoroutine("BossController");
+            else StartCoroutine("WaveTransition");
 
         }
 
@@ -121,6 +125,18 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine("SpawnPowerUp");
         _uiManager.DisplayWaveOff();
 
+    }
+
+    IEnumerator BossController()
+    {
+        Debug.Log("activating the boss");
+        _boss.ActivateBoss();
+        // turn on and bring in the boss
+        // start the first wave
+        // start the second wave
+        // start the final wave
+        // play the You Won! sequence
+        yield return null;
     }
     public void ReStart()
     {

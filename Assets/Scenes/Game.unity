@@ -654,6 +654,11 @@ PrefabInstance:
       propertyPath: _vertTarget
       value: 2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6415868439128519384, guid: d1f6cc6d58a0a3a4e8dbbd4ec1a047d3,
+        type: 3}
+      propertyPath: _attackSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6415868439128519386, guid: d1f6cc6d58a0a3a4e8dbbd4ec1a047d3,
         type: 3}
       propertyPath: m_RootOrder
@@ -741,9 +746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1 &313884077 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 473855263266002104, guid: be8e86f027694f0459ce70f721dfc1dd,
@@ -1684,6 +1687,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 964260874159042340, guid: be8e86f027694f0459ce70f721dfc1dd,
         type: 3}
+      propertyPath: _enemySpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 964260874159042340, guid: be8e86f027694f0459ce70f721dfc1dd,
+        type: 3}
       propertyPath: _laserPrefab
       value: 
       objectReference: {fileID: 8929186307145366088, guid: b9c25fa3a2c8d2940aea417086c8cfa4,
@@ -1775,6 +1783,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311771628126922649, guid: be8e86f027694f0459ce70f721dfc1dd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807951578934242620, guid: be8e86f027694f0459ce70f721dfc1dd,
         type: 3}
@@ -2023,9 +2036,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1001 &586735445
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2314,6 +2325,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 595629192}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &598445416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6311771628126922649, guid: be8e86f027694f0459ce70f721dfc1dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 486060505}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &601188943
 GameObject:
   m_ObjectHideFlags: 0
@@ -2461,9 +2478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1 &664442771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3265,9 +3280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1 &1109282311
 GameObject:
   m_ObjectHideFlags: 0
@@ -3419,7 +3432,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1133455693}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.19, z: 0}
+  m_LocalPosition: {x: -0, y: -0.08, z: 0}
   m_LocalScale: {x: 1.0708632, y: 1.0944843, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3805,22 +3818,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - waveNumber: 0
-    enemyCount: 5
+    enemyCount: 2
     powerUpSpawnRate: 5
-    enemySpawnRate: 3
+    enemySpawnRate: 2
   - waveNumber: 1
-    enemyCount: 5
+    enemyCount: 2
     powerUpSpawnRate: 5
     enemySpawnRate: 2.5
   - waveNumber: 2
-    enemyCount: 5
+    enemyCount: 2
     powerUpSpawnRate: 5
     enemySpawnRate: 2
   - waveNumber: 5
-    enemyCount: 1
+    enemyCount: 2
     powerUpSpawnRate: 5
     enemySpawnRate: 0
-  _waveTransitionDelay: 10
+  - waveNumber: 5
+    enemyCount: 2
+    powerUpSpawnRate: 0
+    enemySpawnRate: 2
+  _waveTransitionDelay: 3
+  _bossLevel: 6
   _powerUpTypes:
   - powerUpType: 0
     frequency: 0.7
@@ -3944,6 +3962,7 @@ MonoBehaviour:
   - {fileID: 9196400202554023363, guid: 424c6cbd3fc870642b81e4b9fd455aeb, type: 3}
   - {fileID: 2552266171004621087, guid: 39047fcfc42d7a246bc559580e03882e, type: 3}
   - {fileID: 6279821483843370839, guid: 7dddfb1963b71964fb92d153feabb164, type: 3}
+  _bossGameObject: {fileID: 598445416}
 --- !u!4 &1363013252
 Transform:
   m_ObjectHideFlags: 0
@@ -4027,9 +4046,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1 &1543050883
 GameObject:
   m_ObjectHideFlags: 0
@@ -4046,7 +4063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1543050884
 Transform:
   m_ObjectHideFlags: 0
@@ -4055,7 +4072,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543050883}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.8, z: 0}
+  m_LocalPosition: {x: 0, y: 5.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 770498747}
@@ -4080,6 +4097,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 628008b068879b8429c62d391da0c90d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attack1Interval: 0.38
+  _attack1Speed: 10
+  _verticalDrop: 3
+  _vertSpeed: 1
 --- !u!1 &1546584792
 GameObject:
   m_ObjectHideFlags: 0
@@ -4922,9 +4943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _vertSpeed: 1
   _horSpeed: 0.5
-  _vertDrop: 3
-  _horShift: 8
-  _vertTarget: 3
+  _attackSpeed: 1
 --- !u!1 &1873013206
 GameObject:
   m_ObjectHideFlags: 0
@@ -5872,7 +5891,7 @@ PrefabInstance:
     - target: {fileID: 4239554738044351706, guid: cd1357da76f8253458a0b0b08d6fd859,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1357da76f8253458a0b0b08d6fd859, type: 3}

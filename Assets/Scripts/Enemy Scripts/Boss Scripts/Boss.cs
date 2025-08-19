@@ -24,11 +24,12 @@ public class Boss : MonoBehaviour
 
     private void Awake()
     {
-        
+
     }
 
     private void Start()
     {
+        Debug.Log("boss is started");
         transform.position = new Vector3(17.5f, 5.5f, 0f);
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
@@ -47,6 +48,7 @@ public class Boss : MonoBehaviour
         }
         _bossAnimator = GetComponent<Animator>();
         if (_bossAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
+        _bossAnimator.SetTrigger("BossEnters");
     }
 
     void Update()
@@ -165,6 +167,10 @@ public class Boss : MonoBehaviour
         }
     }
 
+    public void ActivateBoss()
+    {
+        gameObject.SetActive(true);
+    }
     public void SetPlayerDestroyed()
     {
         _playerDestroyed = true;

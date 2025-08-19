@@ -11,9 +11,14 @@ public class Mech : MonoBehaviour
     private float _tmpXPos;
     [SerializeField] private float _vertSpeed = 1;
     [SerializeField] private float _horSpeed = .5f;
+    [SerializeField] private float _attackSpeed = 1f;
+    private float _horizonalStartPos;
+    private float _verticalStartPos;
+    private bool _canShift;
+
 
     private bool _inPosition = false;
-    private bool _mechAttack = false;
+    private bool _mechAttack1 = false;
     private void Start()
     {
         //transform.position = new Vector3(0f, 0f, 0f);
@@ -24,14 +29,21 @@ public class Mech : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.D))
         {
-            _mechAttack = true;
+            // _mechAttack1 = true;
         }
 
 
 
-        if (_mechAttack == true)
+        if (_mechAttack1 == true)
         {
-            transform.position = Vector3.down * Time.deltaTime;
+            
+            transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed);
+            if (transform.position.y < -13.0f)
+            {
+                transform.position = new Vector3(_horizonalStartPos, 6.5f, 0);  // - 2.8 -9
+                _mechAttack1 = false;
+            }
+            if (transform.position.y < -2.5f &&  transform.position.y > -2.0f) _mechAttack1 = false;
         }
 
     }
@@ -42,6 +54,7 @@ public class Mech : MonoBehaviour
     }
     IEnumerator MechsLineup(float hTarget, float vTarget)
     {
+        _horizonalStartPos = hTarget;
         while (_inPosition == false)
         {
             if (transform.position.y >= vTarget)
@@ -85,9 +98,10 @@ public class Mech : MonoBehaviour
         }
     }
 
-    public void MechAttack()
+    public void MechAttack1(float attackSpeed)
     {
-        _mechAttack = true;
+        _mechAttack1 = true;
+        _attackSpeed = attackSpeed;
     }
 
 /*
