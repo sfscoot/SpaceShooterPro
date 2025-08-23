@@ -7,40 +7,29 @@ public class Boss : MonoBehaviour
     [SerializeField] private float _enemySpeed = 2.50f;
     private Player _player;
 
-    [SerializeField] private SpawnManager _spawnManager;
 
     // create handle to animator component
     private Animator _bossAnimator;
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
+    [SerializeField] private GameObject _dreadnaughtFront;
+    [SerializeField] private GameObject _dreadnaughtRear;
+    private DreadnaughtFront _df;
+    private DreadnaughtRear _dr;
+    private bool _bossInPosition = false;
+    private bool _dreadnaughtFrontGunsDead = false;
+    private bool _dreadnaughtRearGunsDead = false;
 
-    [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private GameObject _homingMissilePrefab;
-    private GameObject _enemyWeapon;
-    private float _fireRate = 3.0f;
-    private float _canFire = -1;
-
-    private bool _playerDestroyed;
-
-    private void Awake()
-    {
-
-    }
-
+    // reset player lives
+    // final attack
+    // boss explosion
+    // tell them it's the boss round
+    // if they die, restart just the boss round
+    // turn on powerup spawning for just ammo and lives
     private void Start()
     {
-        Debug.Log("boss is started");
         transform.position = new Vector3(17.5f, 5.5f, 0f);
-        _player = GameObject.Find("Player").GetComponent<Player>();
-        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        if (_player == null)
-        {
-            Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
-        }
-        if (_spawnManager == null)
-        {
-            Debug.LogError("SpawnManager not assigned");
-        }
+
         _explosionAudioSource = GetComponent<AudioSource>();
         if (_explosionAudioSource == null)
         {
@@ -49,6 +38,11 @@ public class Boss : MonoBehaviour
         _bossAnimator = GetComponent<Animator>();
         if (_bossAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
         _bossAnimator.SetTrigger("BossEnters");
+        _df = _dreadnaughtFront.GetComponent<DreadnaughtFront>();
+        if (_df == null) Debug.LogError("dreadnaught front not found");
+        _dr = _dreadnaughtRear.GetComponent<DreadnaughtRear>();
+        if (_dr == null) Debug.LogError("dreadnaught rear not found");
+        StartCoroutine("SweepAndShoot");
     }
 
     void Update()
@@ -67,6 +61,57 @@ public class Boss : MonoBehaviour
         }
     }
 
+    public void ActivateBoss()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void BossSeparates()
+    {
+        _bossAnimator.SetTrigger("BossSeparates");
+    }
+
+    public void BossRejoins()
+    {
+        _bossAnimator.SetTrigger("BossRejoins");
+    }
+
+    public void BossInPosition()
+    {
+        Debug.Log("the boss is ready to kick your ass");
+        _bossInPosition = true;
+    }
+
+    IEnumerator SweepAndShoot()
+    {
+        while (_bossInPosition == false)
+        {
+            yield return null;
+        }
+        _df.SweepAttack();
+        _dr.SweepAttack();
+
+        while (_dreadnaughtFrontGunsDead == false && _dreadnaughtRearGunsDead == false)
+        {
+            yield return null;
+        }
+        Debug.Log("all guns destroyed");
+        // refill lives
+    }
+
+    public void DreadnaughtGunsDead(string _frontOrRear)
+    {
+        if (_frontOrRear == "Front")
+        {
+            _dreadnaughtFrontGunsDead = true;
+            Debug.Log($"front guns dead {_dreadnaughtFrontGunsDead}");
+        }
+        if (_frontOrRear == "Rear")
+        {
+            _dreadnaughtRearGunsDead = true;
+            Debug.Log($"rear guns dead {_dreadnaughtRearGunsDead}");
+        }
+    }
     void CalculateMovement()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
@@ -79,58 +124,7 @@ public class Boss : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Player player = other.transform.GetComponent<Player>();
-
-            if (_player != null)
-            {
-                _player.Damage();
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "PlayerLaser")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Missile")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Mine")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
+        
     }
 
     void PlayEnemyDeathSequence()
@@ -140,39 +134,10 @@ public class Boss : MonoBehaviour
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());
-        _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
         Destroy(gameObject, 2.8f);
     }
 
-    void FireLaser()
-    {
-        _fireRate = Random.Range(3f, 7f);
-        _canFire = Time.time + _fireRate;
 
-        if (gameObject.name == "Homing_Missile_Enemy")
-        {
-            _enemyWeapon = Instantiate(_homingMissilePrefab, transform.position, Quaternion.identity); // spawn outside the collider
-            _enemyWeapon.tag = "EnemyMissile";
-        }
-        else
-        {
-            _enemyWeapon = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
-            _enemyWeapon.tag = "EnemyLaser";
-            _enemyWeapon.transform.parent = this.transform;
-            Laser[] lasers = _enemyWeapon.GetComponentsInChildren<Laser>();
-            for (int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
-        }
-    }
 
-    public void ActivateBoss()
-    {
-        gameObject.SetActive(true);
-    }
-    public void SetPlayerDestroyed()
-    {
-        _playerDestroyed = true;
-    }
+
 }

@@ -48,8 +48,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _fireRate = 0.5f;
     private float _canFire = -1f;
-    [SerializeField] private float _canCollectPowerupsRate = 6.0f;
-    private float _canCollectPowerups = -1f;
+    [SerializeField] private float _canCollectPowerupsCoolDown = 20.0f;
+    private float _canCollectPowerups = 12f;
 
     // laser audio
     [Header("Audio Objects and Variables")]
@@ -102,8 +102,7 @@ public class Player : MonoBehaviour
     private Vector3 _shield25pct = new Vector3(1.25f, 1.25f, 1.25f);
 
 
-    [SerializeField]
-    private int _score;
+    [SerializeField] private int _score;
 
     // explosion audio
     [SerializeField]
@@ -229,14 +228,20 @@ public class Player : MonoBehaviour
 
     private void CheckForPowerupCollection()
     {
+        if (Time.time > _canCollectPowerups) 
+        { 
+        _uiManager.PowerupCollectActive();
+        }
+
         if (Input.GetKeyDown(KeyCode.C) && Time.time > _canCollectPowerups)
         {
-            _canCollectPowerups = Time.time + _canCollectPowerupsRate;
+            _canCollectPowerups = Time.time + _canCollectPowerupsCoolDown;
             _activePowerups = GameObject.FindGameObjectsWithTag("Powerup");
             for (int i=0; i < _activePowerups.Length; i++)
             {
                 _activePowerups[i].transform.GetComponent<Powerup>().SetMoveTowardPlayer();
             }
+            _uiManager.PowerupCollectInactive();
         }
     }
 
@@ -255,7 +260,6 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H) && _homingMissileActive)
         {
-            Debug.Log("firing homing missile");
             FireHomingMissile();
             _homingMissileActive = false;
         }
@@ -331,6 +335,12 @@ public class Player : MonoBehaviour
     public void AmmoReload()
     {
         _ammoCount += 15;
+        _uiManager.UpdateAmmoCount(_ammoCount);
+        _uiManager.SetLowAmmoWarning(false);
+    }
+    public void AmmoForBossLevel(int AmmoBonus)
+    {
+        _ammoCount += AmmoBonus;
         _uiManager.UpdateAmmoCount(_ammoCount);
         _uiManager.SetLowAmmoWarning(false);
     }
@@ -585,6 +595,12 @@ public class Player : MonoBehaviour
         }
         _lives++;
         if (_lives > 3) _lives = 3;
+        _uiManager.UpdateLivesImage(_lives);
+    }
+
+    public void LivesReset()
+    {
+        _lives = 3;
         _uiManager.UpdateLivesImage(_lives);
     }
 

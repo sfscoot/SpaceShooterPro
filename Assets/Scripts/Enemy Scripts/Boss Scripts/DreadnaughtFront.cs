@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class DreadnaughtFront : MonoBehaviour
@@ -12,10 +14,13 @@ public class DreadnaughtFront : MonoBehaviour
     [SerializeField] private float _maxSweepAngle = 60;
     private float _eulerZ;
     [SerializeField] private float _rotationSpeed = .25f;
+    private Boss _bossScript;
+
     void Start()
     {
         _laserCannons = transform.GetComponentsInChildren<DreadnaughtLaserCannon>();
         _sweepAttack = true;
+        _bossScript = GetComponentInParent<Boss>();
 
     }
 
@@ -26,18 +31,35 @@ public class DreadnaughtFront : MonoBehaviour
             StartCoroutine(SweepAndShoot());
         }
     }
+
+    public void SweepAttack()
+    {
+        Debug.Log("starting sweep attack");
+        _sweepAttack = true;
+        StartCoroutine(SweepAndShoot());
+    }
     IEnumerator SweepAndShoot()
     {
         while (_sweepAttack)
         {
+            _laserCannons = transform.GetComponentsInChildren<DreadnaughtLaserCannon>();
             _eulerZ = Mathf.PingPong(Time.time * _rotationSpeed, _minSweepAngle + _maxSweepAngle) - (_minSweepAngle + _maxSweepAngle) / 2;
-            foreach (DreadnaughtLaserCannon dlc in _laserCannons)
+            if (_laserCannons.Length > 0)
             {
+                foreach (DreadnaughtLaserCannon dlc in _laserCannons)
+                {
 
-                // scj -good dlc.transform.eulerAngles = new Vector3(0,0,_eulerZ);
-                dlc.NewRotateLaserCannon(_eulerZ);
+                    // scj -good dlc.transform.eulerAngles = new Vector3(0,0,_eulerZ);
+                    dlc.NewRotateLaserCannon(_eulerZ);
+                }
+                yield return null;
             }
-            yield return null;
+            else
+            {
+                _sweepAttack = false;
+                _bossScript.DreadnaughtGunsDead("Front");
+                
+            }
         }
     }
 }

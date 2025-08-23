@@ -63,7 +63,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 15.033334
+    m_StopTime: 15.1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -129,4 +129,12 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 15.1
+    functionName: BossInPosition
+    data: 
+    objectReferenceParameter: {fileID: 6311771628126922649, guid: be8e86f027694f0459ce70f721dfc1dd,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

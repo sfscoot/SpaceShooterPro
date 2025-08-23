@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEditorInternal;
+using Unity.Collections.LowLevel.Unsafe;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _ammoCountTxt;
     [SerializeField] private TMP_Text _waveEnemyDeathCount;
     [SerializeField] private TMP_Text _homingMissileActiveTxt;
+    [SerializeField] private TMP_Text _powerupCollectActiveTxt;
 
     private bool _lowAmmoWarning = false;
     private bool _lowAmmoFlicker = false;
@@ -31,6 +33,7 @@ public class UIManager : MonoBehaviour
 
     private GameManager _gameManager;
     private bool _displayHomingMissileActiveMessage = false;
+    private bool _displayPowerupCollectActiveMessage = false;
 
 
     // Start is called before the first frame update
@@ -47,6 +50,7 @@ public class UIManager : MonoBehaviour
         if (_gameManager == null)  Debug.LogError("ERROR! GameManager not found");
 
         _homingMissileActiveTxt.gameObject.SetActive(false);
+        _powerupCollectActiveTxt.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -167,6 +171,10 @@ public class UIManager : MonoBehaviour
         _waveEnemyDeathCount.text = "Kills: " + currentKills + "|" + killsNeeded;
     }
 
+    public void TurnOffEnemyDeathCount()
+    {
+        _waveEnemyDeathCount.gameObject.SetActive(false);
+    }
     void GameOverSequence()
     {
         _gameOverText.gameObject.SetActive(true);
@@ -197,10 +205,16 @@ public class UIManager : MonoBehaviour
         _waveText.gameObject.SetActive(false);
     }
 
+    public void DisplayBossWaveOn(int _bossWave)
+    {
+        _waveText.gameObject.SetActive(true);
+        _waveText.text = "Boss Level - Lives at Full, Ammo +50";  // scj boss - need message about adding lives and ammo
+    }
+
     public void HomingMissileActive()
     {
         _displayHomingMissileActiveMessage = true;
-        StartCoroutine(zzzHomingMissileActive());
+        StartCoroutine(HomingMissileMsgActive());
     }
 
     public void HomingMissileInactive()
@@ -209,7 +223,7 @@ public class UIManager : MonoBehaviour
         _displayHomingMissileActiveMessage = false;
     }
 
-    IEnumerator zzzHomingMissileActive()
+    IEnumerator HomingMissileMsgActive()
     {
         while (_displayHomingMissileActiveMessage == true)
         {
@@ -218,6 +232,32 @@ public class UIManager : MonoBehaviour
             _homingMissileActiveTxt.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.25f);
             _homingMissileActiveTxt.gameObject.SetActive(false);
+        }
+    }
+
+    public void PowerupCollectActive()
+    {
+        _displayPowerupCollectActiveMessage = true;
+        _powerupCollectActiveTxt.gameObject.SetActive(true);
+        // StartCoroutine(PowerupCollectMsgActive());
+    }
+
+    public void PowerupCollectInactive()
+    {
+        // _homingMissileActiveTxt.gameObject.SetActive(false);
+        _powerupCollectActiveTxt.gameObject.SetActive(false);
+        _displayPowerupCollectActiveMessage = false;
+    }
+
+    IEnumerator PowerupCollectMsgActive()
+    {
+        while (_displayHomingMissileActiveMessage == true)
+        {
+
+            yield return new WaitForSeconds(0.25f);
+            _powerupCollectActiveTxt.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.25f);
+            _powerupCollectActiveTxt.gameObject.SetActive(false);
         }
     }
 }

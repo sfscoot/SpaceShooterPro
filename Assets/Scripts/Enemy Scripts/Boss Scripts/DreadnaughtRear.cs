@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class DreadnaughtRear : MonoBehaviour
@@ -15,11 +16,12 @@ public class DreadnaughtRear : MonoBehaviour
     [SerializeField] private float _fireRate;
     [SerializeField] private float _fireDelayTime;
     private bool _delayFire;
+    private Boss _bossScript;
     void Start()
     {
         _missileLaunchers = transform.GetComponentsInChildren<DreadnaughtMissileLauncher>();
         _sweepAttack = true;
-
+        _bossScript = GetComponentInParent<Boss>();
     }
 
     void Update()
@@ -29,24 +31,38 @@ public class DreadnaughtRear : MonoBehaviour
             StartCoroutine(SweepAndShoot());
         }
     }
+
+    public void SweepAttack()
+    {
+        _sweepAttack = true;
+        StartCoroutine(SweepAndShoot());
+    }
     IEnumerator SweepAndShoot()
     {
         _delayFire = false;
         while (_sweepAttack)
         {
+            _missileLaunchers = transform.GetComponentsInChildren<DreadnaughtMissileLauncher>();
             _eulerZ = Mathf.PingPong(Time.time * _rotationSpeed, _minSweepAngle + _maxSweepAngle) - (_minSweepAngle + _maxSweepAngle) / 2;
-            foreach (DreadnaughtMissileLauncher dml in _missileLaunchers)
+            if (_missileLaunchers.Length > 0)
             {
-                // scj -good dlc.transform.eulerAngles = new Vector3(0,0,_eulerZ);
-                if (_delayFire)
+                foreach (DreadnaughtMissileLauncher dml in _missileLaunchers)
                 {
-                    dml.RotateMissileLauncher(_eulerZ, _fireRate, _fireDelayTime);
-                } else
-                {
-                    dml.RotateMissileLauncher(_eulerZ, _fireRate, 0);
-                }
-
+                    if (_delayFire)
+                    {
+                        dml.RotateMissileLauncher(_eulerZ, _fireRate, _fireDelayTime);
+                    }
+                    else
+                    {
+                        dml.RotateMissileLauncher(_eulerZ, _fireRate, 0);
+                    }
                     _delayFire = !_delayFire;
+                }
+            }
+            else
+            {
+                _sweepAttack = false;
+                _bossScript.DreadnaughtGunsDead("Rear");
             }
             yield return null;
         }
