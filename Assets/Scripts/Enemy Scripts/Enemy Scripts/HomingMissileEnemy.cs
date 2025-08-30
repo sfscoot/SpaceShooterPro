@@ -64,10 +64,6 @@ public class HomingMissileEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "EnemyMissile")
-        {
-            Debug.Log("hit by my own missile");
-        }
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();

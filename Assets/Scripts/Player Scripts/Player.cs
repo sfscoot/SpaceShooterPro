@@ -602,6 +602,9 @@ public class Player : MonoBehaviour
     {
         _lives = 3;
         _uiManager.UpdateLivesImage(_lives);
+        _rightEngine.SetActive(false);
+        _leftEngine.SetActive(false);
+        //scj - need "lives reset message
     }
 
     public void SpeedPowerupActive()

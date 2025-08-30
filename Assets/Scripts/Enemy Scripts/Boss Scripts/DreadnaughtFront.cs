@@ -34,7 +34,6 @@ public class DreadnaughtFront : MonoBehaviour
 
     public void SweepAttack()
     {
-        Debug.Log("starting sweep attack");
         _sweepAttack = true;
         StartCoroutine(SweepAndShoot());
     }
@@ -48,8 +47,6 @@ public class DreadnaughtFront : MonoBehaviour
             {
                 foreach (DreadnaughtLaserCannon dlc in _laserCannons)
                 {
-
-                    // scj -good dlc.transform.eulerAngles = new Vector3(0,0,_eulerZ);
                     dlc.NewRotateLaserCannon(_eulerZ);
                 }
                 yield return null;

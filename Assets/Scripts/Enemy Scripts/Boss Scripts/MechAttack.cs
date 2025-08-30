@@ -19,11 +19,6 @@ public class MechAttack : MonoBehaviour
     private Vector3 _transformVertPos;
 
 
-    void Start()
-    {
-        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -46,18 +41,27 @@ public class MechAttack : MonoBehaviour
         }
     }
 
-    private void BringOnTheMechs()
+    public void BringOnTheMechs()
     {
+        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
         for (int i = 0; i < _mechArmy.Length; i++) {
             // _mechArmy.SetActive(true);
-            _mechArmy[i].MechAppear(xTargets[i], _verticalDrop);
+            _mechArmy[i].MechLineUp(xTargets[i], _verticalDrop);
         }
     }
-    IEnumerator MechAttackLToR() // left to right
+
+    public void ResetTheMechs()
+    {
+        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            _mechArmy[i].MechReset();
+        }
+    }
+    public IEnumerator MechAttackLToR() // left to right
     {
         for (int i = 0; i < _mechArmy.Length; i++)
         {
-            // _mechArmy.SetActive(true);
             _mechArmy[i].MechAttack1(_attack1Speed);
             yield return new WaitForSeconds(_attack1Interval);
         }

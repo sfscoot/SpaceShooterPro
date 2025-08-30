@@ -69,7 +69,6 @@ public class HomingMissile : MonoBehaviour
         _targetReleased = true;
         _targetAcquired = false;
         transform.eulerAngles = new Vector3(0f, 0f, 0f);
-        Debug.Log("target is released - ");
     }
 
     void CheckAttackPlayer()

@@ -7,18 +7,22 @@ public class Boss : MonoBehaviour
     [SerializeField] private float _enemySpeed = 2.50f;
     private Player _player;
 
-
     // create handle to animator component
     private Animator _bossAnimator;
     private AudioSource _explosionAudioSource;
+    [SerializeField] private BossSlider _bossSlider;
+    [SerializeField] private int _bossDamage = 0;
+    [SerializeField] private int _maxBossDamage = 100;
     [SerializeField] private GameObject _explosionPreFab;
     [SerializeField] private GameObject _dreadnaughtFront;
     [SerializeField] private GameObject _dreadnaughtRear;
+
     private DreadnaughtFront _df;
     private DreadnaughtRear _dr;
     private bool _bossInPosition = false;
     private bool _dreadnaughtFrontGunsDead = false;
     private bool _dreadnaughtRearGunsDead = false;
+    private SpawnManager _spawnManager;
 
     // reset player lives
     // final attack
@@ -38,11 +42,23 @@ public class Boss : MonoBehaviour
         _bossAnimator = GetComponent<Animator>();
         if (_bossAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
         _bossAnimator.SetTrigger("BossEnters");
+
         _df = _dreadnaughtFront.GetComponent<DreadnaughtFront>();
         if (_df == null) Debug.LogError("dreadnaught front not found");
+
         _dr = _dreadnaughtRear.GetComponent<DreadnaughtRear>();
         if (_dr == null) Debug.LogError("dreadnaught rear not found");
-        StartCoroutine("SweepAndShoot");
+
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null) Debug.LogError("Player object not found");
+
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null) Debug.LogError("spawn manager not found");
+
+        StartCoroutine("SweepAndShoot"); // first Boss attack launches automatically
+
+        _bossSlider = GameObject.Find("BossSlider").GetComponent<BossSlider>();
+        if (_bossSlider == null) Debug.LogError("boss slider not found");
     }
 
     void Update()
@@ -78,7 +94,6 @@ public class Boss : MonoBehaviour
 
     public void BossInPosition()
     {
-        Debug.Log("the boss is ready to kick your ass");
         _bossInPosition = true;
     }
 
@@ -95,8 +110,7 @@ public class Boss : MonoBehaviour
         {
             yield return null;
         }
-        Debug.Log("all guns destroyed");
-        // refill lives
+        
     }
 
     public void DreadnaughtGunsDead(string _frontOrRear)
@@ -104,13 +118,22 @@ public class Boss : MonoBehaviour
         if (_frontOrRear == "Front")
         {
             _dreadnaughtFrontGunsDead = true;
-            Debug.Log($"front guns dead {_dreadnaughtFrontGunsDead}");
         }
         if (_frontOrRear == "Rear")
         {
             _dreadnaughtRearGunsDead = true;
-            Debug.Log($"rear guns dead {_dreadnaughtRearGunsDead}");
         }
+
+        if (_dreadnaughtRearGunsDead && _dreadnaughtFrontGunsDead)
+        {
+            _spawnManager.BossWaveComplete();
+        }
+    }
+
+    public void BossDamage(int damage)
+    {
+        _bossDamage += damage;
+        _bossSlider.UpdateDamageSlider(_bossDamage, _maxBossDamage);
     }
     void CalculateMovement()
     {
@@ -126,18 +149,5 @@ public class Boss : MonoBehaviour
     {
         
     }
-
-    void PlayEnemyDeathSequence()
-    {
-        _bossAnimator.SetTrigger("OnEnemyDeath");
-        // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-        _enemySpeed /= 1.25f;
-        Destroy(GetComponent<Collider2D>());
-        Destroy(GetComponent<Rigidbody2D>());
-        Destroy(gameObject, 2.8f);
-    }
-
-
-
 
 }

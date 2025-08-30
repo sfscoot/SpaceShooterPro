@@ -14,10 +14,9 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
     [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
     private AudioSource _explosionAudioSource;
+    private Boss _boss;
+    [SerializeField] private int _damagePoints = 10;
 
-    
-
-    // Start is called before the first frame update
     void Start()
     {
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -26,11 +25,12 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
         {
             Debug.LogError("Error: Explosion Audio Source not found");
         }
+        _boss = GameObject.Find("Boss").GetComponent<Boss>();
+        if (_boss == null) Debug.LogError("boss not found");
     }
 
     public void RotateMissileLauncher(float eulerZ, float fireRate, float weaponFireDelay)
     {
-        //transform.eulerAngles = new Vector3(0,0, eulerZ);
         transform.eulerAngles = new Vector3(0, 0, eulerZ);
         _fireRate = fireRate;
         StartCoroutine(FireWeapon(weaponFireDelay));
@@ -56,6 +56,7 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
     {
         if (other.tag == "PlayerLaser")
         {
+            _boss.BossDamage(_damagePoints);
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);

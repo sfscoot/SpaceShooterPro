@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class DreadnaughtLaserCannon : MonoBehaviour
 {
-    private float _zRotation = 1;
-    // [SerializeField] private float _zRotationIncrement = .025f;
-    // [SerializeField] private float _rotationSpeed = 1;
+    // private float _zRotation = 1;
     [SerializeField] private float _fireRate = 1.25f;
     [SerializeField] private GameObject _laserPrefab;
-    // [SerializeField] private float _rotationInterval;
+    [SerializeField] private int _damagePoints = 5;
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
+    private Boss _boss;
     private float _canFire = -1f;
     
 
@@ -28,6 +27,8 @@ public class DreadnaughtLaserCannon : MonoBehaviour
         {
             Debug.LogError("Error: Explosion Audio Source not found");
         }
+        _boss = GameObject.Find("Boss").GetComponent<Boss>();
+        if (_boss == null) Debug.LogError("boss not found");
     }
 
     public void RotateLaserCannon(float zRotationFactor, float zRotation)
@@ -38,7 +39,6 @@ public class DreadnaughtLaserCannon : MonoBehaviour
 
     public void NewRotateLaserCannon(float eulerZ)
     {
-        //transform.eulerAngles = new Vector3(0,0, eulerZ);
         transform.eulerAngles = new Vector3(0, 0, eulerZ);
         FireLaser();
     }
@@ -62,6 +62,7 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     {
         if (other.tag == "PlayerLaser")
         {
+            _boss.BossDamage(_damagePoints);
             // _explosionAudioSource.Play();
             Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);

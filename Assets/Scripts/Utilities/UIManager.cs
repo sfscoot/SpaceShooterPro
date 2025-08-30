@@ -72,6 +72,11 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score " + playerScore;
     }
 
+    public void TurnOffScore()
+    {
+        _scoreText.gameObject.SetActive(false);
+    }
+
     public void UpdateAmmoCount(int ammoCount)
     {
         _ammoCountTxt.text = "Ammo " + ammoCount;
@@ -208,7 +213,22 @@ public class UIManager : MonoBehaviour
     public void DisplayBossWaveOn(int _bossWave)
     {
         _waveText.gameObject.SetActive(true);
-        _waveText.text = "Boss Level - Lives at Full, Ammo +50";  // scj boss - need message about adding lives and ammo
+        switch (_bossWave)
+        {
+            case 1:
+                _waveText.text = "Boss Level - Lives at Full, Ammo +50";
+                break;
+            case 2:
+                _waveText.text = "Nicely Done, Wave 2 Coming";
+                break;
+            case 3:
+                _waveText.text = "Last Wave, Good Luck!";
+                break;
+            default:
+                Debug.LogWarning("bad switch case in boss UImanager code");
+                break;
+        }
+         
     }
 
     public void HomingMissileActive()

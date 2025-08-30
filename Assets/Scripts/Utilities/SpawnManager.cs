@@ -17,7 +17,7 @@ public class SpawnManager : MonoBehaviour
     private int _waveEnemiesToSpawn = 99;
     private int _waveEnemiesSpawned = 0;
     private int _waveEnemiesDefeated = 0;
-
+    
 
     [SerializeField] private PowerUpTypeClass[] _powerUpTypes;
     [SerializeField] private PowerUpClass[] _powerUps;
@@ -43,6 +43,11 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private GameObject _bossGameObject;
     private Boss _boss;
+    [SerializeField] GameObject _mechAttack;
+    [SerializeField] private MechAttack _mechAttackController;
+    private bool _bossLevelActive = false;
+    private bool _bossWaveAttackActive = false;
+    private int _bossWave = 1;
 
     private bool _stopSpawning = false;
 
@@ -67,7 +72,9 @@ public class SpawnManager : MonoBehaviour
         _currentWave = 1;
         _uiManager.DisplayWaveOn(_currentWave);
         _boss = _bossGameObject.GetComponent<Boss>();  // scj - change this to the "try" format
+        if (_boss == null) Debug.LogError("boss missing");
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null) Debug.LogError("Player missing");
     }
     public void StartSpawning()
     {
@@ -80,30 +87,39 @@ public class SpawnManager : MonoBehaviour
 
     public void Update()
     {
-        if (_waveEnemiesDefeated == _waveEnemiesToSpawn)
+        if (_waveEnemiesDefeated == _waveEnemiesToSpawn && _bossLevelActive == false)
         {
-            Debug.Log("all enemies defeated");
             _stopSpawning = true;
 
             WaveInitialize();
             _currentWave++;
-            if (_currentWave == _bossLevel) StartCoroutine("BossController");
+            if (_currentWave == _bossLevel)
+            {
+                _bossLevelActive = true;
+                _bossWave = 1;
+            }
             else StartCoroutine("WaveTransition");
-
         }
 
-        /*
-        if (_stopSpawning == false)
+        if (_bossLevelActive == true && _bossWaveAttackActive == false)
         {
-            if (_waveEnemiesDefeated == _waveEnemiesToSpawn)
+            _bossWaveAttackActive = true;
+            switch (_bossWave)
             {
-                Debug.Log("all the spawned are defeated");
-                _currentWave++;
-                WaveInitialize();
-                StartCoroutine("WaveTransition");
+                case 1:
+                    StartCoroutine("BossWave1");
+                    break;
+                case 2:
+                    StartCoroutine("BossWave2");
+                    break;
+                case 3:
+                    StartCoroutine("BossWave3");
+                    break;
+                default:
+                    Debug.LogWarning("bad switch case in boss controller");
+                    break;
             }
         }
-        */
     }
 
     public void WaveInitialize()
@@ -131,22 +147,63 @@ public class SpawnManager : MonoBehaviour
 
     }
 
-    IEnumerator BossController()
+    IEnumerator BossWave1()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(1);  // turn on and bring in the boss
-        //
+        _uiManager.TurnOffScore();
         _uiManager.TurnOffEnemyDeathCount();
+        _player.LivesReset(); // reset lives to full capacity
+        _player.AmmoForBossLevel(_bossLevel1AmmoBonus);
         _boss.ActivateBoss();
+        yield return new WaitForSeconds(14);
+        _uiManager.DisplayWaveOff();
+    }
+
+    IEnumerator BossWave2()
+    {
+        yield return new WaitForSeconds(1); // pause for dramatic effect
+        _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
+
         _player.LivesReset(); // reset lives to full capacity
         _player.AmmoForBossLevel(_bossLevel1AmmoBonus);
 
+        // drop the mechs
+        // start the mech attach waves
+        _mechAttack.SetActive(true);
+        _boss.BossSeparates();
+
+        yield return new WaitForSeconds(3);
+
+        _uiManager.DisplayWaveOff();
+        _mechAttackController.BringOnTheMechs();
+        yield return new WaitForSeconds(10);
+
+        _mechAttackController.StartCoroutine("MechAttackLToR");
+        yield return new WaitForSeconds(5);
+        Debug.Log("resetting the mechs");
+        _mechAttackController.ResetTheMechs();
+    }
+
+    IEnumerator BossWave3()
+    {
+        yield return new WaitForSeconds(1); // pause for dramatic effect
+        _uiManager.DisplayBossWaveOn(3);  // turn on and bring in the boss
+
+        _player.LivesReset(); // reset lives to full capacity
+        _player.AmmoForBossLevel(_bossLevel1AmmoBonus);
+
+        // drop the mechs
+        // start the mech attach waves
+        _boss.ActivateBoss();
+
         yield return new WaitForSeconds(14);
         _uiManager.DisplayWaveOff();
-        // start the first wave
-        // start the second wave
-        // start the final wave
-        // play the You Won! sequence
+    }
+    public void BossWaveComplete()
+    {
+        _bossWave++;
+        _bossWaveAttackActive = false;
     }
     public void ReStart()
     {
