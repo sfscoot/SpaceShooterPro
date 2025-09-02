@@ -17,6 +17,7 @@ public class MechAttack : MonoBehaviour
 
     [SerializeField] private float _vertSpeed = 1f;
     private Vector3 _transformVertPos;
+    private bool _inPosition;
 
 
     // Update is called once per frame
@@ -41,15 +42,59 @@ public class MechAttack : MonoBehaviour
         }
     }
 
-    public void BringOnTheMechs()
+    public void BringOnTheMechs()  // old - not using any more
     {
         _mechArmy = gameObject.GetComponentsInChildren<Mech>();
-        for (int i = 0; i < _mechArmy.Length; i++) {
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
             // _mechArmy.SetActive(true);
+            Debug.Log($"mech drop {_verticalDrop}");    
             _mechArmy[i].MechLineUp(xTargets[i], _verticalDrop);
         }
     }
 
+    public void MechsPositionsReset()
+    {
+        transform.position = Vector3.zero;
+        Debug.Log($"x {transform.position.x} and y {transform.position.y}");
+    }
+    public void MechsDropToPosition(float vTarget, bool reset)
+    {
+        StartCoroutine(MechsDropToPositionCoroutine(vTarget, reset));
+    }
+
+    IEnumerator MechsDropToPositionCoroutine(float vTarget, bool reset)
+    {
+        _inPosition = false;
+        Debug.Log($"parent position {transform.position.x} and y {transform.position.y}");
+        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
+        transform.position = _mechArmy[3].transform.position;
+        Debug.Log($"parent position {transform.position.x} and y {transform.position.y}");
+        if (reset) vTarget = 0f;
+
+        while (_inPosition == false)
+        {
+
+            if (transform.position.y >= vTarget)
+            {
+                _tmpYPos = transform.position.y - vTarget;
+                if (reset) _tmpYPos = 0;
+                _transformVertPos = new Vector3(transform.position.x, _tmpYPos, 0);
+                transform.position = Vector3.Lerp(transform.position, _transformVertPos, Time.deltaTime * _vertSpeed);
+            }
+            yield return null;
+            if (transform.position.y <= vTarget) _inPosition = true;
+        }
+    }
+
+    public void MechsSpreadToPosition()  // old - not using any more
+    {
+        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            _mechArmy[i].MechSpreadToPosition(xTargets[i]);
+        }
+    }
     public void ResetTheMechs()
     {
         _mechArmy = gameObject.GetComponentsInChildren<Mech>();

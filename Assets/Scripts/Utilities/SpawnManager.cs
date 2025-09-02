@@ -62,6 +62,7 @@ public class SpawnManager : MonoBehaviour
     private float _xSpawnValue;
     private int _powerupIndex;
     int _wavePowerupTypesAvailable;
+    [SerializeField] private float _mechVdropTarget;
 
     private Player _player;
 
@@ -176,13 +177,17 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         _uiManager.DisplayWaveOff();
-        _mechAttackController.BringOnTheMechs();
+        // _mechAttackController.BringOnTheMechs();
+        _mechAttackController.MechsDropToPosition(_mechVdropTarget, false);
+        _mechAttackController.MechsSpreadToPosition();
         yield return new WaitForSeconds(10);
 
         _mechAttackController.StartCoroutine("MechAttackLToR");
         yield return new WaitForSeconds(5);
         Debug.Log("resetting the mechs");
-        _mechAttackController.ResetTheMechs();
+        // _mechAttackController.MechsPositionsReset();
+        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
+        //_mechAttackController.ResetTheMechs();
     }
 
     IEnumerator BossWave3()

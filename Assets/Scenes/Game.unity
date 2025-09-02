@@ -4204,6 +4204,7 @@ MonoBehaviour:
   _bossGameObject: {fileID: 598445416}
   _mechAttack: {fileID: 1543050883}
   _mechAttackController: {fileID: 1543050885}
+  _mechVdropTarget: 3
 --- !u!4 &1363013252
 Transform:
   m_ObjectHideFlags: 0
