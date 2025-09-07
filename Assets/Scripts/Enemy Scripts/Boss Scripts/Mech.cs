@@ -12,40 +12,48 @@ public class Mech : MonoBehaviour
     private float _tmpYPos;
     private float _inPosX;
     private float _inPosY;
+    private int _attackDirection = 1;
+
     [SerializeField] private float _vertSpeed = 1;
     [SerializeField] private float _horSpeed = .5f;
     [SerializeField] private float _attackSpeed = 1f;
     [SerializeField] private int _mechNumber;
+    [SerializeField] private float _screenBottom = -5.0f;
+    [SerializeField] private float _screenTop = 5.0f;
+
     private float _horizonalStartPos;
     private float _verticalStartPos;
 
 
     private bool _inPosition = false;
-    private bool _mechAttack1 = false;
-    private void Start()
-    {
-        //transform.position = new Vector3(0f, 0f, 0f);
-        // Debug.Log("put mech on screen");
-    }
+    private bool _mechAttack = false;
+    private bool _mechBounceAttack = false;
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            // _mechAttack1 = true;
-        }
-
-        if (_mechAttack1 == true)
+        if (_mechAttack == true)
         {
             transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed);
             if (transform.position.y < -13.0f)
             {
                 transform.position = new Vector3(_inPosX, 6.5f, 0);  // - 2.8 -9
-                _mechAttack1 = false;
+                _mechAttack = false;
             }
         }
-    }
 
+        if (_mechBounceAttack == true) 
+        {
+            transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed * _attackDirection);
+            if (transform.position.y < _screenBottom)
+            {
+                _attackDirection = -1;
+            }
+            if (transform.position.y > _screenTop)
+            {
+                _attackDirection = 1;
+            }
+        }
+
+    }
     public void MechSpreadToPosition(float xTarget)
     {
         StartCoroutine(MechSpreadToPostionCoroutine(xTarget));
@@ -88,7 +96,7 @@ public class Mech : MonoBehaviour
     {
         StartCoroutine(MechsLineup(hTarget, vTarget));
     }
-
+    
 
     IEnumerator MechSpreadToPostionCoroutine(float hTarget)
     {
@@ -191,9 +199,17 @@ public class Mech : MonoBehaviour
             if (transform.position.y <= vTarget) _inPosition = true;
         }
     }
-    public void MechAttack1(float attackSpeed)
+    public void MechAttack(float attackSpeed)
     {
-        _mechAttack1 = true;
+        _mechAttack = true;
         _attackSpeed = attackSpeed;
+    }
+
+    public void MechBounceAttack(float attackSpeed) 
+    {
+        _mechBounceAttack = true;
+        _mechAttack = false;
+        _attackSpeed = attackSpeed;
+    
     }
 }

@@ -55,7 +55,7 @@ public class Boss : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null) Debug.LogError("spawn manager not found");
 
-        StartCoroutine("SweepAndShoot"); // first Boss attack launches automatically
+        //StartCoroutine("SweepAndShoot"); // first Boss attack launches automatically
 
         _bossSlider = GameObject.Find("BossSlider").GetComponent<BossSlider>();
         if (_bossSlider == null) Debug.LogError("boss slider not found");
@@ -97,6 +97,10 @@ public class Boss : MonoBehaviour
         _bossInPosition = true;
     }
 
+    public void StartSweepAndShoot()
+    {
+        StartCoroutine("SweepAndShoot");
+    }
     IEnumerator SweepAndShoot()
     {
         while (_bossInPosition == false)
@@ -127,6 +131,8 @@ public class Boss : MonoBehaviour
         if (_dreadnaughtRearGunsDead && _dreadnaughtFrontGunsDead)
         {
             _spawnManager.BossWaveComplete();
+            Debug.Log("boss wave complete");
+
         }
     }
 

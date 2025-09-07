@@ -216,13 +216,19 @@ public class UIManager : MonoBehaviour
         switch (_bossWave)
         {
             case 1:
-                _waveText.text = "Boss Level - Lives at Full, Ammo +50";
+                _waveText.text = "Boss Level Lives at Full Ammo +50";
                 break;
             case 2:
                 _waveText.text = "Nicely Done, Wave 2 Coming";
                 break;
             case 3:
-                _waveText.text = "Last Wave, Good Luck!";
+                _waveText.text = "Wave 3 Coming, Good Luck!";
+                break;
+            case 4:
+                _waveText.text = "Wave 4 It's a Hard One";
+                break;
+            case 5:
+                _waveText.text = "Wave 5 This is It - Good Luck Space Cowboy";
                 break;
             default:
                 Debug.LogWarning("bad switch case in boss UImanager code");

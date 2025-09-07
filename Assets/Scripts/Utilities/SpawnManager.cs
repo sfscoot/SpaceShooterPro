@@ -12,6 +12,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private int _waveTransitionDelay = 10;
     [SerializeField] private int _bossLevel = 4;
     [SerializeField] private int _bossLevel1AmmoBonus = 50;
+    [SerializeField] private float _mechLToRAttackSpeed = 5f;
+    [SerializeField] private float _mechOutsideInAttackSpeed = 8f;
     private int _currentWave;
     private int _currentWaveIndex;
     private int _waveEnemiesToSpawn = 99;
@@ -116,6 +118,9 @@ public class SpawnManager : MonoBehaviour
                 case 3:
                     StartCoroutine("BossWave3");
                     break;
+                case 4:
+                    StartCoroutine("BossWave4");
+                    break;
                 default:
                     Debug.LogWarning("bad switch case in boss controller");
                     break;
@@ -145,7 +150,6 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine("SpawnEnemy");
         StartCoroutine("SpawnPowerUp");
         _uiManager.DisplayWaveOff();
-
     }
 
     IEnumerator BossWave1()
@@ -159,6 +163,7 @@ public class SpawnManager : MonoBehaviour
         _boss.ActivateBoss();
         yield return new WaitForSeconds(14);
         _uiManager.DisplayWaveOff();
+        _boss.StartSweepAndShoot();
     }
 
     IEnumerator BossWave2()
@@ -166,49 +171,55 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
 
-        _player.LivesReset(); // reset lives to full capacity
-        _player.AmmoForBossLevel(_bossLevel1AmmoBonus);
-
-        // drop the mechs
-        // start the mech attach waves
         _mechAttack.SetActive(true);
         _boss.BossSeparates();
 
         yield return new WaitForSeconds(3);
 
         _uiManager.DisplayWaveOff();
-        // _mechAttackController.BringOnTheMechs();
         _mechAttackController.MechsDropToPosition(_mechVdropTarget, false);
         _mechAttackController.MechsSpreadToPosition();
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(6);
 
-        _mechAttackController.StartCoroutine("MechAttackLToR");
+        _mechAttackController.StartMechAttackLToR(_mechLToRAttackSpeed);
         yield return new WaitForSeconds(5);
-        Debug.Log("resetting the mechs");
-        // _mechAttackController.MechsPositionsReset();
-        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
-        //_mechAttackController.ResetTheMechs();
     }
 
     IEnumerator BossWave3()
     {
         yield return new WaitForSeconds(1); // pause for dramatic effect
-        _uiManager.DisplayBossWaveOn(3);  // turn on and bring in the boss
+        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
 
-        _player.LivesReset(); // reset lives to full capacity
-        _player.AmmoForBossLevel(_bossLevel1AmmoBonus);
+        yield return new WaitForSeconds(3);
 
-        // drop the mechs
-        // start the mech attach waves
-        _boss.ActivateBoss();
-
-        yield return new WaitForSeconds(14);
         _uiManager.DisplayWaveOff();
+        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
+        yield return new WaitForSeconds(6);
+        _mechAttackController.StartMechAttackOutsideIn(_mechOutsideInAttackSpeed);
+        yield return new WaitForSeconds(5);
+
+        Debug.Log($"boss wave {_bossWave}");
+    }
+
+    IEnumerator BossWave4()
+    {
+        Debug.Log($"starting wave 4");
+        yield return new WaitForSeconds(1); // pause for dramatic effect
+        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+
+        yield return new WaitForSeconds(3);
+
+        _uiManager.DisplayWaveOff();
+        Debug.Log("mechs dropping to position for Wave 4");
+        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
+        yield return new WaitForSeconds(5);
+        _mechAttackController.StartMechBounceAttack(_mechOutsideInAttackSpeed);
     }
     public void BossWaveComplete()
     {
         _bossWave++;
         _bossWaveAttackActive = false;
+        Debug.Log($"boss wave complete moving to wave {_bossWave}");
     }
     public void ReStart()
     {

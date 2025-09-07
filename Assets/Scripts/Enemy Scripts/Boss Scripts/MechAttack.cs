@@ -12,34 +12,23 @@ public class MechAttack : MonoBehaviour
     private bool _mechAppearOn = false;
     private bool _mechsInPosition = false;
     [SerializeField] private float _attack1Interval;
-    [SerializeField] private float _attack1Speed;
     [SerializeField] private float _verticalDrop;
 
     [SerializeField] private float _vertSpeed = 1f;
     private Vector3 _transformVertPos;
     private bool _inPosition;
+    private int _outsideMechIdx;
+    private SpawnManager _spawnManager;
 
 
-    // Update is called once per frame
+    private void Start()
+    {
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null) Debug.LogError("spawn manager not found");
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            BringOnTheMechs();
-        }
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            StartCoroutine(MechAttackLToR());
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            _mechsInPosition = false;
-            StartCoroutine(MechAttackReset());
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            StartCoroutine(MechAttackOdds());
-        }
+
     }
 
     public void BringOnTheMechs()  // old - not using any more
@@ -47,8 +36,6 @@ public class MechAttack : MonoBehaviour
         _mechArmy = gameObject.GetComponentsInChildren<Mech>();
         for (int i = 0; i < _mechArmy.Length; i++)
         {
-            // _mechArmy.SetActive(true);
-            Debug.Log($"mech drop {_verticalDrop}");    
             _mechArmy[i].MechLineUp(xTargets[i], _verticalDrop);
         }
     }
@@ -56,7 +43,6 @@ public class MechAttack : MonoBehaviour
     public void MechsPositionsReset()
     {
         transform.position = Vector3.zero;
-        Debug.Log($"x {transform.position.x} and y {transform.position.y}");
     }
     public void MechsDropToPosition(float vTarget, bool reset)
     {
@@ -66,10 +52,8 @@ public class MechAttack : MonoBehaviour
     IEnumerator MechsDropToPositionCoroutine(float vTarget, bool reset)
     {
         _inPosition = false;
-        Debug.Log($"parent position {transform.position.x} and y {transform.position.y}");
         _mechArmy = gameObject.GetComponentsInChildren<Mech>();
         transform.position = _mechArmy[3].transform.position;
-        Debug.Log($"parent position {transform.position.x} and y {transform.position.y}");
         if (reset) vTarget = 0f;
 
         while (_inPosition == false)
@@ -103,23 +87,70 @@ public class MechAttack : MonoBehaviour
             _mechArmy[i].MechReset();
         }
     }
-    public IEnumerator MechAttackLToR() // left to right
+
+    public void StartMechAttackLToR(float attackSpeed)
+    {
+        StartCoroutine(MechAttackLToR(attackSpeed));
+    }
+    private IEnumerator MechAttackLToR(float attackSpeed) // left to right
     {
         for (int i = 0; i < _mechArmy.Length; i++)
         {
-            _mechArmy[i].MechAttack1(_attack1Speed);
+            _mechArmy[i].MechAttack(attackSpeed);
+            yield return new WaitForSeconds(_attack1Interval);
+        }
+        _spawnManager.BossWaveComplete();
+    }
+
+    public void StartMechAttackOutsideIn(float attackSpeed)
+    {
+        StartCoroutine(MechAttackOutsideIn(attackSpeed));
+    }
+    private IEnumerator MechAttackOutsideIn(float attackSpeed) // outside in
+    {
+        _outsideMechIdx = _mechArmy.Length - 1;
+        for (int i = 0; i <= (_mechArmy.Length / 2); i++)
+        {
+            _mechArmy[i].MechAttack(attackSpeed);
+             if (i !=  Mathf.Round((_mechArmy.Length - 1) / 2)) _mechArmy[_outsideMechIdx].MechAttack(attackSpeed);
+            _outsideMechIdx--;
+            yield return new WaitForSeconds(_attack1Interval);
+        }
+        _spawnManager.BossWaveComplete();
+    }
+
+    public void StartMechBounceAttack(float attackSpeed)
+    {
+        StartCoroutine(MechBounceAttack(attackSpeed));
+    }
+
+    private IEnumerator MechBounceAttack(float attackSpeed)
+    {
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            _mechArmy[i].MechBounceAttack(attackSpeed);
+            yield return new WaitForSeconds(_attack1Interval);
+        }
+
+    }
+
+    public IEnumerator MechAttackBounce(float attackSpeed) // outside in
+    {
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            _mechArmy[i].MechBounceAttack(attackSpeed);
             yield return new WaitForSeconds(_attack1Interval);
         }
     }
 
-    IEnumerator MechAttackOdds() // left to right
+    IEnumerator MechAttackOdds(float attackSpeed) // left to right
     {
         for (int i = 0; i < _mechArmy.Length; i++)
         {
             // _mechArmy.SetActive(true);
             if ((i + 1) % 2 != 0)
             { 
-                _mechArmy[i].MechAttack1(_attack1Speed);
+                _mechArmy[i].MechAttack(attackSpeed);
             }
         }
         yield return new WaitForSeconds(_attack1Interval);
@@ -128,7 +159,7 @@ public class MechAttack : MonoBehaviour
             // _mechArmy.SetActive(true);
             if ((i + 1) % 2 == 0)
             {
-                _mechArmy[i].MechAttack1(_attack1Speed);
+                _mechArmy[i].MechAttack(attackSpeed);
             }
         }
     }
