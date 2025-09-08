@@ -210,10 +210,11 @@ public class UIManager : MonoBehaviour
         _waveText.gameObject.SetActive(false);
     }
 
-    public void DisplayBossWaveOn(int _bossWave)
+    public void DisplayBossWaveOn(int bossWave)
     {
         _waveText.gameObject.SetActive(true);
-        switch (_bossWave)
+        Debug.Log($" boss wave {bossWave}");
+        switch (bossWave)
         {
             case 1:
                 _waveText.text = "Boss Level Lives at Full Ammo +50";
@@ -229,6 +230,9 @@ public class UIManager : MonoBehaviour
                 break;
             case 5:
                 _waveText.text = "Wave 5 This is It - Good Luck Space Cowboy";
+                break;
+            case 6:
+                _waveText.text = "Congratulations You Saved the Galaxy";
                 break;
             default:
                 Debug.LogWarning("bad switch case in boss UImanager code");

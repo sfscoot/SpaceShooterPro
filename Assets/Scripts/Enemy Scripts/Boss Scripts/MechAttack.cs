@@ -11,6 +11,7 @@ public class MechAttack : MonoBehaviour
     private float _verticalTarget = 3f;
     private bool _mechAppearOn = false;
     private bool _mechsInPosition = false;
+    private bool _mechBounceAttackActive = false;
     [SerializeField] private float _attack1Interval;
     [SerializeField] private float _verticalDrop;
 
@@ -28,7 +29,15 @@ public class MechAttack : MonoBehaviour
     }
     void Update()
     {
-
+        if (_mechBounceAttackActive == true)
+        {
+            _mechArmy = gameObject.GetComponentsInChildren<Mech>();
+            if (_mechArmy.Length == 0)
+            {
+                _mechBounceAttackActive = false;
+                _spawnManager.BossWaveComplete();
+            }   
+        }
     }
 
     public void BringOnTheMechs()  // old - not using any more
@@ -122,6 +131,8 @@ public class MechAttack : MonoBehaviour
     public void StartMechBounceAttack(float attackSpeed)
     {
         StartCoroutine(MechBounceAttack(attackSpeed));
+        _mechBounceAttackActive = true;
+        Debug.Log($"Mech bounce attack is active");
     }
 
     private IEnumerator MechBounceAttack(float attackSpeed)

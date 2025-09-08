@@ -9,7 +9,6 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     [SerializeField] private float _fireRate = 1.25f;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private int _damagePoints = 5;
-    private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
     private Boss _boss;
@@ -22,11 +21,6 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     void Start()
     {
         transform.rotation =  Quaternion.Euler (0f, 0f, 0f);
-        _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null)
-        {
-            Debug.LogError("Error: Explosion Audio Source not found");
-        }
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
         if (_boss == null) Debug.LogError("boss not found");
     }
@@ -63,7 +57,6 @@ public class DreadnaughtLaserCannon : MonoBehaviour
         if (other.tag == "PlayerLaser")
         {
             _boss.BossDamage(_damagePoints);
-            // _explosionAudioSource.Play();
             Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);

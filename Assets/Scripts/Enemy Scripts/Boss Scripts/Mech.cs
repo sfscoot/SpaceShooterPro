@@ -20,6 +20,8 @@ public class Mech : MonoBehaviour
     [SerializeField] private int _mechNumber;
     [SerializeField] private float _screenBottom = -5.0f;
     [SerializeField] private float _screenTop = 5.0f;
+    [SerializeField] private GameObject _explosionPreFab;
+    [SerializeField] private int _damagePoints = 5;
 
     private float _horizonalStartPos;
     private float _verticalStartPos;
@@ -28,6 +30,14 @@ public class Mech : MonoBehaviour
     private bool _inPosition = false;
     private bool _mechAttack = false;
     private bool _mechBounceAttack = false;
+    private Boss _boss;
+    private GameObject _explosion;
+
+    private void Start()
+    {
+        _boss = GameObject.Find("Boss").GetComponent<Boss>();
+        if (_boss == null) Debug.LogError("boss not found");
+    }
     private void Update()
     {
         if (_mechAttack == true)
@@ -211,5 +221,18 @@ public class Mech : MonoBehaviour
         _mechAttack = false;
         _attackSpeed = attackSpeed;
     
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "PlayerLaser")
+        {
+            _boss.BossDamage(_damagePoints);
+            // _explosionAudioSource.Play();
+            Destroy(other.gameObject);
+            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            Destroy(this.gameObject, .25f);
+        }
     }
 }

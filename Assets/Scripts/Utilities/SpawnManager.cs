@@ -121,6 +121,12 @@ public class SpawnManager : MonoBehaviour
                 case 4:
                     StartCoroutine("BossWave4");
                     break;
+                case 5:
+                    StartCoroutine("BossWave5");
+                    break;
+                case 6:
+                    StartCoroutine("GameOver");
+                    break;
                 default:
                     Debug.LogWarning("bad switch case in boss controller");
                     break;
@@ -203,23 +209,34 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator BossWave4()
     {
-        Debug.Log($"starting wave 4");
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
 
         yield return new WaitForSeconds(3);
 
         _uiManager.DisplayWaveOff();
-        Debug.Log("mechs dropping to position for Wave 4");
         _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
         yield return new WaitForSeconds(5);
         _mechAttackController.StartMechBounceAttack(_mechOutsideInAttackSpeed);
+    }
+    IEnumerator BossWave5()
+    {
+        yield return new WaitForSeconds(1); // pause for dramatic effect
+        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+
+        yield return new WaitForSeconds(3);
+        _boss.BossRejoins();
+
+    }
+    IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(1); // pause for dramatic effect
+        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
     }
     public void BossWaveComplete()
     {
         _bossWave++;
         _bossWaveAttackActive = false;
-        Debug.Log($"boss wave complete moving to wave {_bossWave}");
     }
     public void ReStart()
     {
