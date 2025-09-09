@@ -160,6 +160,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator BossWave1()
     {
+        _player.DisableWeapons();
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(1);  // turn on and bring in the boss
         _uiManager.TurnOffScore();
@@ -170,10 +171,13 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(14);
         _uiManager.DisplayWaveOff();
         _boss.StartSweepAndShoot();
+        _player.EnableWeapons();
     }
 
     IEnumerator BossWave2()
     {
+        _player.DisableWeapons();
+
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
 
@@ -188,6 +192,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(6);
 
         _mechAttackController.StartMechAttackLToR(_mechLToRAttackSpeed);
+        _uiManager.GameBroadcastMessage("Weapons jammed, take evasive action");
         yield return new WaitForSeconds(5);
     }
 
@@ -203,12 +208,11 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(6);
         _mechAttackController.StartMechAttackOutsideIn(_mechOutsideInAttackSpeed);
         yield return new WaitForSeconds(5);
-
-        Debug.Log($"boss wave {_bossWave}");
     }
 
     IEnumerator BossWave4()
     {
+        _uiManager.GameBroadcastMessage("Weapons repaired, fire at will");
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
 
@@ -218,6 +222,7 @@ public class SpawnManager : MonoBehaviour
         _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
         yield return new WaitForSeconds(5);
         _mechAttackController.StartMechBounceAttack(_mechOutsideInAttackSpeed);
+        _uiManager.GameBroadcastMessageOff();
     }
     IEnumerator BossWave5()
     {

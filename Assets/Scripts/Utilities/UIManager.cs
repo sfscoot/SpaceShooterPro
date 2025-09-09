@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _waveEnemyDeathCount;
     [SerializeField] private TMP_Text _homingMissileActiveTxt;
     [SerializeField] private TMP_Text _powerupCollectActiveTxt;
+    [SerializeField] private TMP_Text _gameBroadcastMsg;
+    private bool _broadcastMsgOn = false;
 
     private bool _lowAmmoWarning = false;
     private bool _lowAmmoFlicker = false;
@@ -43,6 +45,7 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _gameRestartText.gameObject.SetActive(false);
         _waveText.gameObject.SetActive(false);
+        _gameBroadcastMsg.gameObject.SetActive(false);
 
         if (_waveText == null) Debug.LogError("level text not assigned");
 
@@ -158,13 +161,6 @@ public class UIManager : MonoBehaviour
     {
         _livesImage.sprite = _liveSprites[currentLives];
         
-        /*
-        if (currentLives > 0)
-        {
-            _livesImage.sprite = _liveSprites[currentLives];
-        }
-        */
-        
         if (currentLives == 0)
         {
             GameOverSequence();
@@ -205,6 +201,33 @@ public class UIManager : MonoBehaviour
         _waveText.text = "Wave " + level;
     }
 
+    public void GameBroadcastMessage(string msg)
+    {
+        Debug.Log($" broadcast message {msg}");
+        _gameBroadcastMsg.text = msg;
+        _gameBroadcastMsg.fontSize = 18;
+        _gameBroadcastMsg.color = Color.red;
+        _gameBroadcastMsg.gameObject.SetActive(true);
+        _broadcastMsgOn = true;
+        StartCoroutine(FlashBroadcastMessage(msg));
+    }
+
+    IEnumerator FlashBroadcastMessage(string msg)
+    {
+
+        while (_broadcastMsgOn == true) 
+        {
+            _gameBroadcastMsg.text = msg;
+            yield return new WaitForSeconds(0.5f);
+            _gameBroadcastMsg.text = "";
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    public void GameBroadcastMessageOff()
+    {
+        _gameBroadcastMsg.gameObject.SetActive(false);
+        _broadcastMsgOn = false;
+    }
     public void DisplayWaveOff()
     {
         _waveText.gameObject.SetActive(false);
@@ -213,7 +236,6 @@ public class UIManager : MonoBehaviour
     public void DisplayBossWaveOn(int bossWave)
     {
         _waveText.gameObject.SetActive(true);
-        Debug.Log($" boss wave {bossWave}");
         switch (bossWave)
         {
             case 1:

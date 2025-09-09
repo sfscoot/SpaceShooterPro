@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     private GameObject _tmpLaser;
     [SerializeField] private float _laserOffset;
     [SerializeField] private int _ammoCount = 15;
+    private bool _weaponsEnabled = true;
+    [SerializeField] private float _fireRate = 0.5f;
+    private float _baseFireRate;
+    private float _canFire = -1f;
 
     // Missile variables
     [SerializeField] private GameObject _missilePreFab;
@@ -46,8 +50,7 @@ public class Player : MonoBehaviour
     private GameObject[] _activePowerups;
 
 
-    [SerializeField] private float _fireRate = 0.5f;
-    private float _canFire = -1f;
+
     [SerializeField] private float _canCollectPowerupsCoolDown = 20.0f;
     private float _canCollectPowerups = 12f;
 
@@ -144,9 +147,7 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, -3, 0);
         _directionModifier = 1;
-
-        // scj - need to move the prefab assignment and checks to a separate function
-
+        _baseFireRate = _fireRate;
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
@@ -224,8 +225,6 @@ public class Player : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, _downBound, _upBound), 0);
     }
-
-
     private void CheckForPowerupCollection()
     {
         if (Time.time > _canCollectPowerups) 
@@ -250,18 +249,23 @@ public class Player : MonoBehaviour
     //***************************************************************************
     private void CheckForWeaponFire()
     {
-
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (_weaponsEnabled == true)
         {
-            if (_missilePowerupActive == true) FireMissile();
-            else if (_mineLauncherActive == true) DeployMines();
-            else if (_ammoCount > 0) FireLaser();
-        }
+            if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+            {
+                if (_missilePowerupActive == true) FireMissile();
+                else if (_mineLauncherActive == true) DeployMines();
+                else if (_ammoCount > 0) FireLaser();
+            }
 
-        if (Input.GetKeyDown(KeyCode.H) && _homingMissileActive)
+            if (Input.GetKeyDown(KeyCode.H) && _homingMissileActive)
+            {
+                FireHomingMissile();
+                _homingMissileActive = false;
+            }
+        } else if (_weaponsEnabled == false && Input.GetKeyDown(KeyCode.Space))
         {
-            FireHomingMissile();
-            _homingMissileActive = false;
+            // _uiManager.
         }
     }
 
@@ -287,6 +291,25 @@ public class Player : MonoBehaviour
         _homingMissile = Instantiate(_playerHomingMissilePreFab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
         _homingMissile.GetComponent<HomingMissile_Player>().MissileTarget(_closestEnemy);
         _uiManager.HomingMissileInactive();
+    }
+
+    public void DisableWeapons()
+    {
+        _weaponsEnabled = false;
+    }
+    public void EnableWeapons() 
+    {
+        _weaponsEnabled = true;
+    }
+
+    public void IncreaseFireRate()
+    {
+        _fireRate = _fireRate / 2f;
+    }
+
+    public void ResetFireRate()
+    {
+        _fireRate = _baseFireRate;
     }
 
     //***************************************************************************
