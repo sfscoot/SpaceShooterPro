@@ -56,12 +56,13 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
     {
         if (other.tag == "PlayerLaser")
         {
-            _boss.BossDamage(_damagePoints);
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            Destroy(this.gameObject, .25f);
+            _explosionAudioSource.Play();
+            _boss.BossDamage(_damagePoints);
+            Destroy(other.gameObject);
+            this.gameObject.SetActive(false);
+            // Destroy(this.gameObject, .25f);
         }
     }
 }

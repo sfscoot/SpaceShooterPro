@@ -23,6 +23,8 @@ public class Mech : MonoBehaviour
     [SerializeField] private GameObject _explosionPreFab;
     [SerializeField] private int _damagePoints = 5;
 
+    private MechAttack _mechAttackRoutine;
+
     private float _horizonalStartPos;
     private float _verticalStartPos;
 
@@ -37,16 +39,19 @@ public class Mech : MonoBehaviour
     {
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
         if (_boss == null) Debug.LogError("boss not found");
+
+        _mechAttackRoutine = GameObject.Find("MechAttack").GetComponent<MechAttack>();
+        if (_mechAttackRoutine == null) Debug.LogError("MechAttack program not found");
     }
     private void Update()
     {
         if (_mechAttack == true)
         {
             transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed);
-            if (transform.position.y < -13.0f)
+            if (transform.position.y < -7.0f)
             {
-                transform.position = new Vector3(_inPosX, 6.5f, 0);  // - 2.8 -9
                 _mechAttack = false;
+                _mechAttackRoutine.CountMechsFinishedAttacking();
             }
         }
 
@@ -64,9 +69,9 @@ public class Mech : MonoBehaviour
         }
 
     }
-    public void MechSpreadToPosition(float xTarget)
+    public void MechMoveToPosition(float xTarget)
     {
-        StartCoroutine(MechSpreadToPostionCoroutine(xTarget));
+        StartCoroutine(MechMoveToPositionCoroutine(xTarget));
     }
     public void MechReset()
     {
@@ -102,13 +107,14 @@ public class Mech : MonoBehaviour
         }
         yield return null;
     }
+    /*
     public void MechLineUp(float hTarget, float vTarget)
     {
         StartCoroutine(MechsLineup(hTarget, vTarget));
     }
+    */
     
-
-    IEnumerator MechSpreadToPostionCoroutine(float hTarget)
+    IEnumerator MechMoveToPositionCoroutine(float hTarget)
     {
         _inPosition = false;
         while (_inPosition == false)
@@ -124,6 +130,7 @@ public class Mech : MonoBehaviour
                             _inPosX = transform.position.x;
                             _inPosY = transform.position.y;
                             _inPosition = true;
+                            _mechAttackRoutine.CountMechsFinishedSpreading();
                         }
                     }
                 }
@@ -135,17 +142,20 @@ public class Mech : MonoBehaviour
                         transform.position = Vector3.Lerp(transform.position, _transformHorPos, Time.deltaTime * _horSpeed);
                         if (transform.position.x >= (hTarget - .1f))
                         {
-                            _inPosition = true;
                             _inPosX = transform.position.x;
                             _inPosY = transform.position.y;
-                        }
+                            _inPosition = true;
+                            _mechAttackRoutine.CountMechsFinishedSpreading();
+                    }
                     }
                 }
             yield return null;
         }
     }
+    
     IEnumerator MechsLineup(float hTarget, float vTarget)
     {
+        Debug.Log("Mechs.cs mechslineup");
         _horizonalStartPos = hTarget;
         while (_inPosition == false)
         {
@@ -190,13 +200,9 @@ public class Mech : MonoBehaviour
         }
     }
 
-
-    public void MechDrop(float vTarget)
-    {
-        StartCoroutine(MechDropToPosition(vTarget));
-    }
     IEnumerator MechDropToPosition(float vTarget)
     {
+        Debug.Log("Mechs.cs mechdrop coroutine");
         while (_inPosition == false)
         {
             if (transform.position.y >= vTarget)
@@ -227,12 +233,13 @@ public class Mech : MonoBehaviour
     {
         if (other.tag == "PlayerLaser")
         {
-            _boss.BossDamage(_damagePoints);
-            // _explosionAudioSource.Play();
             Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            Destroy(this.gameObject, .25f);
+            _boss.BossDamage(_damagePoints);
+            // _explosionAudioSource.Play();
+
+            Destroy(this.gameObject);
         }
     }
 }

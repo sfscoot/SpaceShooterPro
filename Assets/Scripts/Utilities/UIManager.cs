@@ -33,6 +33,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite[] _liveSprites;
     [SerializeField] private GameObject _player;
 
+    [SerializeField] private AudioClip _weaponsOfflineClip;
+    [SerializeField] private AudioClip _weaponsOnlineClip;
+    [SerializeField] private AudioSource _audioSource;
+
     private GameManager _gameManager;
     private bool _displayHomingMissileActiveMessage = false;
     private bool _displayPowerupCollectActiveMessage = false;
@@ -54,6 +58,10 @@ public class UIManager : MonoBehaviour
 
         _homingMissileActiveTxt.gameObject.SetActive(false);
         _powerupCollectActiveTxt.gameObject.SetActive(false);
+        if (_weaponsOfflineClip == null) Debug.LogError("no audio clip found for weapons offline");
+        if (_weaponsOnlineClip == null) Debug.LogError("no audio clip found for weapons online");
+        _audioSource = _gameBroadcastMsg.gameObject.GetComponent<AudioSource>();
+        if (_audioSource == null) Debug.Log("warning message audio source not found");
     }
 
     private void Update()
@@ -201,13 +209,24 @@ public class UIManager : MonoBehaviour
         _waveText.text = "Wave " + level;
     }
 
-    public void GameBroadcastMessage(string msg)
+    public void GameBroadcastMessage(string msg, int warningAudioID)
     {
-        Debug.Log($" broadcast message {msg}");
         _gameBroadcastMsg.text = msg;
         _gameBroadcastMsg.fontSize = 18;
         _gameBroadcastMsg.color = Color.red;
+        _audioSource = _gameBroadcastMsg.gameObject.GetComponent<AudioSource>();
+        if (warningAudioID == 1)
+        {
+            _audioSource.clip = _weaponsOfflineClip;
+            _gameBroadcastMsg.color = Color.red;
+        }
+        if (warningAudioID == 2)
+        {
+            _audioSource.clip = _weaponsOnlineClip;
+            _gameBroadcastMsg.color = Color.green;
+        }
         _gameBroadcastMsg.gameObject.SetActive(true);
+
         _broadcastMsgOn = true;
         StartCoroutine(FlashBroadcastMessage(msg));
     }

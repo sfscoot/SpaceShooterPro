@@ -177,61 +177,65 @@ public class SpawnManager : MonoBehaviour
     IEnumerator BossWave2()
     {
         _player.DisableWeapons();
-
-        yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
-
         _mechAttack.SetActive(true);
         _boss.BossSeparates();
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         _uiManager.DisplayWaveOff();
-        _mechAttackController.MechsDropToPosition(_mechVdropTarget, false);
-        _mechAttackController.MechsSpreadToPosition();
-        yield return new WaitForSeconds(6);
+        yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
+        yield return StartCoroutine(_mechAttackController.MechsSpreadToPositionCoroutine());
+        yield return new WaitForSeconds(4);
 
         _mechAttackController.StartMechAttackLToR(_mechLToRAttackSpeed);
-        _uiManager.GameBroadcastMessage("Weapons jammed, take evasive action");
-        yield return new WaitForSeconds(5);
+        _uiManager.GameBroadcastMessage("Weapons offline, take evasive action", 1);
+        yield return new WaitForSeconds(2);
     }
 
     IEnumerator BossWave3()
     {
-        yield return new WaitForSeconds(1); // pause for dramatic effect
-        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+        _mechAttackController.MechsPositionsReset();
+        yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
+        yield return StartCoroutine(_mechAttackController.MechsSpreadToPositionCoroutine());
 
-        yield return new WaitForSeconds(3);
-
-        _uiManager.DisplayWaveOff();
-        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
-        yield return new WaitForSeconds(6);
+        yield return new WaitForSeconds(4);
         _mechAttackController.StartMechAttackOutsideIn(_mechOutsideInAttackSpeed);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
     }
 
     IEnumerator BossWave4()
     {
-        _uiManager.GameBroadcastMessage("Weapons repaired, fire at will");
-        yield return new WaitForSeconds(1); // pause for dramatic effect
-        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
 
-        yield return new WaitForSeconds(3);
+        _mechAttackController.MechsPositionsReset();
+        
+        yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
+        yield return StartCoroutine(_mechAttackController.MechsSpreadToPositionCoroutine());
+        yield return new WaitForSeconds(4);
 
-        _uiManager.DisplayWaveOff();
-        _mechAttackController.MechsDropToPosition(_mechVdropTarget, true);
-        yield return new WaitForSeconds(5);
-        _mechAttackController.StartMechBounceAttack(_mechOutsideInAttackSpeed);
+
+        yield return StartCoroutine(_mechAttackController.StartMechBounceAttackCoroutine(_mechOutsideInAttackSpeed));
+        _player.EnableWeapons();
+        _uiManager.GameBroadcastMessageOff();
+        _uiManager.GameBroadcastMessage("Weapons back online, fire at will", 2);
+        yield return new WaitForSeconds(2);
         _uiManager.GameBroadcastMessageOff();
     }
-    IEnumerator BossWave5()
+    IEnumerator BossWave5() // final wave
     {
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
 
         yield return new WaitForSeconds(3);
         _boss.BossRejoins();
+        yield return new WaitForSeconds(2);
 
+
+    }
+
+    private void ActivateBossWeapons()
+    {
+        
     }
     IEnumerator GameOver()
     {

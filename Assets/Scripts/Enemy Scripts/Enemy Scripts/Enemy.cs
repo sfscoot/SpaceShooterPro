@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _raycastRange = 5.0f;
 
     private bool _playerDestroyed;
+    private bool _raycastActive = true;
 
 
     private void Start()
@@ -61,10 +62,9 @@ public class Enemy : MonoBehaviour
         Debug.DrawRay(transform.position, Vector2.down * _raycastRange, Color.red);
 
         // If it detects something...
-        if (hit && hit.collider.gameObject.tag == "Powerup")
+        if (hit && hit.collider.gameObject.tag == "Powerup" && _raycastActive == true)
         {
             FireLaser();
-            Debug.Log("just hit " + hit.collider.gameObject.name);
         }
     }
 
@@ -85,10 +85,9 @@ public class Enemy : MonoBehaviour
         Debug.DrawRay(transform.position, Vector2.down* _raycastRange, Color.red);
 
         // If it detects something...
-        if (hit && hit.collider.gameObject.tag == "Powerup")
+        if (hit && hit.collider.gameObject.tag == "Powerup" && _raycastActive == true)
         {
             FireLaser();
-            Debug.Log("just hit " + hit.collider.gameObject.name);
         }
     }
 private void OnTriggerEnter2D(Collider2D other)
@@ -167,7 +166,8 @@ private void OnTriggerEnter2D(Collider2D other)
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());
-        _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
+        _raycastActive = false;
+        _canFire = Time.time + 10.0f; // make it so enemy can't fire after they've been destroyed.
         Destroy(gameObject, 2.8f);
     }
     
