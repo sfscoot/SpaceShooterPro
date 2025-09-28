@@ -13,6 +13,8 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     private GameObject _explosion;
     private Boss _boss;
     private float _canFire = -1f;
+    private Transform _parent;
+    private Transform _grandparent;
     
 
     private GameObject _enemyWeapon;
@@ -23,6 +25,9 @@ public class DreadnaughtLaserCannon : MonoBehaviour
         transform.rotation =  Quaternion.Euler (0f, 0f, 0f);
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
         if (_boss == null) Debug.LogError("boss not found");
+
+        _parent = transform.parent;
+        _grandparent = _parent.transform.parent;
     }
 
     public void RotateLaserCannon(float zRotationFactor, float zRotation)
@@ -48,7 +53,7 @@ public class DreadnaughtLaserCannon : MonoBehaviour
             _canFire = Time.time + _fireRate;
             _enemyWeapon = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
             _enemyWeapon.transform.eulerAngles = new Vector3(0f, 0f, transform.eulerAngles.z);
-            _enemyWeapon.transform.parent = transform.parent.Find("Laser_Blasts");
+            _enemyWeapon.transform.parent = _grandparent.Find("Laser_Blasts");
         }
     }
 

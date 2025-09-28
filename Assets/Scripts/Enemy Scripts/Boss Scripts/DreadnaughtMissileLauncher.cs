@@ -16,6 +16,8 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
     private AudioSource _explosionAudioSource;
     private Boss _boss;
     [SerializeField] private int _damagePoints = 10;
+    Transform _parent;
+    Transform _grandparent;
 
     void Start()
     {
@@ -27,6 +29,9 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
         }
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
         if (_boss == null) Debug.LogError("boss not found");
+
+        _parent = transform.parent;
+        _grandparent = _parent.transform.parent;
     }
 
     public void RotateMissileLauncher(float eulerZ, float fireRate, float weaponFireDelay)
@@ -44,7 +49,7 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
             _canFire = Time.time + _fireRate;
             _enemyWeapon = Instantiate(_missilePrefab, transform.position, Quaternion.identity); // spawn outside the collider
             _enemyWeapon.transform.eulerAngles = new Vector3(0f, 0f, transform.eulerAngles.z);
-            _enemyWeapon.transform.parent = transform.parent.Find("Grenades");
+            _enemyWeapon.transform.parent = _grandparent.Find("Grenades");
         }
     }
     public void ResetMissileLauncherRotation(float zRotation)

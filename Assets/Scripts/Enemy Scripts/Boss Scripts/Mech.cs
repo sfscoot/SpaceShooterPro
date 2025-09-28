@@ -6,12 +6,7 @@ using static UnityEngine.GraphicsBuffer;
 public class Mech : MonoBehaviour
 {
 
-    private Vector3 _transformVertPos;
-    private Vector3 _transformVertResetPos;
     private Vector3 _transformHorPos;
-    private float _tmpYPos;
-    private float _inPosX;
-    private float _inPosY;
     private int _attackDirection = 1;
 
     [SerializeField] private float _vertSpeed = 1;
@@ -24,11 +19,6 @@ public class Mech : MonoBehaviour
     [SerializeField] private int _damagePoints = 5;
 
     private MechAttack _mechAttackRoutine;
-
-    private float _horizonalStartPos;
-    private float _verticalStartPos;
-
-
     private bool _inPosition = false;
     private bool _mechAttack = false;
     private bool _mechBounceAttack = false;
@@ -73,47 +63,7 @@ public class Mech : MonoBehaviour
     {
         StartCoroutine(MechMoveToPositionCoroutine(xTarget));
     }
-    public void MechReset()
-    {
-        StartCoroutine(MechReLineup());
-    }
-    IEnumerator MechReLineup()  // just the vertical alignment - horizonal has already been done
-    {
-        _inPosition = false;
-        _tmpYPos = _inPosY * -1;
-        _transformVertResetPos = new Vector3(transform.position.x, _tmpYPos, 0);
-        while (_inPosition == false)
-        {
 
-            if (this._mechNumber == 3) 
-            {
-                Debug.Log($"mech number {this._mechNumber}");
-                Debug.Log($"_inPosY is {_inPosY}");
-                Debug.Log($"transform.position.y is {transform.position.y}");
-                Debug.Log($"vertspeed is {_vertSpeed}");
-                //_tmpYPos = transform.position.y - _inPosY;
-                Debug.Log($"tmpYPos is {_tmpYPos}");
-            } 
-
-            if (transform.position.y >= _inPosY)
-            {
-                // _tmpYPos = transform.position.y - _inPosY;
-                // Debug.Log("tmpYPos is " + _tmpYPos);
-                // _transformVertPos = new Vector3(transform.position.x, _tmpYPos, 0);
-                transform.position = Vector3.Lerp(transform.position, _transformVertResetPos, Time.deltaTime * (_vertSpeed/3));
-            }
-            if (transform.position.y <= _inPosY) _inPosition = true;
-            
-        }
-        yield return null;
-    }
-    /*
-    public void MechLineUp(float hTarget, float vTarget)
-    {
-        StartCoroutine(MechsLineup(hTarget, vTarget));
-    }
-    */
-    
     IEnumerator MechMoveToPositionCoroutine(float hTarget)
     {
         _inPosition = false;
@@ -127,8 +77,6 @@ public class Mech : MonoBehaviour
                         transform.position = Vector3.Lerp(transform.position, _transformHorPos, Time.deltaTime * _horSpeed);
                         if (transform.position.x <= (hTarget + .1f))
                         {
-                            _inPosX = transform.position.x;
-                            _inPosY = transform.position.y;
                             _inPosition = true;
                             _mechAttackRoutine.CountMechsFinishedSpreading();
                         }
@@ -142,8 +90,6 @@ public class Mech : MonoBehaviour
                         transform.position = Vector3.Lerp(transform.position, _transformHorPos, Time.deltaTime * _horSpeed);
                         if (transform.position.x >= (hTarget - .1f))
                         {
-                            _inPosX = transform.position.x;
-                            _inPosY = transform.position.y;
                             _inPosition = true;
                             _mechAttackRoutine.CountMechsFinishedSpreading();
                     }
@@ -152,69 +98,7 @@ public class Mech : MonoBehaviour
             yield return null;
         }
     }
-    
-    IEnumerator MechsLineup(float hTarget, float vTarget)
-    {
-        Debug.Log("Mechs.cs mechslineup");
-        _horizonalStartPos = hTarget;
-        while (_inPosition == false)
-        {
-            if (transform.position.y >= vTarget)
-            {
-                _tmpYPos = transform.position.y - vTarget;
-                _transformVertPos = new Vector3(transform.position.x, _tmpYPos, 0);
-                transform.position = Vector3.Lerp(transform.position, _transformVertPos, Time.deltaTime * _vertSpeed);
-            }
 
-            if (transform.position.y <= vTarget)
-            {
-                if (hTarget <= 0)
-                {
-                    if (transform.position.x >= hTarget && _inPosition == false)
-                    {
-                        _transformHorPos = new Vector3(hTarget, transform.position.y, 0);
-                        transform.position = Vector3.Lerp(transform.position, _transformHorPos, Time.deltaTime * _horSpeed);
-                        if (transform.position.x <= (hTarget + .1f))
-                        {
-                            _inPosX = transform.position.x;
-                            _inPosY = transform.position.y;
-                            _inPosition = true;
-                        }
-                    }
-                } else
-                {
-                    if (transform.position.x <= hTarget && _inPosition == false)
-                    {
-                        _transformHorPos = new Vector3(hTarget, transform.position.y, 0);
-                        transform.position = Vector3.Lerp(transform.position, _transformHorPos, Time.deltaTime * _horSpeed);
-                        if (transform.position.x >= (hTarget - .1f))
-                        {
-                            _inPosition = true;
-                            _inPosX = transform.position.x;
-                            _inPosY = transform.position.y;
-                        }
-                    }
-                }
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator MechDropToPosition(float vTarget)
-    {
-        Debug.Log("Mechs.cs mechdrop coroutine");
-        while (_inPosition == false)
-        {
-            if (transform.position.y >= vTarget)
-            {
-                _tmpYPos = transform.position.y - vTarget;
-                _transformVertPos = new Vector3(transform.position.x, _tmpYPos, 0);
-                transform.position = Vector3.Lerp(transform.position, _transformVertPos, Time.deltaTime * _vertSpeed);
-            }
-            yield return null;
-            if (transform.position.y <= vTarget) _inPosition = true;
-        }
-    }
     public void MechAttack(float attackSpeed)
     {
         _mechAttack = true;

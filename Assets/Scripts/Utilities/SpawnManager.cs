@@ -1,10 +1,11 @@
 ﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+// using System.Diagnostics;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -43,13 +44,19 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private GameObject[] _powerups;
 
+
+    [Header("Boss Level Variables")]
     [SerializeField] private GameObject _bossGameObject;
-    private Boss _boss;
-    [SerializeField] GameObject _mechAttack;
+    [SerializeField] private GameObject _mechAttack;
     [SerializeField] private MechAttack _mechAttackController;
+    [SerializeField] private DreadnaughtFront _dreadnaughtFront;
+    [SerializeField] private DreadnaughtRear _dreadnaughtRear;
+    private Boss _boss;
     private bool _bossLevelActive = false;
     private bool _bossWaveAttackActive = false;
     private int _bossWave = 1;
+    private Transform[] _dreadnaughtFrontWeapons;
+    private Transform[] _dreadnaughtRearWeapons;
 
     private bool _stopSpawning = false;
 
@@ -78,6 +85,9 @@ public class SpawnManager : MonoBehaviour
         if (_boss == null) Debug.LogError("boss missing");
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null) Debug.LogError("Player missing");
+
+        if (_dreadnaughtFront == null) Debug.LogError("DreadnaughtFront gameobject unassigned");
+        if (_dreadnaughtRear == null)  Debug.LogError("DreadnaughtFront gameobject unassigned");
     }
     public void StartSpawning()
     {
@@ -110,22 +120,22 @@ public class SpawnManager : MonoBehaviour
             switch (_bossWave)
             {
                 case 1:
-                    StartCoroutine("BossWave1");
+                    StartCoroutine(BossWave1());
                     break;
                 case 2:
-                    StartCoroutine("BossWave2");
+                    StartCoroutine(BossWave2());
                     break;
                 case 3:
-                    StartCoroutine("BossWave3");
+                    StartCoroutine(BossWave3());
                     break;
                 case 4:
-                    StartCoroutine("BossWave4");
+                    StartCoroutine(BossWave4());
                     break;
                 case 5:
-                    StartCoroutine("BossWave5");
+                    StartCoroutine(BossWave5());
                     break;
                 case 6:
-                    StartCoroutine("GameOver");
+                    StartCoroutine(GameOver());
                     break;
                 default:
                     Debug.LogWarning("bad switch case in boss controller");
@@ -177,6 +187,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator BossWave2()
     {
         _player.DisableWeapons();
+        yield return new WaitForSeconds(2);
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
         _mechAttack.SetActive(true);
         _boss.BossSeparates();
@@ -199,7 +210,7 @@ public class SpawnManager : MonoBehaviour
         yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
         yield return StartCoroutine(_mechAttackController.MechsSpreadToPositionCoroutine());
 
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2);
         _mechAttackController.StartMechAttackOutsideIn(_mechOutsideInAttackSpeed);
         yield return new WaitForSeconds(2);
     }
@@ -223,19 +234,30 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator BossWave5() // final wave
     {
-        yield return new WaitForSeconds(1); // pause for dramatic effect
-        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
-
         yield return new WaitForSeconds(3);
         _boss.BossRejoins();
-        yield return new WaitForSeconds(2);
-
-
+        yield return new WaitForSeconds(5);
+        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+        ActivateBossWeapons();
     }
 
     private void ActivateBossWeapons()
     {
-        
+        _dreadnaughtFrontWeapons = _dreadnaughtFront.GetComponentsInChildren<Transform>(true);
+        Debug.Log($"dreadnaught front weapons found {_dreadnaughtFrontWeapons.Length} ");
+        _dreadnaughtRearWeapons = _dreadnaughtRear.GetComponentsInChildren<Transform>(true);
+        Debug.Log($"Dreadnaught rear weapons found {_dreadnaughtRearWeapons.Length}");
+
+        for (int i = 0; i < _dreadnaughtFrontWeapons.Length; i++)
+        {
+            Debug.Log($"setting front weapon to active {_dreadnaughtFrontWeapons[i].name}");
+            _dreadnaughtFrontWeapons[i].gameObject.SetActive(true);
+        }
+
+        foreach (Transform t in _dreadnaughtRearWeapons)
+        {
+            t.gameObject.SetActive(true);
+        }
     }
     IEnumerator GameOver()
     {
