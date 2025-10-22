@@ -49,8 +49,8 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _bossGameObject;
     [SerializeField] private GameObject _mechAttack;
     [SerializeField] private MechAttack _mechAttackController;
-    [SerializeField] private DreadnaughtFront _dreadnaughtFront;
-    [SerializeField] private DreadnaughtRear _dreadnaughtRear;
+    [SerializeField] private GameObject _dreadnaughtFront;
+    [SerializeField] private GameObject _dreadnaughtRear;
     private Boss _boss;
     private bool _bossLevelActive = false;
     private bool _bossWaveAttackActive = false;
