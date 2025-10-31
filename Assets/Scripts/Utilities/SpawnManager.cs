@@ -239,6 +239,8 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(5);
         _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
         ActivateBossWeapons();
+        _boss.StartSweepAndShoot();
+        _player.EnableWeapons();
     }
 
     private void ActivateBossWeapons()
