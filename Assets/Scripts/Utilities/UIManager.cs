@@ -212,8 +212,7 @@ public class UIManager : MonoBehaviour
     public void GameBroadcastMessage(string msg, int warningAudioID)
     {
         _gameBroadcastMsg.text = msg;
-        _gameBroadcastMsg.fontSize = 18;
-        _gameBroadcastMsg.color = Color.red;
+        _gameBroadcastMsg.fontSize = 24;
         _audioSource = _gameBroadcastMsg.gameObject.GetComponent<AudioSource>();
         if (warningAudioID == 1)
         {
@@ -233,12 +232,11 @@ public class UIManager : MonoBehaviour
 
     IEnumerator FlashBroadcastMessage(string msg)
     {
-
         while (_broadcastMsgOn == true) 
         {
             _gameBroadcastMsg.text = msg;
             yield return new WaitForSeconds(0.5f);
-            _gameBroadcastMsg.text = "";
+            _gameBroadcastMsg.text = " ";
             yield return new WaitForSeconds(0.5f);
         }
     }

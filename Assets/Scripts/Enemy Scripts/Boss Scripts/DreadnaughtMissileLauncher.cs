@@ -67,7 +67,6 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
             _boss.BossDamage(_damagePoints);
             Destroy(other.gameObject);
             this.gameObject.SetActive(false);
-            // Destroy(this.gameObject, .25f);
         }
     }
 }

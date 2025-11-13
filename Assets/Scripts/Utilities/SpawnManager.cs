@@ -50,7 +50,11 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _mechAttack;
     [SerializeField] private MechAttack _mechAttackController;
     [SerializeField] private GameObject _dreadnaughtFront;
+    private DreadnaughtFront _dreadnaughtFrontController;
+
     [SerializeField] private GameObject _dreadnaughtRear;
+    private DreadnaughtRear _dreadnaughtRearController;
+    [SerializeField] private GameObject _bossShield;
     private Boss _boss;
     private bool _bossLevelActive = false;
     private bool _bossWaveAttackActive = false;
@@ -82,12 +86,15 @@ public class SpawnManager : MonoBehaviour
         _currentWave = 1;
         _uiManager.DisplayWaveOn(_currentWave);
         _boss = _bossGameObject.GetComponent<Boss>();  // scj - change this to the "try" format
+
         if (_boss == null) Debug.LogError("boss missing");
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null) Debug.LogError("Player missing");
 
         if (_dreadnaughtFront == null) Debug.LogError("DreadnaughtFront gameobject unassigned");
         if (_dreadnaughtRear == null)  Debug.LogError("DreadnaughtFront gameobject unassigned");
+        _dreadnaughtFrontController = _dreadnaughtFront.GetComponent<DreadnaughtFront>();
+        _dreadnaughtRearController = _dreadnaughtRear.GetComponent<DreadnaughtRear>();
     }
     public void StartSpawning()
     {
@@ -210,14 +217,13 @@ public class SpawnManager : MonoBehaviour
         yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
         yield return StartCoroutine(_mechAttackController.MechsSpreadToPositionCoroutine());
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         _mechAttackController.StartMechAttackOutsideIn(_mechOutsideInAttackSpeed);
         yield return new WaitForSeconds(2);
     }
 
     IEnumerator BossWave4()
     {
-
         _mechAttackController.MechsPositionsReset();
         
         yield return StartCoroutine(_mechAttackController.MechsDropToPositionCoroutine(_mechVdropTarget, false));
@@ -228,31 +234,37 @@ public class SpawnManager : MonoBehaviour
         yield return StartCoroutine(_mechAttackController.StartMechBounceAttackCoroutine(_mechOutsideInAttackSpeed));
         _player.EnableWeapons();
         _uiManager.GameBroadcastMessageOff();
+        yield return new WaitForSeconds(0.25f);
         _uiManager.GameBroadcastMessage("Weapons back online, fire at will", 2);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         _uiManager.GameBroadcastMessageOff();
     }
     IEnumerator BossWave5() // final wave
     {
         yield return new WaitForSeconds(3);
         _boss.BossRejoins();
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
+        _boss.BossLeaves();
+        yield return new WaitForSeconds(3);
+        _boss.BossEnters();
+        yield return new WaitForSeconds(3);
         _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+        yield return new WaitForSeconds(5);
+
         ActivateBossWeapons();
+        ActivateBossShield();
         _boss.StartSweepAndShoot();
+        _uiManager.DisplayWaveOff();
         _player.EnableWeapons();
     }
 
     private void ActivateBossWeapons()
     {
         _dreadnaughtFrontWeapons = _dreadnaughtFront.GetComponentsInChildren<Transform>(true);
-        Debug.Log($"dreadnaught front weapons found {_dreadnaughtFrontWeapons.Length} ");
         _dreadnaughtRearWeapons = _dreadnaughtRear.GetComponentsInChildren<Transform>(true);
-        Debug.Log($"Dreadnaught rear weapons found {_dreadnaughtRearWeapons.Length}");
 
         for (int i = 0; i < _dreadnaughtFrontWeapons.Length; i++)
         {
-            Debug.Log($"setting front weapon to active {_dreadnaughtFrontWeapons[i].name}");
             _dreadnaughtFrontWeapons[i].gameObject.SetActive(true);
         }
 
@@ -261,10 +273,25 @@ public class SpawnManager : MonoBehaviour
             t.gameObject.SetActive(true);
         }
     }
+
+    private void ActivateBossShield() 
+    { 
+        _bossShield.SetActive(true);
+        for (int i = 0; i < _bossShield.transform.childCount; i++)
+        {
+            _bossShield.transform.GetChild(i).gameObject.SetActive(true);
+        }
+        _boss.ActivateBossShield();
+    
+    }
+
     IEnumerator GameOver()
     {
         yield return new WaitForSeconds(1); // pause for dramatic effect
-        _uiManager.DisplayBossWaveOn(_bossWave);  // turn on and bring in the boss
+        _dreadnaughtFrontController.DreadnaughtDestruction();
+        yield return new WaitForSeconds(1);
+        _dreadnaughtRearController.DreadnaughtDestruction();
+        _uiManager.DisplayBossWaveOn(_bossWave);  
     }
     public void BossWaveComplete()
     {

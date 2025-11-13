@@ -88,8 +88,7 @@ public class Player : MonoBehaviour
     [SerializeField] int _leftRightSwapDuration;
 
 
-    [SerializeField]
-    int _shieldMaxLevel = 4;
+    [SerializeField] int _shieldMaxLevel = 4;
     int _shieldLevel;
 
     [SerializeField]
@@ -403,37 +402,8 @@ public class Player : MonoBehaviour
     //***************************************************************************
     void DeployMines()
     {
-        /* 
-        _canFire = Time.time + _fireRate;
-        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
-        */
-        StartCoroutine(DeployMinesTimed());
 
-        /*
-        for (int i = 1; i < 6; i++)
-        {
-            var newSpaceMine = Instantiate(_spaceMinePreFab, transform.position, Quaternion.identity);
-            switch (i)
-            {
-                case 1:
-                    newSpaceMine.transform.eulerAngles = Vector3.forward * 0;
-                    break;
-                case 2:
-                    newSpaceMine.transform.eulerAngles = Vector3.forward * 30;
-                    break;
-                case 3:
-                    newSpaceMine.transform.eulerAngles = Vector3.forward * 60;
-                    break;
-                case 4:
-                    newSpaceMine.transform.eulerAngles = Vector3.forward * 330;
-                    break;
-                case 5:
-                    newSpaceMine.transform.eulerAngles = Vector3.forward * 300;
-                    break;
-            }
-            // newSpaceMine.transform.eulerAngles = Vector3.forward * fireAngle;
-        }
-        */
+        StartCoroutine(DeployMinesTimed());
         _mineLauncherActive = false;
     }
 

@@ -7,6 +7,10 @@ using UnityEngine;
 public class DreadnaughtFront : MonoBehaviour
 {
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
+    private Vector3 _explosionLocation;
+
     [SerializeField] private float _rotationDistance = 5.0f;
     private bool _sweepAttack = false;
     private DreadnaughtLaserCannon[] _laserCannons;
@@ -15,6 +19,7 @@ public class DreadnaughtFront : MonoBehaviour
     private float _eulerZ;
     [SerializeField] private float _rotationSpeed = .25f;
     private Boss _bossScript;
+
 
     void Start()
     {
@@ -58,5 +63,26 @@ public class DreadnaughtFront : MonoBehaviour
                 
             }
         }
+    }
+
+    public void DreadnaughtDestruction()
+    {
+        StartCoroutine(DreadnaughtDestructionSequence());
+    }
+
+    IEnumerator DreadnaughtDestructionSequence()
+    {
+        _explosionLocation = transform.position;
+        _explosionLocation.x += 0.5f;
+        _explosion = Instantiate(_explosionPreFab, _explosionLocation, Quaternion.identity);
+        _explosion.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+        yield return new WaitForSeconds(0.25f);
+
+        _explosionLocation = transform.position;
+        _explosionLocation.x -= 0.5f;
+        _explosion = Instantiate(_explosionPreFab, _explosionLocation, Quaternion.identity);
+
+        gameObject.SetActive(false);
+        Destroy(this);
     }
 }

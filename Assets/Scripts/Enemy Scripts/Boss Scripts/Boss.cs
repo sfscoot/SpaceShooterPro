@@ -10,6 +10,7 @@ public class Boss : MonoBehaviour
     // create handle to animator component
     private Animator _bossAnimator;
     private AudioSource _explosionAudioSource;
+    [Header("Boss Variables")]
     [SerializeField] private BossSlider _bossSlider;
     [SerializeField] private int _bossDamage = 0;
     [SerializeField] private int _maxBossDamage = 100;
@@ -24,14 +25,30 @@ public class Boss : MonoBehaviour
     private bool _dreadnaughtRearGunsDead = false;
     private SpawnManager _spawnManager;
 
+    [Header("Shield Variables")]
+    [SerializeField]  private GameObject _bossShield;
+    [SerializeField] int _bossShieldMaxLevel = 6;
+    private int _bossShieldLevel = 0;
+    private bool _bossShieldActive = false;
+
+    private Vector3 _bossShieldMax = new Vector3(5.0f, 1.0f, 0.0f);
+    private Vector3 _bossShield6 = new Vector3(5.0f, 0.9f, 0.0f);
+    private Vector3 _bossShield5 = new Vector3(5.0f, 0.8f, 0.0f);
+    private Vector3 _bossShield4 = new Vector3(5.0f, 0.7f, 0.0f);
+    private Vector3 _bossShield3 = new Vector3(5.0f, 0.6f, 0.0f);
+    private Vector3 _bossShield2 = new Vector3(5.0f, 0.5f, 0.0f);
+    private Vector3 _bossShield1 = new Vector3(5.0f, 0.4f, 0.0f);
+
+
     // reset player lives
     // final attack
     // boss explosion
-    // tell them it's the boss round
+
     // if they die, restart just the boss round
     // turn on powerup spawning for just ammo and lives
     private void Start()
     {
+
         transform.position = new Vector3(17.5f, 5.5f, 0f);
 
         _explosionAudioSource = GetComponent<AudioSource>();
@@ -82,16 +99,61 @@ public class Boss : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+    public void ActivateBossShield()
+    {
+        _bossShieldActive = true;
+        _bossShieldLevel = _bossShieldMaxLevel;
+    }
+
+    public void DamageBossShield()
+    {
+
+        _bossShieldLevel -= 1;
+        Debug.Log($"boss shield has been damaged {_bossShieldLevel}");
+        switch (_bossShieldLevel)
+        {
+            case 5:
+                _bossShield.transform.localScale = _bossShield5;
+                break;
+            case 4:
+                _bossShield.transform.localScale = _bossShield4;
+                break;
+            case 3:
+                _bossShield.transform.localScale = _bossShield3;
+                break;
+            case 2:
+                _bossShield.transform.localScale = _bossShield2;
+                break;
+            case 1:
+                _bossShield.transform.localScale = _bossShield1;
+                break;
+            case 0:
+                _bossShield.gameObject.SetActive(false);
+                break;
+            default:
+                Debug.LogError("unknown shield level encountered" + _bossShieldLevel);
+                break;
+        }
+}
     public void BossSeparates()
     {
         _bossAnimator.SetTrigger("BossSeparates");
     }
 
+    
+    public void BossEnters()
+    {
+        _bossAnimator.SetTrigger("BossEnters");
+    }
     public void BossRejoins()
     {
         _bossAnimator.SetTrigger("BossRejoins");
     }
 
+    public void BossLeaves()
+    {
+        _bossAnimator.SetTrigger("BossLeaves");
+    }
     public void BossInPosition()
     {
         _bossInPosition = true;
@@ -99,6 +161,8 @@ public class Boss : MonoBehaviour
 
     public void StartSweepAndShoot()
     {
+        _dreadnaughtFrontGunsDead = false;
+        _dreadnaughtRearGunsDead = false;
         StartCoroutine("SweepAndShoot");
     }
     IEnumerator SweepAndShoot()
@@ -131,8 +195,6 @@ public class Boss : MonoBehaviour
         if (_dreadnaughtRearGunsDead && _dreadnaughtFrontGunsDead)
         {
             _spawnManager.BossWaveComplete();
-            Debug.Log("boss wave complete");
-
         }
     }
 
@@ -151,9 +213,5 @@ public class Boss : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        
-    }
 
 }
