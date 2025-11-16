@@ -11,10 +11,8 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private WaveClass[] _waves;
     [SerializeField] private int _waveTransitionDelay = 10;
-    [SerializeField] private int _bossLevel = 4;
-    [SerializeField] private int _bossLevel1AmmoBonus = 50;
-    [SerializeField] private float _mechLToRAttackSpeed = 5f;
-    [SerializeField] private float _mechOutsideInAttackSpeed = 8f;
+
+    [SerializeField] private GameObject _killCountDown;
     private int _currentWave;
     private int _currentWaveIndex;
     private int _waveEnemiesToSpawn = 99;
@@ -52,6 +50,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private GameObject _dreadnaughtFront;
     private DreadnaughtFront _dreadnaughtFrontController;
 
+
     [SerializeField] private GameObject _dreadnaughtRear;
     private DreadnaughtRear _dreadnaughtRearController;
     [SerializeField] private GameObject _bossShield;
@@ -61,6 +60,10 @@ public class SpawnManager : MonoBehaviour
     private int _bossWave = 1;
     private Transform[] _dreadnaughtFrontWeapons;
     private Transform[] _dreadnaughtRearWeapons;
+    [SerializeField] private int _bossLevel = 4;
+    [SerializeField] private int _bossLevel1AmmoBonus = 50;
+    [SerializeField] private float _mechLToRAttackSpeed = 5f;
+    [SerializeField] private float _mechOutsideInAttackSpeed = 8f;
 
     private bool _stopSpawning = false;
 
@@ -85,7 +88,7 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = true;
         _currentWave = 1;
         _uiManager.DisplayWaveOn(_currentWave);
-        _boss = _bossGameObject.GetComponent<Boss>();  // scj - change this to the "try" format
+        _boss = _bossGameObject.GetComponent<Boss>(); 
 
         if (_boss == null) Debug.LogError("boss missing");
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -98,29 +101,45 @@ public class SpawnManager : MonoBehaviour
     }
     public void StartSpawning()
     {
+        Debug.Log($"in StartSpawning current wave is {_currentWave}");
         _uiManager.DisplayWaveOff();
         WaveInitialize();
         _stopSpawning = false;
-        StartCoroutine("SpawnEnemy");
+        StartCoroutine(SpawnEnemy(_waveEnemiesToSpawn)); ;
         StartCoroutine("SpawnPowerUp");
     }
 
     public void Update()
     {
-        if (_waveEnemiesDefeated == _waveEnemiesToSpawn && _bossLevelActive == false)
+        if (_bossLevelActive == true)
+            BossLevelController();
+        else
+            LevelController();
+    }
+
+    private void LevelController()
+    {
+        if (_waveEnemiesDefeated == _waveEnemiesToSpawn)
         {
             _stopSpawning = true;
-
-            WaveInitialize();
             _currentWave++;
+
+            if (_currentWave < _bossLevel)
+            {
+                WaveInitialize();
+                StartCoroutine("WaveTransition");
+            }
+
+
             if (_currentWave == _bossLevel)
             {
                 _bossLevelActive = true;
                 _bossWave = 1;
             }
-            else StartCoroutine("WaveTransition");
         }
-
+    }
+    public void BossLevelController()
+    {
         if (_bossLevelActive == true && _bossWaveAttackActive == false)
         {
             _bossWaveAttackActive = true;
@@ -150,15 +169,15 @@ public class SpawnManager : MonoBehaviour
             }
         }
     }
-
     public void WaveInitialize()
     {
         _currentWaveIndex = _currentWave - 1;
         _waveEnemiesToSpawn = _waves[_currentWaveIndex].enemyCount;
+
         _enemySpawnRate = _waves[_currentWaveIndex].enemySpawnRate;
         _powerUpSpawnRate = _waves[_currentWaveIndex].powerUpSpawnRate;
         _waveEnemiesDefeated = 0;
-        _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
+        // _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
 
         InitializeWavePowerUps();
         InitializeWaveEnemies();
@@ -167,12 +186,14 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         _uiManager.DisplayWaveOn(_currentWave);
+        Debug.Log($"just displayed the wave {_currentWave}");
         yield return new WaitForSeconds(_waveTransitionDelay);
 
         _stopSpawning = false;
-        StartCoroutine("SpawnEnemy");
+        StartCoroutine(SpawnEnemy(_currentWave));
         StartCoroutine("SpawnPowerUp");
         _uiManager.DisplayWaveOff();
+        _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
     }
 
     IEnumerator BossWave1()
@@ -303,13 +324,15 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = false;
     }
 
-    IEnumerator SpawnEnemy()
+    IEnumerator SpawnEnemy(int waveEnemiesToSpawn)
     {
         _waveEnemiesSpawned = 0;
         yield return new WaitForSeconds(_enemySpawnRate);
 
-        for (int i = 1; i <= _waveEnemiesToSpawn; i++) 
+        Debug.Log($"Current wave is {_currentWave}");
+        for (int i = 1; i <= waveEnemiesToSpawn; i++) 
         {
+            Debug.Log($"in the enemy spawn loop i = {i} enemies to spawn is {waveEnemiesToSpawn} and enemies spawned is {_waveEnemiesSpawned}");
             _tmpEnemyType = EnemyTypePicker();
 
             switch (_tmpEnemyType)
@@ -332,6 +355,7 @@ public class SpawnManager : MonoBehaviour
                 Vector3 enemySpawnPosition = new Vector3(Random.Range(-9.5f, 9.5f), 7.0f, 0f);
                 _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
+                Debug.Log($"just spawned an enemy");
             } else
             {
                 _leftOrRight = Random.Range(0f, 1f);
@@ -349,6 +373,7 @@ public class SpawnManager : MonoBehaviour
                 _enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
                 _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, _enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
+                Debug.Log($"just spawned an enemy");
             }
 
             _tmpNewEnemy.transform.parent = _enemyContainer.transform;
@@ -392,10 +417,6 @@ public class SpawnManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
-    //
-    // Powerup Availability System
-    //
 
     private void InitializeWavePowerUps()
     {

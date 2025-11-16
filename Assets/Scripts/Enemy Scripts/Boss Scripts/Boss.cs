@@ -202,6 +202,7 @@ public class Boss : MonoBehaviour
     {
         _bossDamage += damage;
         _bossSlider.UpdateDamageSlider(_bossDamage, _maxBossDamage);
+        Debug.Log($"damage to boss is: {_bossDamage}");
     }
     void CalculateMovement()
     {
