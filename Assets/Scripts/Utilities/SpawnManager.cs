@@ -105,7 +105,7 @@ public class SpawnManager : MonoBehaviour
         _uiManager.DisplayWaveOff();
         WaveInitialize();
         _stopSpawning = false;
-        StartCoroutine(SpawnEnemy(_waveEnemiesToSpawn)); ;
+        StartCoroutine(SpawnEnemy(_waveEnemiesToSpawn));
         StartCoroutine("SpawnPowerUp");
     }
 
@@ -190,7 +190,7 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(_waveTransitionDelay);
 
         _stopSpawning = false;
-        StartCoroutine(SpawnEnemy(_currentWave));
+        StartCoroutine(SpawnEnemy(_waveEnemiesToSpawn));
         StartCoroutine("SpawnPowerUp");
         _uiManager.DisplayWaveOff();
         _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);

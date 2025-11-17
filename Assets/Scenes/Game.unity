@@ -2335,7 +2335,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -100, y: 0}
   m_SizeDelta: {x: -190, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2571,8 +2571,8 @@ RectTransform:
   m_Father: {fileID: 1362843531}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5434,23 +5434,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - waveNumber: 1
-    enemyCount: 1
+    enemyCount: 5
     powerUpSpawnRate: 2
     enemySpawnRate: 2
   - waveNumber: 2
-    enemyCount: 2
+    enemyCount: 5
     powerUpSpawnRate: 2
     enemySpawnRate: 2
   - waveNumber: 3
-    enemyCount: 3
+    enemyCount: 6
     powerUpSpawnRate: 2
     enemySpawnRate: 2
   - waveNumber: 4
-    enemyCount: 4
+    enemyCount: 7
     powerUpSpawnRate: 2
     enemySpawnRate: 2
   - waveNumber: 5
-    enemyCount: 5
+    enemyCount: 8
     powerUpSpawnRate: 2
     enemySpawnRate: 2
   - waveNumber: 6
@@ -8027,7 +8027,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []

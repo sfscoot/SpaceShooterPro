@@ -121,45 +121,13 @@ public class HorizonalEnemy : MonoBehaviour
             }
         }
 
-        if (other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine") Destroy(other.gameObject);
-
-        /*
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
         {
-            // _explosionAudioSource.Play();
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Missile")
-        {
-            _explosionAudioSource.Play();
+            other.gameObject.SetActive(false);
             Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-            PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "Mine")
-        {
-            // _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-            PlayEnemyDeathSequence();
         }
-        //_spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-        */
-    }
 
     void PlayEnemyDeathSequence()
     {
