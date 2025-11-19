@@ -23,12 +23,14 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null)
-        {
-            Debug.LogError("Error: Explosion Audio Source not found");
-        }
+        if (_explosionAudioSource == null) Debug.LogError("Error: Explosion Audio Source not found");
+
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
         if (_boss == null) Debug.LogError("boss not found");
+
+        if (_missilePrefab == null) Debug.LogError("Dreadnaught missile launcher - missile prefab not assigned");
+
+        if (_explosionAudioSource == null) Debug.LogError("Dreadnaught missile launcher - explosion audio source not assigned");
 
         _parent = transform.parent;
         _grandparent = _parent.transform.parent;

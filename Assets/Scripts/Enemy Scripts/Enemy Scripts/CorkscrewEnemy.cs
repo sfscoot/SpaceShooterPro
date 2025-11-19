@@ -17,6 +17,7 @@ public class CorkscrewEnemy : MonoBehaviour
 
     private bool _playerDestroyed = false;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
 
     private void Start()
     {
@@ -55,9 +56,10 @@ public class CorkscrewEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _explosionAudioSource.Play();
+        
         if (other.tag == "Player")
         {
+            _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             Player player = other.transform.GetComponent<Player>();
 
@@ -70,6 +72,7 @@ public class CorkscrewEnemy : MonoBehaviour
 
         if (other.tag == "PlayerLaser")
         {
+            _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
@@ -83,6 +86,7 @@ public class CorkscrewEnemy : MonoBehaviour
 
         if (other.tag == "Missile")
         {
+            _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
@@ -95,6 +99,7 @@ public class CorkscrewEnemy : MonoBehaviour
 
         if (other.tag == "Mine")
         {
+            _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
@@ -108,7 +113,8 @@ public class CorkscrewEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         // _enemyAnimator.SetTrigger("OnEnemyDeath");
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());

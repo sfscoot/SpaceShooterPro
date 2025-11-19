@@ -228,7 +228,7 @@ MonoBehaviour:
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
   _shieldVisualizer: {fileID: 827641930037138730}
-  _enemySpeed: 5
+  _enemySpeed: 4
   _rightBound: 11
   _leftBound: -11
   _topBound: 11
@@ -253,7 +253,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.030371666, y: 2.8489685}
+  m_Offset: {x: -0.030373096, y: 2.480236}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -264,7 +264,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.6690044, y: 2.074911}
+  m_Size: {x: 8.565337, y: 2.812376}
   m_EdgeRadius: 0
 --- !u!82 &150207832699074647
 AudioSource:
@@ -578,7 +578,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6673403835710632363
 Transform:
   m_ObjectHideFlags: 0

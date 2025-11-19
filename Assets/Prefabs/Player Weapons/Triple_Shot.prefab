@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6849088488358944971}
   m_Layer: 0
   m_Name: Triple_Shot
-  m_TagString: Untagged
+  m_TagString: PlayerLaser
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,6 +100,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerLaser
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e3fcba93b87fa940a6e5f3fde68e836, type: 3}
 --- !u!4 &4495534310566970942 stripped
@@ -175,6 +180,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: laser
       objectReference: {fileID: 0}
+    - target: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerLaser
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e3fcba93b87fa940a6e5f3fde68e836, type: 3}
 --- !u!4 &2835285217561757257 stripped
@@ -249,6 +259,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: laser (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
+        type: 3}
+      propertyPath: m_TagString
+      value: PlayerLaser
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e3fcba93b87fa940a6e5f3fde68e836, type: 3}

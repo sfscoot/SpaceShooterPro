@@ -8,9 +8,6 @@ public class MechAttack : MonoBehaviour
     private Mech[] _mechArmy;
     private float[] xTargets = { -9f, -6f, -3f, 0f, 3f, 6f, 9f };
     private float _tmpYPos;
-    // private float _verticalTarget = 3f;
-    // private bool _mechAppearOn = false;
-    // private bool _mechsInPosition = false;
     private bool _mechBounceAttackActive = false;
     [SerializeField] private float _attack1Interval;
     [SerializeField] private float _verticalDrop;

@@ -24,6 +24,8 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     {
         transform.rotation =  Quaternion.Euler (0f, 0f, 0f);
         _boss = GameObject.Find("Boss").GetComponent<Boss>();
+        if (_laserPrefab == null) Debug.LogError("Laser prefab missing on Dreadnaught Rear Cannon");
+        if (_explosionPreFab == null) Debug.LogError("Explosion prefab missing on Dreadnaught Rear Cannon");
         if (_boss == null) Debug.LogError("boss not found");
 
         _parent = transform.parent;

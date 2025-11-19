@@ -13,6 +13,7 @@ public class HomingMissileEnemy : MonoBehaviour
     private Animator _enemyAnimator;
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
     [SerializeField] private GameObject _homingMissilePrefab;
     private GameObject _enemyWeapon;
     private float _fireRate = 3.0f;
@@ -120,13 +121,8 @@ public class HomingMissileEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        //_enemyAnimator.SetTrigger("OnEnemyDeath");
         Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-        //_enemySpeed /= 1.25f;
-        //Destroy(GetComponent<Collider2D>());
-        //Destroy(GetComponent<Rigidbody2D>());
-        //_canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
-        //Destroy(gameObject, 2.8f);
+        _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject);
     }
 

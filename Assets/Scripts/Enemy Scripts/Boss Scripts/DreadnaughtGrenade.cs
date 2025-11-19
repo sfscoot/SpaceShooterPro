@@ -17,9 +17,11 @@ public class DreadnaughtGrenade : MonoBehaviour
 
     private void Start()
     {
+        if (_explosionPreFab == null) Debug.LogError("Dreadnaught Grenade - explosion prefab not assigned");
         _collider = GetComponent<Collider2D>();
         _collider.enabled = true;
         _explosionAudioSource = GetComponent<AudioSource>();
+        if (_explosionAudioSource == null) Debug.LogError("Dreadnaught Grenade - explosion audio source not assigned");
         StartCoroutine(ExplosionDelay());
     }
     void Update()

@@ -52,10 +52,8 @@ public class Boss : MonoBehaviour
         transform.position = new Vector3(17.5f, 5.5f, 0f);
 
         _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null)
-        {
-            Debug.LogError("Error: Explosion Audio Source not found");
-        }
+        if (_explosionAudioSource == null) Debug.LogError("Error: Explosion Audio Source not found");
+
         _bossAnimator = GetComponent<Animator>();
         if (_bossAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
         _bossAnimator.SetTrigger("BossEnters");
@@ -72,26 +70,8 @@ public class Boss : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null) Debug.LogError("spawn manager not found");
 
-        //StartCoroutine("SweepAndShoot"); // first Boss attack launches automatically
-
         _bossSlider = GameObject.Find("BossSlider").GetComponent<BossSlider>();
         if (_bossSlider == null) Debug.LogError("boss slider not found");
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            _bossAnimator.SetTrigger("BossEnters");
-        }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            _bossAnimator.SetTrigger("BossSeparates");
-        }
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            _bossAnimator.SetTrigger("BossRejoins");
-        }
     }
 
     public void ActivateBoss()
@@ -204,6 +184,8 @@ public class Boss : MonoBehaviour
         _bossSlider.UpdateDamageSlider(_bossDamage, _maxBossDamage);
         Debug.Log($"damage to boss is: {_bossDamage}");
     }
+
+    /*
     void CalculateMovement()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
@@ -213,6 +195,6 @@ public class Boss : MonoBehaviour
             transform.position = new Vector3(randomX, 7.5f, 0);
         }
     }
-
+    */
 
 }

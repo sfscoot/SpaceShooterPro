@@ -45,13 +45,14 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        CheckTextObjectAssignments();
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
         _gameRestartText.gameObject.SetActive(false);
         _waveText.gameObject.SetActive(false);
         _gameBroadcastMsg.gameObject.SetActive(false);
 
-        if (_waveText == null) Debug.LogError("level text not assigned");
+        if (_player == null) Debug.LogError("UIManager - _player not assigned");
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         if (_gameManager == null)  Debug.LogError("ERROR! GameManager not found");
@@ -77,6 +78,31 @@ public class UIManager : MonoBehaviour
             StopCoroutine("LowAmmoFlicker");
             ResetAmmoDisplay();
         }
+    }
+
+    private void CheckTextObjectAssignments()
+    {
+        if (_scoreText == null) Debug.LogError("UIManager - _scoreText not assigned");
+        if (_ammoCountTxt == null) Debug.LogError("UIManager - ammo count text not assigned");
+        if (_homingMissileActiveTxt == null) Debug.LogError("UIManager - _homingMissileActiveTxt not assigned");
+
+
+        if (_gameOverText == null) Debug.LogError("UIManager - game over text not assigned");
+        if (_gameRestartText == null) Debug.LogError("UIManager - _gameRestartText not assigned");
+        if (_waveText == null) Debug.LogError("UIManager - _waveText not assigned");
+
+        if (_thrusterPowerLevelText == null) Debug.LogError("UIManager - _thrusterPowerLevelText not assigned");
+        if (_thrusterLevelImg == null) Debug.LogError("UIManager - _thrusterLevelImg not assigned");
+
+
+        if (_livesImage == null) Debug.LogError("UIManager - _livesImage not assigned");
+        if (_liveSprites == null) Debug.LogError("UIManager - _liveSprites not assigned");
+
+        if (_weaponsOfflineClip == null) Debug.LogError("UIManager - _weaponsOfflineClip not assigned");
+        if (_weaponsOnlineClip == null) Debug.LogError("UIManager - _weaponsOnlineClip not assigned");
+
+
+
     }
     public void UpdateScore(int playerScore)
     {

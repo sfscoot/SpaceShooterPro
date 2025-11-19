@@ -24,6 +24,7 @@ public class DreadnaughtFront : MonoBehaviour
     void Start()
     {
         _laserCannons = transform.GetComponentsInChildren<DreadnaughtLaserCannon>();
+        if (_laserCannons == null) Debug.LogWarning("Dreadnaught laser cannons are missing");
         _sweepAttack = true;
         _bossScript = GetComponentInParent<Boss>();
 

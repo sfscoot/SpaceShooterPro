@@ -9,7 +9,6 @@ public class DreadnaughtRear : MonoBehaviour
     private GameObject _explosion;
     private Vector3 _explosionLocation;
 
-    [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _rotationDistance = 4.0f;
     private bool _sweepAttack = false;
     private DreadnaughtMissileLauncher[] _missileLaunchers;
@@ -21,8 +20,10 @@ public class DreadnaughtRear : MonoBehaviour
     [SerializeField] private float _fireDelayTime;
     private bool _delayFire;
     private Boss _bossScript;
+    
     void Start()
     {
+        if (_explosionPreFab == null) Debug.LogError("Explosion prefab missing in Dreadnaught Rear");
         _missileLaunchers = transform.GetComponentsInChildren<DreadnaughtMissileLauncher>();
         _sweepAttack = true;
         _bossScript = GetComponentInParent<Boss>();

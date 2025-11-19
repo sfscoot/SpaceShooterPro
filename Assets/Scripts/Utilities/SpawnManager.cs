@@ -78,6 +78,7 @@ public class SpawnManager : MonoBehaviour
     private float _xSpawnValue;
     private int _powerupIndex;
     int _wavePowerupTypesAvailable;
+    int _waveEnemyTypesAvailable;
     [SerializeField] private float _mechVdropTarget;
 
     private Player _player;
@@ -186,7 +187,6 @@ public class SpawnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         _uiManager.DisplayWaveOn(_currentWave);
-        Debug.Log($"just displayed the wave {_currentWave}");
         yield return new WaitForSeconds(_waveTransitionDelay);
 
         _stopSpawning = false;
@@ -329,10 +329,8 @@ public class SpawnManager : MonoBehaviour
         _waveEnemiesSpawned = 0;
         yield return new WaitForSeconds(_enemySpawnRate);
 
-        Debug.Log($"Current wave is {_currentWave}");
         for (int i = 1; i <= waveEnemiesToSpawn; i++) 
         {
-            Debug.Log($"in the enemy spawn loop i = {i} enemies to spawn is {waveEnemiesToSpawn} and enemies spawned is {_waveEnemiesSpawned}");
             _tmpEnemyType = EnemyTypePicker();
 
             switch (_tmpEnemyType)
@@ -355,7 +353,6 @@ public class SpawnManager : MonoBehaviour
                 Vector3 enemySpawnPosition = new Vector3(Random.Range(-9.5f, 9.5f), 7.0f, 0f);
                 _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
-                Debug.Log($"just spawned an enemy");
             } else
             {
                 _leftOrRight = Random.Range(0f, 1f);
@@ -373,7 +370,6 @@ public class SpawnManager : MonoBehaviour
                 _enemySpawnPosition = new Vector3(_xSpawnValue, Random.Range(-1.5f, 3.5f), 0f);
                 _tmpNewEnemy = Instantiate(_tmpRandomEnemy.enemyPrefab, _enemySpawnPosition, Quaternion.identity);
                 _waveEnemiesSpawned++;
-                Debug.Log($"just spawned an enemy");
             }
 
             _tmpNewEnemy.transform.parent = _enemyContainer.transform;
@@ -462,7 +458,6 @@ public class SpawnManager : MonoBehaviour
         float RNG = Random.value;
         float runningTotal = 0;
 
-        //        for (int i = 0; i < _powerUpTypes.Length; i++)
         for (int i = 0; i < _wavePowerupTypesAvailable; i++)
         {
             runningTotal += _powerUpTypes[i].frequency;
@@ -471,7 +466,6 @@ public class SpawnManager : MonoBehaviour
                 return _powerUpTypes[i].powerUpType;
             } 
         }
-
         return _powerUpTypes[0].powerUpType;
     }
 
@@ -492,7 +486,7 @@ public class SpawnManager : MonoBehaviour
         return _commonPowerUpsList[0].powerupPrefab;
     }
 
-    private GameObject RarePowerUpPicker() // scj
+    private GameObject RarePowerUpPicker()
     {
         float RNG = Random.value;
         float runningTotal = 0;
@@ -505,11 +499,10 @@ public class SpawnManager : MonoBehaviour
                 return _rarePowerUpsList[i].powerupPrefab;
             }
         }
-
         return _rarePowerUpsList[0].powerupPrefab;
     }
 
-    private GameObject EpicPowerUpPicker() // scj
+    private GameObject EpicPowerUpPicker() 
     {
         float RNG = Random.value;
         float runningTotal = 0;
@@ -560,6 +553,10 @@ public class SpawnManager : MonoBehaviour
                     break;
             }
         }
+        _waveEnemyTypesAvailable = 0;
+        if (_normalEnemyList.Count > 0) _waveEnemyTypesAvailable++;
+        if (_aggressiveEnemyList.Count > 0) _waveEnemyTypesAvailable++;
+        if (_evilEnemyList.Count > 0) _waveEnemyTypesAvailable++;
     }
 
     private EnemyType EnemyTypePicker()
@@ -567,7 +564,7 @@ public class SpawnManager : MonoBehaviour
         float RNG = Random.value;
         float runningTotal = 0;
 
-        for (int i = 0; i < _enemyTypes.Length; i++)
+        for (int i = 0; i < _waveEnemyTypesAvailable; i++)
         {
             runningTotal += _enemyTypes[i].frequency;
             if (RNG <= runningTotal)
@@ -582,6 +579,7 @@ public class SpawnManager : MonoBehaviour
     public void WaveEnemyDefeated()
     {
         _waveEnemiesDefeated++;
+        Debug.Log($"wave enemies defeated {_waveEnemiesDefeated} of {_waveEnemiesToSpawn} with {_waveEnemiesSpawned} already spawned");
         _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
     }
 

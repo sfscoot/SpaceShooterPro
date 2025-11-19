@@ -32,6 +32,7 @@ public class Mech : MonoBehaviour
 
         _mechAttackRoutine = GameObject.Find("MechAttack").GetComponent<MechAttack>();
         if (_mechAttackRoutine == null) Debug.LogError("MechAttack program not found");
+        if (_explosionPreFab == null) Debug.LogError("Mech - explosion prefab not assigned");
     }
     private void Update()
     {

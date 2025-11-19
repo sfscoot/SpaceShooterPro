@@ -14,6 +14,7 @@ public class Asteroid : MonoBehaviour
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null )  Debug.LogError("No spawn manager found for asteroids!");
+        if (_explosionPreFab == null) Debug.LogError("Asteroid - explosion prefab not assigned");
     }
 
     void Update()

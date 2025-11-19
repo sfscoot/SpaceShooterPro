@@ -144,54 +144,35 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        CheckObjectAssignments();
         transform.position = new Vector3(0, -3, 0);
         _directionModifier = 1;
         _baseFireRate = _fireRate;
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null) Debug.LogError("Player - spawnmanager not assigned");
+
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if (_uiManager == null) Debug.LogError("Player - UIManager not assigned");
+
         _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null) Debug.LogError("Player - audio source not assigned");
+
         _thrusterProgressBarImage = GameObject.Find("RadialProgressBar").GetComponent<Image>();
+        if (_thrusterProgressBarImage == null) Debug.LogError("Player - thruster progress bar not assigned");
+
         _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        if (_shieldRenderer == null) Debug.LogError("Player - shield renderer not assigned");
+
         _playerAnimator = GetComponent<Animator>();
+        if (_playerAnimator == null) Debug.LogError("Player - player animator not assigned");
+
         _cameraShake = GameObject.Find("Main Camera").GetComponent<CameraShake>();
+        if (_cameraShake == null) Debug.LogError("Player - Camera shake not assigned");
+
+        _audioSource.clip = _fireLaserAudio;
 
         InitializeThrusters();
-
-        if (_spawnManager == null)
-        {
-            Debug.Log("spawn manager reference failed");
-        }
-
-        if (_uiManager == null)
-        {
-            Debug.Log("UI manager not found");
-        }
-        
-        if ( _audioSource == null)
-        {
-            Debug.LogError("Player Audio Source is missing");
-        } else
-        {
-            _audioSource.clip = _fireLaserAudio;
-        }
-        if (_shieldVisualizer == null)
-        {
-            Debug.LogError("shield visualizer missing");
-        }
-
-        if (_thrusterProgressBarImage == null) 
-        {
-            Debug.LogError("Thruster progress bar not found");
-        }
-        if (_thrusterVisualizer == null) 
-        {
-            Debug.LogError("Thruster visualizer not found");
-        }
-        if (_missilePreFab == null) 
-        {
-            Debug.LogError("Missile prefab not found or assigned");
-        }
     }
 
     void Update()
@@ -201,6 +182,18 @@ public class Player : MonoBehaviour
         CheckForThruster();
         CheckForPowerupCollection();
     }
+
+    private void CheckObjectAssignments()
+    {
+        if (_thrusterVisualizer == null) Debug.LogError("Thruster visualizer not found");
+        if (_missilePreFab == null) Debug.LogError("Missile prefab not found or assigned");
+        if (_laserPrefab == null) Debug.LogError("Player - missile prefab not assigned");
+        if (_tripleShotLaserPreFab == null) Debug.LogError("Player - tripleshotlaserprefab not assigned");
+        if (_playerHomingMissilePreFab == null) Debug.LogError("Player - playerhomingmissileprefab not assigned");
+        if (_spaceMinePreFab == null) Debug.LogError("Player -  spacemineprefab not assigned");
+
+    }
+
     //***************************************************************************
     // Player Movement Code
     //***************************************************************************

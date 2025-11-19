@@ -9,6 +9,7 @@ public class HorizonalEnemy : MonoBehaviour
     [Header("Related Game Objects")]
     [SerializeField] private SpawnManager _spawnManager;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
     [SerializeField] private GameObject _shieldVisualizer;
     SpriteRenderer _shieldRenderer;
 
@@ -46,15 +47,18 @@ public class HorizonalEnemy : MonoBehaviour
     private void Start()
     {
         _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null )
-        {
-            Debug.LogError("explosion audio source not found");
-        }
+        if (_explosionAudioSource == null ) Debug.LogError("explosion audio source not found");
+
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+        if (_spawnManager == null) Debug.LogError("Horiconal Enemy - spawn manager not assigned");
+
+
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null) Debug.Log("Horizonal enemy - player object not assigned");
+
         if (_shieldVisualizer == null)
         {
-            Debug.LogError("Shield visualizer not initialized on HorizonalEnemy");
+            Debug.LogError("Horizonal Enemy - shield visualizer not assigned");
         } else
         {
             _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
@@ -62,6 +66,7 @@ public class HorizonalEnemy : MonoBehaviour
         }
         _enemyShield = transform.Find("Model/Shield");
         _shieldDownAudioSource = _enemyShield.GetComponent<AudioSource>();
+        if (_shieldDownAudioSource == null) Debug.LogError("Horizonal enemy - shield audio source missing");
         this.transform.Find("Model/Left_Scanner");
 
         _leftScanner.SetActive(true);
@@ -104,6 +109,9 @@ public class HorizonalEnemy : MonoBehaviour
     {
         if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
         {
+            {
+
+            }
             if (_shieldRenderer.isVisible)
             {
                 _shieldRenderer.enabled = false;
@@ -132,6 +140,7 @@ public class HorizonalEnemy : MonoBehaviour
     void PlayEnemyDeathSequence()
     {
         Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject);
 
     }

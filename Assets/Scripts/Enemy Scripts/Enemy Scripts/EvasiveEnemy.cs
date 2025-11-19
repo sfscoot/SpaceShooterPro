@@ -29,6 +29,7 @@ public class EvasiveEnemy : MonoBehaviour
     private Animator _enemyAnimator; // clean this up? 
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
    // [SerializeField] float _trackingTriggerDistance = 3.0f;
 
     [SerializeField] private GameObject _laserPrefab;
@@ -203,12 +204,8 @@ public class EvasiveEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        // _enemyAnimator.SetTrigger("OnEnemyDeath");
         Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-        // _enemySpeed /= 1.25f;
-        // Destroy(GetComponent<Collider2D>());
-        // Destroy(GetComponent<Rigidbody2D>());
-        // _canFire = Time.time + 2.8f; // make it so enemy can't fire after they've been destroyed.
+        _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject, .2f);
     }
 
