@@ -15,9 +15,10 @@ public class CorkscrewEnemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
-    private bool _playerDestroyed = false;
+    private bool _enemyDestroyed = false;
     [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
+
 
     private void Start()
     {
@@ -45,9 +46,8 @@ public class CorkscrewEnemy : MonoBehaviour
 
     void CalculateMovement()
     {
-        // move  _enemySpeed meters per second
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
-        if (transform.position.y <= -5.44f) // if moving off the bottom of screen, respawn at random x pos at top 
+        if (transform.position.y <= -5.44f && _enemyDestroyed == false) // if moving off the bottom of screen, respawn at random x pos at top 
         {
             float randomX = Random.Range(-9.5f, 9.5f);
             transform.position = new Vector3(randomX, 7.5f, 0);
@@ -57,7 +57,7 @@ public class CorkscrewEnemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         
-        if (other.tag == "Player")
+        if (other.tag == "Player" || other.tag == "PlayerWeapon")
         {
             _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -113,6 +113,7 @@ public class CorkscrewEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
+        _enemyDestroyed = true;
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         // _enemyAnimator.SetTrigger("OnEnemyDeath");
@@ -137,9 +138,5 @@ public class CorkscrewEnemy : MonoBehaviour
             lasers[i].AssignEnemyLaser();
         }
         
-    }
-    public void SetPlayerDestroyed()
-    {
-        _playerDestroyed = true;
     }
 }

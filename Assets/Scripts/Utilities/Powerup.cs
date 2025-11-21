@@ -59,8 +59,12 @@ public class Powerup : MonoBehaviour
     }
     public void MoveTowardPlayer()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _pickupCollectSpeed * Time.deltaTime);
-        transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
+        if (this != null)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _pickupCollectSpeed * Time.deltaTime);
+            transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
+        }
+
     }
 
     public void SetMoveTowardPlayer()

@@ -139,7 +139,7 @@ public class HorizonalEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject);
 

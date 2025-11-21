@@ -12,6 +12,7 @@ public class Boss : MonoBehaviour
     private AudioSource _explosionAudioSource;
     [Header("Boss Variables")]
     [SerializeField] private BossSlider _bossSlider;
+    [SerializeField] private BossSlider _bossSlider2;
     [SerializeField] private int _bossDamage = 0;
     [SerializeField] private int _maxBossDamage = 100;
     [SerializeField] private GameObject _explosionPreFab;
@@ -182,7 +183,7 @@ public class Boss : MonoBehaviour
     {
         _bossDamage += damage;
         _bossSlider.UpdateDamageSlider(_bossDamage, _maxBossDamage);
-        Debug.Log($"damage to boss is: {_bossDamage}");
+        _bossSlider2.UpdateDamageSlider(_bossDamage, _maxBossDamage);
     }
 
     /*

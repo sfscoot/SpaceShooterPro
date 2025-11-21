@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _leftEngine;
     [SerializeField] private float _speed;
     [SerializeField] private float _defaultSpeed = 4.0f;
-    [SerializeField] private float _speedMultiplier = 2;
+    
     
     private Animator _playerAnimator;
     private UIManager _uiManager;
@@ -86,6 +86,7 @@ public class Player : MonoBehaviour
     [SerializeField] bool _tripleShotActive = false;
     [SerializeField] bool _shieldPowerupActive = false;
     [SerializeField] int _leftRightSwapDuration;
+    private bool _speedPowerupOn = false;
 
 
     [SerializeField] int _shieldMaxLevel = 4;
@@ -126,18 +127,14 @@ public class Player : MonoBehaviour
     private bool _thrusterActive = false;
 
 
-    [SerializeField]
-    private float _thrusterMaxChargeLevel;
-    [SerializeField]
-    private float _thrusterMinChargeLevel;
-    [SerializeField]
-    private float _thrusterDischargeRate = 1.0f;
-    [SerializeField]
-    private float _thrusterRechargeRate = 0.5f;
+    [SerializeField] private float _thrusterMaxChargeLevel;
+    [SerializeField] private float _thrusterMinChargeLevel;
+    [SerializeField] private float _thrusterDischargeRate = 1.0f;
+    [SerializeField] private float _thrusterRechargeRate = 0.5f;
+    [SerializeField] private float _speedMultiplier = 2;
     private float _thrusterChargeLevel;
 
-    // private float _canOverrideSpeed = -1;
-    // [SerializeField] private float _thrusterDuration = 5.0f;
+
     [SerializeField] private float _thrusterReloadDuration = 10.0f;
 
     // private float _timeLeftOnThruster;
@@ -454,7 +451,7 @@ public class Player : MonoBehaviour
                 _speed = _defaultSpeed;
             }
         }
-        if (Input.GetKeyUp(KeyCode.LeftShift) && _thrusterActive)
+        if (Input.GetKeyUp(KeyCode.LeftShift) && _thrusterActive && _speedPowerupOn == false)
         {
             _thrusterActive = false;
             _thrusterVisualizer.SetActive(false);
@@ -595,13 +592,15 @@ public class Player : MonoBehaviour
 
     public void SpeedPowerupActive()
     {
-        _speed = _defaultSpeed * _speedMultiplier; 
+        _speed = _defaultSpeed * _speedMultiplier;
+        _speedPowerupOn = true;
         StartCoroutine(SpeedPowerupPowerDown());
     }
 
     IEnumerator SpeedPowerupPowerDown()
     {
         yield return new WaitForSeconds(5);
+        _speedPowerupOn = false;
         _speed = _defaultSpeed;
     }
 

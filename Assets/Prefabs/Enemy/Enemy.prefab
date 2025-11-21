@@ -121,12 +121,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemySpeed: 2.5
-  _spawnManager: {fileID: 0}
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
   _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
     type: 3}
   _homingMissilePrefab: {fileID: 0}
+  _fireRate: 3
+  _laserOffset: -0.025
   _raycastRange: 5
 --- !u!212 &5441148295386992331
 SpriteRenderer:

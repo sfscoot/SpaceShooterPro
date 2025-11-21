@@ -102,7 +102,6 @@ public class SpawnManager : MonoBehaviour
     }
     public void StartSpawning()
     {
-        Debug.Log($"in StartSpawning current wave is {_currentWave}");
         _uiManager.DisplayWaveOff();
         WaveInitialize();
         _stopSpawning = false;
@@ -210,6 +209,10 @@ public class SpawnManager : MonoBehaviour
         _uiManager.DisplayWaveOff();
         _boss.StartSweepAndShoot();
         _player.EnableWeapons();
+        Debug.Log($"wave number {_currentWave} starting spawning in boss level");
+        _stopSpawning = false;
+        _powerUpSpawnRate = _waves[_currentWave - 1].powerUpSpawnRate;
+        StartCoroutine("SpawnPowerUp");
     }
 
     IEnumerator BossWave2()
@@ -379,6 +382,12 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUp()
     {
+        if (_currentWave == 6)
+        {
+            Debug.Log($"boss level powerups being spawned at a rate of {_powerUpSpawnRate}");
+        }
+            
+
         yield return new WaitForSeconds(_powerUpSpawnRate);
         while (_stopSpawning == false)
         {
@@ -455,6 +464,10 @@ public class SpawnManager : MonoBehaviour
     }
     private PowerUpType PowerUpTypePicker()
     {
+        if (_currentWave == 6) // boss level - only shield and ammo available
+        {
+            return _powerUpTypes[0].powerUpType;
+        }
         float RNG = Random.value;
         float runningTotal = 0;
 
