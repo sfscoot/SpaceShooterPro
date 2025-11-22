@@ -115,7 +115,7 @@ public class HomingMissile : MonoBehaviour
             }
         }
 
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);

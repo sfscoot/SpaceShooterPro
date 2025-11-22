@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEditor.UIElements;
@@ -34,8 +35,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float _fireRate = 0.5f;
     private float _baseFireRate;
     private float _canFire = -1f;
+    [SerializeField] int _ammoReloadAmount;
 
     // Missile variables
+    [Header("Missile and Mine Variables")]
     [SerializeField] private GameObject _missilePreFab;
     [SerializeField] private float _missileOffset;
     [SerializeField] private float _missilePowerupDuration;
@@ -87,6 +90,8 @@ public class Player : MonoBehaviour
     [SerializeField] bool _shieldPowerupActive = false;
     [SerializeField] int _leftRightSwapDuration;
     private bool _speedPowerupOn = false;
+    
+    private Transform[] _laserTransforms;
 
 
     [SerializeField] int _shieldMaxLevel = 4;
@@ -117,8 +122,9 @@ public class Player : MonoBehaviour
     // thruster vars
     // progress bar variables
 
-    [SerializeField]
-    private GameObject _thrusterVisualizer;
+    [Header("Thruster Variables")]
+
+    [SerializeField] private GameObject _thrusterVisualizer;
 
     private RadialProgressBar _radialProgressBar;
     private Image _thrusterProgressBarImage;
@@ -178,6 +184,13 @@ public class Player : MonoBehaviour
         CheckForWeaponFire();
         CheckForThruster();
         CheckForPowerupCollection();
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            _lives = 3;
+            _uiManager.UpdateLivesImage(_lives);
+            _rightEngine.SetActive(false);
+            _leftEngine.SetActive(false);
+        } 
     }
 
     private void CheckObjectAssignments()
@@ -310,13 +323,19 @@ public class Player : MonoBehaviour
         if (_tripleShotActive == true && _ammoCount >= 3)
         {
             _tmpLaser = Instantiate(_tripleShotLaserPreFab, transform.position, Quaternion.identity);
-            _tmpLaser.tag = "PlayerLaser";
+            _tmpLaser.tag = "PlayerWeapon";
+            _laserTransforms = _tmpLaser.GetComponentsInChildren<Transform>();
+            for (int i=0; i< _laserTransforms.Length; i++)
+            {
+                _laserTransforms[i].tag = "PlayerWeapon";
+            }
+
             _ammoCount -= 3;
         }
         else
         {
             _tmpLaser = Instantiate(_laserPrefab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
-            _tmpLaser.tag = "PlayerLaser";
+            _tmpLaser.tag = "PlayerWeapon";
             _ammoCount--;
         }
         _uiManager.UpdateAmmoCount(_ammoCount);
@@ -346,7 +365,7 @@ public class Player : MonoBehaviour
 
     public void AmmoReload()
     {
-        _ammoCount += 15;
+        _ammoCount += _ammoReloadAmount;
         _uiManager.UpdateAmmoCount(_ammoCount);
         _uiManager.SetLowAmmoWarning(false);
     }

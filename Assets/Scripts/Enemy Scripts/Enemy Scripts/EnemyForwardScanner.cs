@@ -17,10 +17,6 @@ public class EnemyForwardScanner : MonoBehaviour
             _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
             _enemyLaser.GetComponent<Laser>().AssignLaserDirection("down");
             _enemyLaser.GetComponent<Laser>().AssignEnemyLaser();
-            // Laser _tmpLaser = _enemyLaser.GetComponent<Laser>();
-            // if (_tmpLaser == null) Debug.Log("laser component not found");
-            // _tmpLaser.AssignLaserDirection("down");
-            // _tmpLaser.AssignEnemyLaser();
             _enemyLaser.tag = "EnemyLaser";
         }
     }

@@ -433,7 +433,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAME OVER
+  m_text: GAME OVER ALL YOUR BASES ARE BELONG TO US
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -526,8 +526,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 0, y: -28.98}
+  m_SizeDelta: {x: 200, y: 107.96466}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &83992455
 GameObject:
@@ -1623,7 +1623,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Kill Count
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5649,23 +5649,23 @@ MonoBehaviour:
   _waves:
   - waveNumber: 1
     enemyCount: 5
-    powerUpSpawnRate: 2
-    enemySpawnRate: 2
+    powerUpSpawnRate: 4
+    enemySpawnRate: 3
   - waveNumber: 2
     enemyCount: 8
-    powerUpSpawnRate: 2
-    enemySpawnRate: 2
+    powerUpSpawnRate: 4
+    enemySpawnRate: 3
   - waveNumber: 3
     enemyCount: 10
-    powerUpSpawnRate: 2
-    enemySpawnRate: 2
+    powerUpSpawnRate: 4
+    enemySpawnRate: 3
   - waveNumber: 4
     enemyCount: 12
-    powerUpSpawnRate: 2
+    powerUpSpawnRate: 3
     enemySpawnRate: 2
   - waveNumber: 5
     enemyCount: 14
-    powerUpSpawnRate: 2
+    powerUpSpawnRate: 3
     enemySpawnRate: 2
   - waveNumber: 6
     enemyCount: 0
@@ -5732,8 +5732,8 @@ MonoBehaviour:
   - name: HomingMissile
     powerupPrefab: {fileID: 5556103034255430727, guid: d43e8ebca150a8e4895c0889f266661c,
       type: 3}
-    powerUpType: 1
-    waveAvailable: 3
+    powerUpType: 0
+    waveAvailable: 1
     frequency: 0.1
   _commonPowerUpsList: []
   _rarePowerUpsList: []
@@ -7154,6 +7154,7 @@ MonoBehaviour:
   _laserOffset: 1.4
   _ammoCount: 15
   _fireRate: 0.5
+  _ammoReloadAmount: 5
   _missilePreFab: {fileID: 3502003195532156235, guid: 9ed2a10a276f1c04782c4b7e3d10127e,
     type: 3}
   _missileOffset: 1.4
@@ -7178,9 +7179,9 @@ MonoBehaviour:
   _thrusterVisualizer: {fileID: 2078239953}
   _thrusterMaxChargeLevel: 6
   _thrusterMinChargeLevel: 3
-  _thrusterDischargeRate: 1.5
-  _thrusterRechargeRate: 1
-  _speedMultiplier: 3
+  _thrusterDischargeRate: 1
+  _thrusterRechargeRate: 1.25
+  _speedMultiplier: 2.5
   _thrusterReloadDuration: 10
 --- !u!212 &1894934406
 SpriteRenderer:
@@ -7959,7 +7960,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ammo Count
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

@@ -57,56 +57,21 @@ public class CorkscrewEnemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         
-        if (other.tag == "Player" || other.tag == "PlayerWeapon")
+        if (other.tag == "Player")
         {
             _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            Player player = other.transform.GetComponent<Player>();
-
-            if (_player != null)
-            {
-                _player.Damage();
-            }
+            _player.AddToScore(10);
+            _player.Damage();
             PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Missile")
-        {
-            _explosionAudioSource.Play();
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Mine")
-        {
-            _explosionAudioSource.Play();
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
+            _player.AddToScore(10);
             PlayEnemyDeathSequence();
         }
     }

@@ -130,33 +130,7 @@ public class TrackingEnemy : MonoBehaviour
             PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "PlayerLaser")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Missile")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Mine")
+        if (other.tag == "PlayerWeapon")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _explosionAudioSource.Play();

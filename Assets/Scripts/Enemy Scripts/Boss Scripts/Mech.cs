@@ -116,7 +116,7 @@ public class Mech : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             Destroy(other.gameObject);
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);

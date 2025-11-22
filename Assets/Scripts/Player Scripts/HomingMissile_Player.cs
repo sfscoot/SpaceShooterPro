@@ -69,11 +69,13 @@ public class HomingMissile_Player : MonoBehaviour
     public void MissileTarget(GameObject targetEnemy)
     {
         _targetEnemy = targetEnemy;
+        Debug.Log($"Target enemy is {targetEnemy.name}");
         // StartCoroutine(MissileCooldown());
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        /*
         if (other.tag == "Player")
         {
             GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
@@ -98,5 +100,6 @@ public class HomingMissile_Player : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
+         */
     }
 }

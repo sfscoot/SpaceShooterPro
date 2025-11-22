@@ -8,7 +8,7 @@ public class EvasiveEnemyScanner : MonoBehaviour
     private Enemy _parent;
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "PlayerWeapon")
+        if (other.tag == "Player" || other.tag == "PlayerWeapon")
 
         {
             if (this.name == "Forward_Left_Sensor")

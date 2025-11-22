@@ -107,35 +107,35 @@ public class HorizonalEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" || other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
+        if (other.tag != "Player" &&  other.tag != "PlayerWeapon") return;
+
+
+        if (_shieldRenderer.isVisible) // 
         {
-            {
-
-            }
-            if (_shieldRenderer.isVisible)
-            {
-                _shieldRenderer.enabled = false;
-                _shieldDownAudioSource.Play();
-            } else
-            {
-                _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-                Player player = other.transform.GetComponent<Player>();
-
-                if (player != null)
-                {
-                    player.Damage();
-                }
-                PlayEnemyDeathSequence();
-            }
+            _shieldRenderer.enabled = false;
+            _shieldDownAudioSource.Play();
+            return;
         }
 
-        if (other.tag == "PlayerLaser" || other.tag == "Missile" || other.tag == "Mine")
+        _player.AddToScore(10);
+
+        if (other.tag == "Player")
         {
-            other.gameObject.SetActive(false);
+            _player.Damage();
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+        }
+
+
+        if (other.tag == "PlayerWeapon")
+        {
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            _explosionAudioSource.Play();
             Destroy(other.gameObject);
         }
 
-        }
+        PlayEnemyDeathSequence();
+
+    }
 
     void PlayEnemyDeathSequence()
     {

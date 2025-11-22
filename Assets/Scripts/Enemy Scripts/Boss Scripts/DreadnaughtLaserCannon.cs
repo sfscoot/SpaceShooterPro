@@ -61,7 +61,7 @@ public class DreadnaughtLaserCannon : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);

@@ -90,12 +90,14 @@ public class Laser : MonoBehaviour
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+        gameObject.tag = "EnemyLaser";
     }
 
     public void AssignLaserDirection(string direction)
     {
         _laserDirection = direction;
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (_isEnemyLaser == true && other.tag == "Player")
@@ -108,4 +110,5 @@ public class Laser : MonoBehaviour
             }
         }
     }
+
 }

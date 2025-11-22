@@ -29,11 +29,10 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        if (_player == null) Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        if (_player == null)
-        {
-            Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
-        }
+
+
         if (_spawnManager == null)
         {
             Debug.LogError("SpawnManager not assigned");
@@ -96,6 +95,7 @@ private void OnTriggerEnter2D(Collider2D other)
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            Debug.Log("dead enemy");
             _explosionAudioSource.Play();
             Player player = other.transform.GetComponent<Player>();
 
@@ -107,48 +107,10 @@ private void OnTriggerEnter2D(Collider2D other)
             PlayEnemyDeathSequence();
         }
 
-        if (other.tag == "PlayerLaser")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Missile")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
-        if (other.tag == "Mine")
-        {
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
-            Destroy(other.gameObject);
-            if (_player != null)
-            {
-                _player.AddToScore(10);
-            }
-
-            PlayEnemyDeathSequence();
-        }
-
         if (other.tag == "PlayerWeapon")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            Debug.Log("dead enemy");
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)

@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5067094422327242525}
   m_Layer: 0
   m_Name: Space_Mine
-  m_TagString: Mine
+  m_TagString: PlayerWeapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

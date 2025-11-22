@@ -159,7 +159,11 @@ public class Boss : MonoBehaviour
         {
             yield return null;
         }
-        
+    }
+
+    public void StopSweepAndShoot()
+    {
+        StopCoroutine("SweepAndShoot");
     }
 
     public void DreadnaughtGunsDead(string _frontOrRear)

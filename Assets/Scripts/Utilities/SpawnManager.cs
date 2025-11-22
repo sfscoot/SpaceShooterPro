@@ -66,6 +66,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _mechOutsideInAttackSpeed = 8f;
 
     private bool _stopSpawning = false;
+    private bool _gameOver = false;
 
     private UIManager _uiManager;
 
@@ -161,7 +162,7 @@ public class SpawnManager : MonoBehaviour
                     StartCoroutine(BossWave5());
                     break;
                 case 6:
-                    StartCoroutine(GameOver());
+                    StartCoroutine(GameOverPlayerWins());
                     break;
                 default:
                     Debug.LogWarning("bad switch case in boss controller");
@@ -184,7 +185,8 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator WaveTransition()
     {
-        yield return new WaitForSeconds(1);
+        Debug.Log($"wave transition - {_currentWave}");
+        yield return new WaitForSeconds(2);
         _uiManager.DisplayWaveOn(_currentWave);
         yield return new WaitForSeconds(_waveTransitionDelay);
 
@@ -209,7 +211,6 @@ public class SpawnManager : MonoBehaviour
         _uiManager.DisplayWaveOff();
         _boss.StartSweepAndShoot();
         _player.EnableWeapons();
-        Debug.Log($"wave number {_currentWave} starting spawning in boss level");
         _stopSpawning = false;
         _powerUpSpawnRate = _waves[_currentWave - 1].powerUpSpawnRate;
         StartCoroutine("SpawnPowerUp");
@@ -217,6 +218,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator BossWave2()
     {
+        _stopSpawning = true;
         _player.DisableWeapons();
         yield return new WaitForSeconds(2);
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
@@ -280,6 +282,7 @@ public class SpawnManager : MonoBehaviour
         _boss.StartSweepAndShoot();
         _uiManager.DisplayWaveOff();
         _player.EnableWeapons();
+        _stopSpawning = false;
     }
 
     private void ActivateBossWeapons()
@@ -309,7 +312,7 @@ public class SpawnManager : MonoBehaviour
     
     }
 
-    IEnumerator GameOver()
+    IEnumerator GameOverPlayerWins()
     {
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _dreadnaughtFrontController.DreadnaughtDestruction();
@@ -382,12 +385,6 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUp()
     {
-        if (_currentWave == 6)
-        {
-            Debug.Log($"boss level powerups being spawned at a rate of {_powerUpSpawnRate}");
-        }
-            
-
         yield return new WaitForSeconds(_powerUpSpawnRate);
         while (_stopSpawning == false)
         {
@@ -415,14 +412,12 @@ public class SpawnManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        StopAllSpawning();
-
+        _stopSpawning = true;        
         foreach (Transform child in _enemyContainer.transform)
         {
             Destroy(child.gameObject);
         }
     }
-
     private void InitializeWavePowerUps()
     {
         _commonPowerUpsList.Clear();
@@ -591,13 +586,10 @@ public class SpawnManager : MonoBehaviour
 
     public void WaveEnemyDefeated()
     {
+        Debug.Log("just killed an enemy");
         _waveEnemiesDefeated++;
         Debug.Log($"wave enemies defeated {_waveEnemiesDefeated} of {_waveEnemiesToSpawn} with {_waveEnemiesSpawned} already spawned");
+        if (_waveEnemiesDefeated > _waveEnemiesSpawned) Debug.Break();
         _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
-    }
-
-    public void StopAllSpawning()
-    {
-        _stopSpawning = true;
     }
 }

@@ -18,9 +18,8 @@ public class BossShieldGenerator : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("hit by " + other.tag);
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
-            Debug.Log("hit by player laser");
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             // explosionAudioSource.Play();

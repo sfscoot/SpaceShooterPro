@@ -17,7 +17,7 @@ public class BossShieldCollider : MonoBehaviour
         _explosionPosition = other.transform.position;
 
 
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             other.gameObject.SetActive(false);
             _explosion = Instantiate(_explosionPreFab, other.transform.position, Quaternion.identity);

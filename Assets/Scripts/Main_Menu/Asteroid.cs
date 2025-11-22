@@ -24,7 +24,7 @@ public class Asteroid : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "PlayerLaser")
+        if (other.tag == "PlayerWeapon")
         {
             _explosionPreFab.transform.localScale = Vector3.one;
             Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
