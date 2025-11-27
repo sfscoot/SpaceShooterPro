@@ -6,22 +6,14 @@ using static UnityEngine.GraphicsBuffer;
 
 public class TrackingEnemy : MonoBehaviour
 {
-
-    [Header("Screen Boundaries")]
-    // [SerializeField] private float _rightBound = 11f;
-    // [SerializeField] private float _leftBound = -11f;
-    // [SerializeField] private float _topBound = 5f;
-    // [SerializeField] private float _bottomBound = -10.5f;
-
     [Header("Enemy Variables")]
     [SerializeField] private float _enemySpeed = 2.50f;
     [SerializeField] private float _trackingCooldown = 4;
+    [SerializeField] private int _enemyPointsValue;
     private Player _player;
 
     private SpawnManager _spawnManager;
 
-    // create handle to animator component
-    private Animator _enemyAnimator; // clean this up? 
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
@@ -55,8 +47,8 @@ public class TrackingEnemy : MonoBehaviour
         {
             Debug.LogError("Error: Explosion Audio Source not found");
         }
-        _enemyAnimator = GetComponent<Animator>();
-       // if (_enemyAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
+
+        _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
     void Update()
@@ -116,7 +108,6 @@ public class TrackingEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -125,6 +116,7 @@ public class TrackingEnemy : MonoBehaviour
             if (_player != null)
             {
                 _player.Damage();
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -132,12 +124,12 @@ public class TrackingEnemy : MonoBehaviour
 
         if (other.tag == "PlayerWeapon")
         {
+            gameObject.GetComponent<Collider2D>().enabled = false; // stops the tripleshot laser getting counted twice 
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddToScore(10);
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();

@@ -12,6 +12,7 @@ public class HomingMissile_Player : MonoBehaviour
     [SerializeField] private float _missileSpeed = 2.50f;
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
 
     private GameObject _targetEnemy;
 
@@ -41,8 +42,6 @@ public class HomingMissile_Player : MonoBehaviour
             Destroy(this);
         }
 
-
-
         if (transform.position.y < -5.0)
         {
             Destroy(gameObject);
@@ -59,18 +58,22 @@ public class HomingMissile_Player : MonoBehaviour
 
     IEnumerator MissileCooldown()
     {
+        Debug.Log("in missile cooldown");
         yield return new WaitForSeconds(_trackingCooldown);
         _targetReleased = true;
         _targetAcquired = false;
         transform.eulerAngles = new Vector3(0f, 0f, 0f);
         Debug.Log("target is released - ");
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        Destroy(this);
     }
 
     public void MissileTarget(GameObject targetEnemy)
     {
         _targetEnemy = targetEnemy;
         Debug.Log($"Target enemy is {targetEnemy.name}");
-        // StartCoroutine(MissileCooldown());
+        StartCoroutine(MissileCooldown());
     }
 
     private void OnTriggerEnter2D(Collider2D other)

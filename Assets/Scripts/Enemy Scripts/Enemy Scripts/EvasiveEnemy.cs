@@ -8,31 +8,20 @@ public class EvasiveEnemy : MonoBehaviour
     // tmp vars
     private bool _canMove = true;
 
-    [Header("Screen Boundaries")]
-    /*
-    [SerializeField] private float _rightBound = 11f;
-    [SerializeField] private float _leftBound = -11f;
-    [SerializeField] private float _topBound = 5f;
-    [SerializeField] private float _bottomBound = -10.5f;
-    */
-
     [Header("Enemy Variables")]
+    [SerializeField] private GameObject _explosionPreFab;
+    [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _enemySpeed = 2.50f;
     [SerializeField] private float _evadingCooldown = 1.5f;
+    [SerializeField] private int _enemyPointsValue;
+
     private bool _evading = false;
     private string _evadeDirection = "left";
     private Player _player;
 
     private SpawnManager _spawnManager;
-
-    // create handle to animator component
-    private Animator _enemyAnimator; // clean this up? 
-    private AudioSource _explosionAudioSource;
-    [SerializeField] private GameObject _explosionPreFab;
     private GameObject _explosion;
-   // [SerializeField] float _trackingTriggerDistance = 3.0f;
 
-    [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
@@ -45,6 +34,7 @@ public class EvasiveEnemy : MonoBehaviour
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
+
         if (_player == null)
         {
             Debug.LogError("Player not assigned " + this.tag + "  " + this.gameObject.name);
@@ -53,11 +43,8 @@ public class EvasiveEnemy : MonoBehaviour
         {
             Debug.LogError("SpawnManager not assigned");
         }
-        _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null)
-        {
-            Debug.LogError("Error: Explosion Audio Source not found");
-        }
+
+        _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
     void Update()
@@ -136,7 +123,6 @@ public class EvasiveEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _explosionAudioSource.Play();
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -145,6 +131,7 @@ public class EvasiveEnemy : MonoBehaviour
             if (_player != null)
             {
                 _player.Damage();
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -152,12 +139,12 @@ public class EvasiveEnemy : MonoBehaviour
 
         if (other.tag == "PlayerWeapon")
         {
+            gameObject.GetComponent<Collider2D>().enabled = false; // stops the tripleshot laser getting counted twice 
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddToScore(10);
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -166,7 +153,7 @@ public class EvasiveEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject, .2f);
     }

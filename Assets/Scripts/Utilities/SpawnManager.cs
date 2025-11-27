@@ -108,6 +108,10 @@ public class SpawnManager : MonoBehaviour
         _stopSpawning = false;
         StartCoroutine(SpawnEnemy(_waveEnemiesToSpawn));
         StartCoroutine("SpawnPowerUp");
+        if (_currentWave == 1)
+        {
+            _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
+        }
     }
 
     public void Update()
@@ -178,7 +182,6 @@ public class SpawnManager : MonoBehaviour
         _enemySpawnRate = _waves[_currentWaveIndex].enemySpawnRate;
         _powerUpSpawnRate = _waves[_currentWaveIndex].powerUpSpawnRate;
         _waveEnemiesDefeated = 0;
-        // _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
 
         InitializeWavePowerUps();
         InitializeWaveEnemies();
@@ -201,6 +204,7 @@ public class SpawnManager : MonoBehaviour
     {
         _player.DisableWeapons();
         yield return new WaitForSeconds(1); // pause for dramatic effect
+        _boss.ClearSceneOfPlayerWeapons();
         _uiManager.DisplayBossWaveOn(1);  // turn on and bring in the boss
         _uiManager.TurnOffScore();
         _uiManager.TurnOffEnemyDeathCount();
@@ -586,9 +590,8 @@ public class SpawnManager : MonoBehaviour
 
     public void WaveEnemyDefeated()
     {
-        Debug.Log("just killed an enemy");
         _waveEnemiesDefeated++;
-        Debug.Log($"wave enemies defeated {_waveEnemiesDefeated} of {_waveEnemiesToSpawn} with {_waveEnemiesSpawned} already spawned");
+        // Debug.Log($"wave enemies defeated {_waveEnemiesDefeated} of {_waveEnemiesToSpawn} with {_waveEnemiesSpawned} already spawned");
         if (_waveEnemiesDefeated > _waveEnemiesSpawned) Debug.Break();
         _uiManager.UpdateKills(_waveEnemiesDefeated, _waveEnemiesToSpawn);
     }

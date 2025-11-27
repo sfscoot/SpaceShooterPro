@@ -12,6 +12,7 @@ public class HomingMissile : MonoBehaviour
     [SerializeField] private float _missileSpeed = 2.50f;
     private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
+    private GameObject _explosion;
 
     private void Start()
     {
@@ -102,10 +103,8 @@ public class HomingMissile : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-            _explosionAudioSource.Play();
 
             Player player = other.GetComponent<Player>();
             if (player != null)
@@ -117,10 +116,8 @@ public class HomingMissile : MonoBehaviour
 
         if (other.tag == "PlayerWeapon")
         {
-            GameObject _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
             Destroy(gameObject);
         }

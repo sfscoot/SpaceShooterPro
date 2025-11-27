@@ -44,7 +44,6 @@ public class DreadnaughtGrenade : MonoBehaviour
         _grenadeTimer = Random.Range(_grenadeTimerMin, _grenadeTimerMax);
         yield return new WaitForSeconds(_grenadeTimer);
         _collider.enabled = true;
-        _explosionAudioSource.Play();
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(this.gameObject);

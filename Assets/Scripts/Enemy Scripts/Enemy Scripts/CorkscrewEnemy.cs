@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class CorkscrewEnemy : MonoBehaviour
 {
+    [SerializeField] private GameObject _explosionPreFab;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private int _enemyPointsValue;
     [SerializeField] private float _enemySpeed = 2.50f;
+
     private Player _player;
     private SpawnManager _spawnManager;
     private AudioSource _explosionAudioSource;
-    // create handle to animator component
-    private Animator _enemyAnimator; // clean this up? 
 
-    [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
 
     private bool _enemyDestroyed = false;
-    [SerializeField] private GameObject _explosionPreFab;
+
     private GameObject _explosion;
+
 
 
     private void Start()
@@ -31,8 +33,7 @@ public class CorkscrewEnemy : MonoBehaviour
         _explosionAudioSource = GetComponent<AudioSource>();
         if (_explosionAudioSource == null) Debug.LogError("Error: Explosion Audio Source not found");
 
-        // _enemyAnimator = GetComponent<Animator>();
-        // if (_enemyAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
+        _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
     void Update()
@@ -59,19 +60,18 @@ public class CorkscrewEnemy : MonoBehaviour
         
         if (other.tag == "Player")
         {
-            _explosionAudioSource.Play();
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _player.AddToScore(10);
+            _player.AddToScore(_enemyPointsValue);
             _player.Damage();
             PlayEnemyDeathSequence();
         }
 
         if (other.tag == "PlayerWeapon")
         {
-            _explosionAudioSource.Play();
+            gameObject.GetComponent<Collider2D>().enabled = false; // stops the tripleshot laser getting counted twice 
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             Destroy(other.gameObject);
-            _player.AddToScore(10);
+            _player.AddToScore(_enemyPointsValue);
             PlayEnemyDeathSequence();
         }
     }
@@ -81,7 +81,6 @@ public class CorkscrewEnemy : MonoBehaviour
         _enemyDestroyed = true;
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        // _enemyAnimator.SetTrigger("OnEnemyDeath");
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());

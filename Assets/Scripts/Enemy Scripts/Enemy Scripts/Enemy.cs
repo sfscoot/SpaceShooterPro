@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _laserOffset;
 
     [SerializeField] private float _raycastRange = 5.0f;
+    [SerializeField] private int _enemyPointsValue;
 
     private bool _enemyDestroyed = false;
     private bool _raycastActive = true;
@@ -95,13 +96,13 @@ private void OnTriggerEnter2D(Collider2D other)
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            Debug.Log("dead enemy");
             _explosionAudioSource.Play();
             Player player = other.transform.GetComponent<Player>();
 
             if (_player != null)
             {
                 _player.Damage();
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -109,13 +110,13 @@ private void OnTriggerEnter2D(Collider2D other)
 
         if (other.tag == "PlayerWeapon")
         {
+            gameObject.GetComponent<Collider2D>().enabled = false;
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            Debug.Log("dead enemy");
             _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddToScore(10);
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();

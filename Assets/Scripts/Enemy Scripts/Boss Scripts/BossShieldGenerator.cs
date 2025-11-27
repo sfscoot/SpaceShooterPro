@@ -17,16 +17,17 @@ public class BossShieldGenerator : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("hit by " + other.tag);
         if (other.tag == "PlayerWeapon")
         {
-            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            // explosionAudioSource.Play();
             _boss.DamageBossShield();
             Destroy(other.gameObject);
             _shieldGeneratorPowerLevel--;
-            if (_shieldGeneratorPowerLevel <= 0) Destroy(gameObject);
+            if (_shieldGeneratorPowerLevel <= 0)
+            {
+                _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+                _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                Destroy(gameObject);
+            }
         }
     }
 }

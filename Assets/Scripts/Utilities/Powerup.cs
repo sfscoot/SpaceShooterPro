@@ -87,11 +87,10 @@ public class Powerup : MonoBehaviour
             Player player = other.transform.GetComponent<Player>();
             if (player != null) 
             {
-                // AudioSource.PlayClipAtPoint(_powerupClip, transform.position, 0.5f); // plays the clip before the powerup is destroyed
                 switch (_powerupID)
                 {
                     case 0:
-                        _powerupAudioSource.Play();
+                        
                         player.TripleShotActive();
                         break;
                     case 1:

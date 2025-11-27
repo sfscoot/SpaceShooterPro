@@ -97,12 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1aac0f52e5812645bbc1387792ae5df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rightBound: 11
-  _leftBound: -11
-  _topBound: 5
-  _bottomBound: -10.5
   _enemySpeed: 3
   _trackingCooldown: 5
+  _enemyPointsValue: 10
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
   _trackingTriggerDistance: 4

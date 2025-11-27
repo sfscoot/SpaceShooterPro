@@ -127,8 +127,10 @@ MonoBehaviour:
     type: 3}
   _homingMissilePrefab: {fileID: 0}
   _fireRate: 3
+  _canFire: -1
   _laserOffset: -0.025
   _raycastRange: 5
+  _enemyPointsValue: 5
 --- !u!212 &5441148295386992331
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -63,11 +63,18 @@ public class DreadnaughtLaserCannon : MonoBehaviour
     {
         if (other.tag == "PlayerWeapon")
         {
-            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
-            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            StartCoroutine(DestroyLaser());
             _boss.BossDamage(_damagePoints);
             Destroy(other.gameObject);
-            this.gameObject.SetActive(false);
+            
         }
+    }
+
+    IEnumerator DestroyLaser()
+    {
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        yield return new WaitForSeconds(0.1f);
+        gameObject.SetActive(false);
     }
 }

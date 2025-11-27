@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 1618956311686939816}
   - component: {fileID: 2518752330507207728}
   - component: {fileID: 150207832699074647}
+  - component: {fileID: 144415280631564339}
   m_Layer: 0
   m_Name: Horizonal_Enemy
   m_TagString: HorizonalEnemy
@@ -205,7 +206,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1618956311686939820}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.53, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children:
   - {fileID: 1618956312219531610}
@@ -224,22 +225,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a810b417af2a0644db60e8ff107ef907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
+  _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
+    type: 3}
   _spawnManager: {fileID: 0}
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
+  _shieldDownAudioSource: {fileID: 0}
   _shieldVisualizer: {fileID: 827641930037138730}
+  _leftScanner: {fileID: 8568052783833358866}
+  _rightScanner: {fileID: 7183923209133810037}
+  _enemyPointsValue: 10
   _enemySpeed: 4
   _rightBound: 11
   _leftBound: -11
   _topBound: 11
   _bottomBound: -10.5
   _topBoundOffset: 6
-  _shieldDownAudioSource: {fileID: 0}
-  _player: {fileID: 0}
-  _laserPrefab: {fileID: 4392805550727603375, guid: 61126e9f5702b714fa8535b3bcce95d2,
-    type: 3}
-  _leftScanner: {fileID: 8568052783833358866}
-  _rightScanner: {fileID: 7183923209133810037}
+  _laserOffset: -0.025
 --- !u!61 &2518752330507207728
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -253,7 +256,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.030373096, y: 2.480236}
+  m_Offset: {x: -0.030373096, y: 2.84517}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -264,7 +267,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.565337, y: 2.812376}
+  m_Size: {x: 6.3093824, y: 2.016159}
   m_EdgeRadius: 0
 --- !u!82 &150207832699074647
 AudioSource:
@@ -362,6 +365,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!50 &144415280631564339
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618956311686939820}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1618956312219531609
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +536,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -6.599909, y: 0.33117878}
+  m_Offset: {x: -6.400854, y: 0.33117878}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -523,7 +547,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 23, y: 2.75}
+  m_Size: {x: 22.60189, y: 2.75}
   m_EdgeRadius: 0
 --- !u!114 &3892541687935517565
 MonoBehaviour:
@@ -606,7 +630,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -11.219952, y: 0.33117878}
+  m_Offset: {x: -11.336067, y: 0.33117878}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -617,7 +641,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 23, y: 2.75}
+  m_Size: {x: 22.767769, y: 2.75}
   m_EdgeRadius: 0
 --- !u!114 &6133069192497671163
 MonoBehaviour:

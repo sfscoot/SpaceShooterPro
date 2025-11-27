@@ -22,8 +22,6 @@ public class BossShieldCollider : MonoBehaviour
             other.gameObject.SetActive(false);
             _explosion = Instantiate(_explosionPreFab, other.transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-
-            // explosionAudioSource.Play();
         }
     }
 }

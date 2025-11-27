@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class HomingMissileEnemy : MonoBehaviour
 {
-    [SerializeField] private float _enemySpeed = 2.50f;
-    private Player _player;
-
     [SerializeField] private SpawnManager _spawnManager;
-
-    // create handle to animator component
-    private Animator _enemyAnimator;
-    private AudioSource _explosionAudioSource;
     [SerializeField] private GameObject _explosionPreFab;
-    private GameObject _explosion;
     [SerializeField] private GameObject _homingMissilePrefab;
+    [SerializeField] private float _missileOffset = 1.0f;
+    [SerializeField] private int _enemyPointsValue;
+    [SerializeField] private float _enemySpeed = 2.50f;
+
+    private Player _player;
+    private GameObject _explosion;
     private GameObject _enemyWeapon;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
-    [SerializeField] private float _missileOffset = 1.0f;
+
 
     private bool _playerDestroyed;
 
@@ -34,13 +32,8 @@ public class HomingMissileEnemy : MonoBehaviour
         {
             Debug.LogError("SpawnManager not assigned");
         }
-        _explosionAudioSource = GetComponent<AudioSource>();
-        if (_explosionAudioSource == null)
-        {
-            Debug.LogError("Error: Explosion Audio Source not found");
-        }
-        _enemyAnimator = GetComponent<Animator>();
-        if (_enemyAnimator == null) Debug.LogError("Error: Enemy Animator Audio Source not found");
+
+        _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
     void Update()
@@ -68,12 +61,12 @@ public class HomingMissileEnemy : MonoBehaviour
         if (other.tag == "Player")
         {
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Player player = other.transform.GetComponent<Player>();
 
             if (_player != null)
             {
                 _player.Damage();
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -81,12 +74,12 @@ public class HomingMissileEnemy : MonoBehaviour
 
         if (other.tag == "PlayerWeapon")
         {
+            gameObject.GetComponent<Collider2D>().enabled = false; // stops the tripleshot laser getting counted twice 
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
             if (_player != null)
             {
-                _player.AddToScore(10);
+                _player.AddToScore(_enemyPointsValue);
             }
 
             PlayEnemyDeathSequence();
@@ -95,7 +88,7 @@ public class HomingMissileEnemy : MonoBehaviour
 
     void PlayEnemyDeathSequence()
     {
-        Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+        _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject);
     }
@@ -107,13 +100,6 @@ public class HomingMissileEnemy : MonoBehaviour
 
         _enemyWeapon = Instantiate(_homingMissilePrefab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity); 
         _enemyWeapon.tag = "EnemyMissile";
-        /* _enemyWeapon.transform.parent = this.transform;
-        Laser[] lasers = _enemyWeapon.GetComponentsInChildren<Laser>();
-        for (int i = 0; i < lasers.Length; i++)
-        {
-            lasers[i].AssignEnemyLaser();
-        }
-        */
     }
 
     public void SetPlayerDestroyed()

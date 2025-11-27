@@ -65,7 +65,6 @@ public class DreadnaughtMissileLauncher : MonoBehaviour
         {
             _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            _explosionAudioSource.Play();
             _boss.BossDamage(_damagePoints);
             Destroy(other.gameObject);
             this.gameObject.SetActive(false);

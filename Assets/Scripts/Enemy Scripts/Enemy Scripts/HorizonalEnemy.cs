@@ -6,15 +6,21 @@ using static UnityEngine.GraphicsBuffer;
 
 public class HorizonalEnemy : MonoBehaviour
 {
-    [Header("Related Game Objects")]
+    [Header("Game Objects")]
+    [SerializeField] private Player _player;
+    [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private SpawnManager _spawnManager;
     [SerializeField] private GameObject _explosionPreFab;
-    private GameObject _explosion;
-    [SerializeField] private GameObject _shieldVisualizer;
-    SpriteRenderer _shieldRenderer;
+    [SerializeField] private AudioSource _shieldDownAudioSource;
 
-    [SerializeField]
-    private float _enemySpeed = 2.50f;
+    [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private GameObject _leftScanner;
+    [SerializeField] private GameObject _rightScanner;
+    [SerializeField] private int _enemyPointsValue;
+    [SerializeField] private float _enemySpeed = 2.50f;
+
+    SpriteRenderer _shieldRenderer;
+    private GameObject _explosion;
 
     private int _direction = 1;
 
@@ -25,24 +31,15 @@ public class HorizonalEnemy : MonoBehaviour
     [SerializeField] private float _bottomBound = -10.5f;
     [SerializeField] private float _topBoundOffset = 8;
 
-
     private float _randomY;
-
-    // create handle to animator component
-    private Animator _enemyAnimator;
     private AudioSource _explosionAudioSource;
-    [SerializeField] private AudioSource _shieldDownAudioSource;
 
-    [SerializeField]
-    private Player _player;
-
-    [SerializeField]
-    private GameObject _laserPrefab; // leaving this in for later implementation of this enemy destroying powerups.
     private float _fireRate = 3.0f;
     private float _canFire = -1;
     private Transform _enemyShield;
-    [SerializeField]  private GameObject _leftScanner;
-    [SerializeField]  private GameObject _rightScanner;
+    [SerializeField] private float _laserOffset = -0.025f;
+
+
 
     private void Start()
     {
@@ -71,6 +68,7 @@ public class HorizonalEnemy : MonoBehaviour
 
         _leftScanner.SetActive(true);
         _rightScanner.SetActive(false);
+        _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
     void Update()
@@ -107,49 +105,61 @@ public class HorizonalEnemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.tag == "Player" || other.name == "Player") Debug.Break();
+        Debug.Log($"horizonal enemy hit by {other.tag} and {other.name}");
         if (other.tag != "Player" &&  other.tag != "PlayerWeapon") return;
 
+        // code for when enemy shield is active
 
-        if (_shieldRenderer.isVisible) // 
+        if (_shieldRenderer.enabled == true && other.tag == "PlayerWeapon")
         {
             _shieldRenderer.enabled = false;
             _shieldDownAudioSource.Play();
             return;
         }
 
-        _player.AddToScore(10);
-
-        if (other.tag == "Player")
+        if (_shieldRenderer.enabled == true && other.tag == "Player")
         {
+            Debug.Log($"rammed by player, shield should be down");
+            _shieldRenderer.enabled = false;
+            _shieldDownAudioSource.Play();
             _player.Damage();
-            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            return;
         }
 
-
+        // code for when enemy shield is inactive
         if (other.tag == "PlayerWeapon")
         {
+            gameObject.GetComponent<Collider2D>().enabled = false; // this prevents a tripleshot from getting double credit for destroying this
+            _player.AddToScore(_enemyPointsValue);
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
-            _explosionAudioSource.Play();
             Destroy(other.gameObject);
         }
 
-        PlayEnemyDeathSequence();
+        if (other.tag == "Player")
+        {
+            Debug.Log("player hit the horizonal enemy");
+            _player.AddToScore(_enemyPointsValue);
+            _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
+            _player.Damage();
+        }
 
+        PlayEnemyDeathSequence();
     }
 
     void PlayEnemyDeathSequence()
     {
+        Debug.Log("should be in horizonal enemy death sequencce");
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         Destroy(gameObject);
-
     }
 
     void FireLaser()
     {
         _fireRate = Random.Range(3f, 7f);
         _canFire = Time.time + _fireRate;
-        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity); // spawn outside the collider
+        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position+  new Vector3(0, _laserOffset, 0), Quaternion.identity); // spawn outside the collider
         enemyLaser.tag = "EnemyLaser";
         enemyLaser.transform.parent = this.transform;
 

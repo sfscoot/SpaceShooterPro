@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _playerHomingMissilePreFab;
     private GameObject _tmpLaser;
     [SerializeField] private float _laserOffset;
-    [SerializeField] private int _ammoCount = 15;
+    [SerializeField] private int _ammoCount = 16;
     private bool _weaponsEnabled = true;
     [SerializeField] private float _fireRate = 0.5f;
     private float _baseFireRate;
@@ -381,10 +381,6 @@ public class Player : MonoBehaviour
     //***************************************************************************
     void FireMissile()
     {
-        /* 
-        _canFire = Time.time + _fireRate;
-        Instantiate(_missilePreFab, transform.position + new Vector3(0, _missileOffset, 0), Quaternion.identity);
-        */
 
         for (int fireAngle = 0; fireAngle < 360; fireAngle+= 30)
         {

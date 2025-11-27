@@ -248,6 +248,7 @@ MonoBehaviour:
   _homingMissilePrefab: {fileID: 5899558491808359093, guid: e001fd9289397d6468a595548528ec62,
     type: 3}
   _missileOffset: -1
+  _enemyPointsValue: 10
 --- !u!95 &4488011573472296394
 Animator:
   serializedVersion: 3

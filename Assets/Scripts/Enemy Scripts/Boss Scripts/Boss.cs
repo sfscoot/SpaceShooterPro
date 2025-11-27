@@ -19,6 +19,7 @@ public class Boss : MonoBehaviour
     [SerializeField] private GameObject _dreadnaughtFront;
     [SerializeField] private GameObject _dreadnaughtRear;
 
+    private GameObject _explosion;
     private DreadnaughtFront _df;
     private DreadnaughtRear _dr;
     private bool _bossInPosition = false;
@@ -40,16 +41,11 @@ public class Boss : MonoBehaviour
     private Vector3 _bossShield2 = new Vector3(5.0f, 0.5f, 0.0f);
     private Vector3 _bossShield1 = new Vector3(5.0f, 0.4f, 0.0f);
 
+    private GameObject[] _activePlayerWeapons;
+    private Transform _PlayerWeaponsTransform;
 
-    // reset player lives
-    // final attack
-    // boss explosion
-
-    // if they die, restart just the boss round
-    // turn on powerup spawning for just ammo and lives
     private void Start()
     {
-
         transform.position = new Vector3(17.5f, 5.5f, 0f);
 
         _explosionAudioSource = GetComponent<AudioSource>();
@@ -188,6 +184,17 @@ public class Boss : MonoBehaviour
         _bossDamage += damage;
         _bossSlider.UpdateDamageSlider(_bossDamage, _maxBossDamage);
         _bossSlider2.UpdateDamageSlider(_bossDamage, _maxBossDamage);
+    }
+
+    public void ClearSceneOfPlayerWeapons()
+    {
+        _activePlayerWeapons = GameObject.FindGameObjectsWithTag("PlayerWeapon");
+        for (int i = 0; i < _activePlayerWeapons.Length; i++)
+        {
+            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            Destroy(_activePlayerWeapons[i]);
+        }
     }
 
     /*
