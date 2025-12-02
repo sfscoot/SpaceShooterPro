@@ -278,8 +278,17 @@ public class Player : MonoBehaviour
     }
     void FireHomingMissile()
     {
+        // if no target, flash message that no enemies are detected
+        // keep homing missile active
+        // exit
+
         _distanceToClosestEnemy = 100;
         _activeEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if (_activeEnemies.Length == 0)
+        {
+            Debug.Log($"fired homing missile at no one");
+            return;
+        }
         for (int i = 0; i < _activeEnemies.Length; i++)
         {
             _enemyTransform = _activeEnemies[i].transform;

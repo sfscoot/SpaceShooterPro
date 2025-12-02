@@ -22,7 +22,7 @@ public class EnemyScanner : MonoBehaviour
                 _tmpLaser.AssignLaserDirection("left");
                 _tmpLaser.AssignEnemyLaser();
                 _tmpLaser.transform.Rotate(0, 0, 90, Space.Self);
-                _enemyLaser.tag = "EnemyLaser";
+                _enemyLaser.tag = "EnemyWeapon";
             } else if (this.name == "Right_Scanner" && this.isActiveAndEnabled)
             {
                 _enemyLaser = Instantiate(_laserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
@@ -30,7 +30,7 @@ public class EnemyScanner : MonoBehaviour
                 _tmpLaser.AssignLaserDirection("right");
                 _tmpLaser.AssignEnemyLaser();
                 _tmpLaser.transform.Rotate(0, 0, -90, Space.Self);
-                _enemyLaser.tag = "EnemyLaser";
+                _enemyLaser.tag = "EnemyWeapon";
             }
         }
     }

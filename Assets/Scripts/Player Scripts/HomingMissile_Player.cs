@@ -72,7 +72,6 @@ public class HomingMissile_Player : MonoBehaviour
     public void MissileTarget(GameObject targetEnemy)
     {
         _targetEnemy = targetEnemy;
-        Debug.Log($"Target enemy is {targetEnemy.name}");
         StartCoroutine(MissileCooldown());
     }
 

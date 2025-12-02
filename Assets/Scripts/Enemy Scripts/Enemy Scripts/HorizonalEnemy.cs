@@ -14,8 +14,6 @@ public class HorizonalEnemy : MonoBehaviour
     [SerializeField] private AudioSource _shieldDownAudioSource;
 
     [SerializeField] private GameObject _shieldVisualizer;
-    [SerializeField] private GameObject _leftScanner;
-    [SerializeField] private GameObject _rightScanner;
     [SerializeField] private int _enemyPointsValue;
     [SerializeField] private float _enemySpeed = 2.50f;
 
@@ -39,7 +37,16 @@ public class HorizonalEnemy : MonoBehaviour
     private Transform _enemyShield;
     [SerializeField] private float _laserOffset = -0.025f;
 
-
+    [Header("Raycast Variables")]
+    [SerializeField] private float _raycastRange = 5.0f;
+    private bool _raycastActive = true;
+    private bool _raycastShootLeft = false;
+    private Vector3 _laserSpawnPosition;
+    [SerializeField] private GameObject _enemyHLaserPrefab;
+    private GameObject _enemyHLaser;
+    private Laser _enemyHLaserScript;
+    RaycastHit2D _hit;
+    private bool _hLaserOn = true;
 
     private void Start()
     {
@@ -48,7 +55,6 @@ public class HorizonalEnemy : MonoBehaviour
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null) Debug.LogError("Horiconal Enemy - spawn manager not assigned");
-
 
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null) Debug.Log("Horizonal enemy - player object not assigned");
@@ -64,10 +70,7 @@ public class HorizonalEnemy : MonoBehaviour
         _enemyShield = transform.Find("Model/Shield");
         _shieldDownAudioSource = _enemyShield.GetComponent<AudioSource>();
         if (_shieldDownAudioSource == null) Debug.LogError("Horizonal enemy - shield audio source missing");
-        this.transform.Find("Model/Left_Scanner");
 
-        _leftScanner.SetActive(true);
-        _rightScanner.SetActive(false);
         _canFire = Time.time + Random.Range(0.25f, 1.0f); // add 1 second delay before enemy can fire, otherwise they fire as soon as they're spawned
     }
 
@@ -78,19 +81,18 @@ public class HorizonalEnemy : MonoBehaviour
         {
             FireLaser();
         }
+
+        CheckForPlayerInSights();
     }
     void CalculateMovement()
     {
-        // transform.Translate(Vector3.right * (2 * Time.deltaTime));
-
         transform.Translate(Vector3.right * (_enemySpeed * Time.deltaTime * _direction));
         if (transform.position.x <= _leftBound)
         {
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_leftBound, _randomY, 0);
             _direction = 1;
-            _leftScanner.SetActive(true);
-            _rightScanner.SetActive(false);
+            _raycastShootLeft = true;
 
         }
         else if (transform.position.x >= _rightBound)
@@ -98,60 +100,125 @@ public class HorizonalEnemy : MonoBehaviour
             _randomY = Random.Range((_topBound - _topBoundOffset), 0.0f);
             transform.position = new Vector3(_rightBound, _randomY, 0);
             _direction = -1;
-            _leftScanner.SetActive(false);
-            _rightScanner.SetActive(true);
+            _raycastShootLeft = false;
         }
     }
 
+    private void CheckForPlayerInSights()
+    {
+        if (_hLaserOn == true)
+        {
+            if (_raycastShootLeft == true)
+            {
+                _hit = Physics2D.Raycast(transform.position, Vector2.left, _raycastRange);
+                Debug.DrawRay(transform.position, Vector2.left * _raycastRange, Color.red);
+            }
+
+            else if (_raycastShootLeft == false)
+            {
+                _hit = Physics2D.Raycast(transform.position, Vector2.right, _raycastRange);
+                Debug.DrawRay(transform.position, Vector2.right * _raycastRange, Color.red);
+            }
+
+
+
+            // If it detects something...
+            if (_hit == true && _hit.collider.gameObject.tag == "Player")
+            {
+                FireHLaser();
+            }
+        }
+    }
+
+    private void FireHLaser()
+    {
+        _laserSpawnPosition = transform.position;
+        if (_raycastShootLeft == true)
+        {
+            _enemyHLaser = Instantiate(_enemyHLaserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
+            _enemyHLaserScript = _enemyHLaser.GetComponent<Laser>();
+            _enemyHLaserScript.AssignLaserDirection("left");
+            _enemyHLaserScript.AssignEnemyLaser();
+            _enemyHLaserScript.transform.Rotate(0, 0, 90, Space.Self);
+            _enemyHLaserScript.tag = "EnemyWeapon";
+        }
+        else 
+        {
+            Debug.Log($"should be shooting right");
+            _enemyHLaser = Instantiate(_enemyHLaserPrefab, _laserSpawnPosition, Quaternion.identity); // spawn outside the collider
+            _enemyHLaserScript = _enemyHLaser.GetComponent<Laser>();
+            _enemyHLaserScript.AssignLaserDirection("right");
+            _enemyHLaserScript.AssignEnemyLaser();
+            _enemyHLaserScript.transform.Rotate(0, 0, -90, Space.Self);
+            _enemyHLaserScript.tag = "EnemyWeapon";
+        }
+    }
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player" || other.name == "Player") Debug.Break();
-        Debug.Log($"horizonal enemy hit by {other.tag} and {other.name}");
+
         if (other.tag != "Player" &&  other.tag != "PlayerWeapon") return;
 
-        // code for when enemy shield is active
+        _hLaserOn = false;
+
+        Debug.Log($"shield status: {_shieldRenderer.enabled} collided with {other.tag}");
 
         if (_shieldRenderer.enabled == true && other.tag == "PlayerWeapon")
         {
+            Debug.Log($"case shield enabled and hit by player weapon");
             _shieldRenderer.enabled = false;
             _shieldDownAudioSource.Play();
+            _hLaserOn = true;
             return;
         }
 
         if (_shieldRenderer.enabled == true && other.tag == "Player")
         {
-            Debug.Log($"rammed by player, shield should be down");
+            Debug.Log($"case shield enabled and hit by Player");
+            Debug.Break();
+            _canFire = Time.time + _fireRate;
             _shieldRenderer.enabled = false;
             _shieldDownAudioSource.Play();
+
             _player.Damage();
+            _hLaserOn = true;
             return;
         }
 
         // code for when enemy shield is inactive
         if (other.tag == "PlayerWeapon")
         {
+            Debug.Log($"case shield off and hit by player weapon");
+            Debug.Break();
             gameObject.GetComponent<Collider2D>().enabled = false; // this prevents a tripleshot from getting double credit for destroying this
             _player.AddToScore(_enemyPointsValue);
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             Destroy(other.gameObject);
+            PlayEnemyDeathSequence();
+            return;
         }
 
         if (other.tag == "Player")
         {
-            Debug.Log("player hit the horizonal enemy");
+            Debug.Log($"case shield off and hit by Player");
+            Debug.Break();
             _player.AddToScore(_enemyPointsValue);
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _player.Damage();
+            PlayEnemyDeathSequence();
+            return;
         }
 
-        PlayEnemyDeathSequence();
+
     }
 
     void PlayEnemyDeathSequence()
     {
-        Debug.Log("should be in horizonal enemy death sequencce");
+
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        Debug.Break();
         Destroy(gameObject);
     }
 
@@ -168,10 +235,5 @@ public class HorizonalEnemy : MonoBehaviour
         {
             lasers[i].AssignEnemyLaser();
         }
-    }
-
-    public void SetPlayerDestroyed()
-    {
-        // _playerDestroyed = true;
     }
 }

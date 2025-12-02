@@ -58,6 +58,7 @@ public class Enemy : MonoBehaviour
         }
 
         CheckForPowerupsInSights();
+        /*
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, _raycastRange);
         Debug.DrawRay(transform.position, Vector2.down * _raycastRange, Color.red);
@@ -67,6 +68,7 @@ public class Enemy : MonoBehaviour
         {
             FireLaser();
         }
+        */
     }
 
 
