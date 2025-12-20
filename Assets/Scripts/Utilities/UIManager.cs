@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private TMP_Text _ammoCountTxt;
     [SerializeField] private TMP_Text _waveEnemyDeathCount;
-    [SerializeField] private TMP_Text _homingMissileActiveTxt;
+    [SerializeField] private TMP_Text _homingMissileMessageTxt;
     [SerializeField] private TMP_Text _powerupCollectActiveTxt;
     [SerializeField] private TMP_Text _gameBroadcastMsg;
     private bool _broadcastMsgOn = false;
@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AudioSource _audioSource;
 
     private GameManager _gameManager;
-    private bool _displayHomingMissileActiveMessage = false;
+    private bool _displayHomingMissileMessage = false;
     private bool _displayPowerupCollectActiveMessage = false;
 
 
@@ -57,7 +57,7 @@ public class UIManager : MonoBehaviour
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         if (_gameManager == null)  Debug.LogError("ERROR! GameManager not found");
 
-        _homingMissileActiveTxt.gameObject.SetActive(false);
+        _homingMissileMessageTxt.gameObject.SetActive(false);
         _powerupCollectActiveTxt.gameObject.SetActive(false);
         if (_weaponsOfflineClip == null) Debug.LogError("no audio clip found for weapons offline");
         if (_weaponsOnlineClip == null) Debug.LogError("no audio clip found for weapons online");
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
     {
         if (_scoreText == null) Debug.LogError("UIManager - _scoreText not assigned");
         if (_ammoCountTxt == null) Debug.LogError("UIManager - ammo count text not assigned");
-        if (_homingMissileActiveTxt == null) Debug.LogError("UIManager - _homingMissileActiveTxt not assigned");
+        if (_homingMissileMessageTxt == null) Debug.LogError("UIManager - _homingMissileMessageTxt not assigned");
 
 
         if (_gameOverText == null) Debug.LogError("UIManager - game over text not assigned");
@@ -306,28 +306,54 @@ public class UIManager : MonoBehaviour
          
     }
 
+    public void HomingMissileMessage(string text, bool flash)
+    {
+        _displayHomingMissileMessage = true;
+        if (flash)
+        {
+            StartCoroutine(HomingMissileMsgFlash(text));
+        } else
+        {
+            StartCoroutine(HomingMissileMsgFade(text));
+        }
+
+    }
+
     public void HomingMissileActive()
     {
-        _displayHomingMissileActiveMessage = true;
-        StartCoroutine(HomingMissileMsgActive());
+        _displayHomingMissileMessage = true;
+        // StartCoroutine(HomingMissileMsgActive());
     }
 
     public void HomingMissileInactive()
     {
         // _homingMissileActiveTxt.gameObject.SetActive(false);
-        _displayHomingMissileActiveMessage = false;
+        _displayHomingMissileMessage = false;
     }
 
-    IEnumerator HomingMissileMsgActive()
+    IEnumerator HomingMissileMsgFlash(string mtext)
     {
-        while (_displayHomingMissileActiveMessage == true)
+        _homingMissileMessageTxt.text = mtext;
+        _homingMissileMessageTxt.color = new Color32(48, 241, 206, 255);
+        while (_displayHomingMissileMessage == true)
         {
 
             yield return new WaitForSeconds(0.25f);
-            _homingMissileActiveTxt.gameObject.SetActive(true);
+            _homingMissileMessageTxt.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.25f);
-            _homingMissileActiveTxt.gameObject.SetActive(false);
+            _homingMissileMessageTxt.gameObject.SetActive(false);
         }
+    }
+
+    IEnumerator HomingMissileMsgFade(string mtext)
+    {
+        // _homingMissileMessageTxt.gameObject.SetActive(false);
+        _homingMissileMessageTxt.text = mtext;
+        _homingMissileMessageTxt.color = Color.red;
+
+        _homingMissileMessageTxt.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2.0f);
+        _displayHomingMissileMessage = false;
     }
 
     public void PowerupCollectActive()
@@ -339,12 +365,12 @@ public class UIManager : MonoBehaviour
 
     public void PowerupCollectInactive()
     {
-        // _homingMissileActiveTxt.gameObject.SetActive(false);
+        // _homingMissileMessageTxt.gameObject.SetActive(false);
         _powerupCollectActiveTxt.gameObject.SetActive(false);
         _displayPowerupCollectActiveMessage = false;
     }
 
-    IEnumerator PowerupCollectMsgActive()
+    /*IEnumerator PowerupCollectMsgActive()
     {
         while (_displayHomingMissileActiveMessage == true)
         {
@@ -355,4 +381,5 @@ public class UIManager : MonoBehaviour
             _powerupCollectActiveTxt.gameObject.SetActive(false);
         }
     }
+    */
 }

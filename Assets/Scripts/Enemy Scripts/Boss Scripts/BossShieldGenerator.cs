@@ -8,6 +8,7 @@ public class BossShieldGenerator : MonoBehaviour
     private GameObject _explosion;
     private Boss _boss;
     private int _shieldGeneratorPowerLevel = 3;
+    [SerializeField] private int _damagePoints = 20;
 
     void Start()
     {

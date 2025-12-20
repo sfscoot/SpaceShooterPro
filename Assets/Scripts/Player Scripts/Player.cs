@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float _missilePowerupDuration;
     bool _missilePowerupActive = false;
     bool _homingMissileActive = false;
+    Collider2D _tmp2DCollider;
 
     // space mine variables
     [SerializeField] private GameObject _spaceMinePreFab;
@@ -62,6 +63,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip _fireLaserAudio;
     [SerializeField] private AudioClip _explosion;
     [SerializeField] private AudioClip _ammoCountLow;
+    [SerializeField] private AudioClip _homingMissileMisfireAudio;
     private AudioSource _audioSource; // scj
 
     [SerializeField] private int _lives = 3;
@@ -113,8 +115,7 @@ public class Player : MonoBehaviour
     [SerializeField] private int _score;
 
     // explosion audio
-    [SerializeField]
-    AudioSource _externalAudioSource;
+    [SerializeField] AudioSource _externalAudioSource;
     [SerializeField]
     private AudioClip _explosionClip;
 
@@ -274,36 +275,47 @@ public class Player : MonoBehaviour
     public void HomingMissileActive() // scj
     {
         _homingMissileActive = true;
-        _uiManager.HomingMissileActive();
+        _uiManager.HomingMissileMessage("Homing Missile is Active (H)", true);
+        // _uiManager.HomingMissileActive();
     }
     void FireHomingMissile()
     {
-        // if no target, flash message that no enemies are detected
-        // keep homing missile active
-        // exit
-
+        _uiManager.HomingMissileInactive();
         _distanceToClosestEnemy = 100;
         _activeEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if (_activeEnemies.Length == 0)
-        {
-            Debug.Log($"fired homing missile at no one");
-            return;
-        }
+
         for (int i = 0; i < _activeEnemies.Length; i++)
         {
+            _tmp2DCollider = _activeEnemies[i].GetComponent<Collider2D>();
             _enemyTransform = _activeEnemies[i].transform;
             _enemyDistanceFromPlayer = Vector3.Distance(_enemyTransform.position, transform.position);
-            if (_enemyDistanceFromPlayer < _distanceToClosestEnemy) 
+            if (_enemyDistanceFromPlayer < _distanceToClosestEnemy && _tmp2DCollider != null) 
             {
                 _closestEnemy = _activeEnemies[i];
                 _distanceToClosestEnemy = _enemyDistanceFromPlayer;
             }
         }
+
+        if (_closestEnemy == null)
+        {
+            _audioSource.clip = _homingMissileMisfireAudio;
+            _audioSource.Play();
+            _uiManager.HomingMissileMessage("Homing Missile Misfire", false);
+            return;
+        }
+
         _homingMissile = Instantiate(_playerHomingMissilePreFab, transform.position + new Vector3(0, _laserOffset, 0), Quaternion.identity);
         _homingMissile.GetComponent<HomingMissile_Player>().MissileTarget(_closestEnemy);
-        _uiManager.HomingMissileInactive();
+
     }
 
+    public void DisablePowerupWeapons()
+    {
+        _tripleShotActive = false;
+        _missilePowerupActive  = false;
+        _mineLauncherActive = false;
+        _homingMissileActive = false;
+    }
     public void DisableWeapons()
     {
         _weaponsEnabled = false;

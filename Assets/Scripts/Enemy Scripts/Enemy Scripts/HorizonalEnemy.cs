@@ -46,7 +46,9 @@ public class HorizonalEnemy : MonoBehaviour
     private GameObject _enemyHLaser;
     private Laser _enemyHLaserScript;
     RaycastHit2D _hit;
-    private bool _hLaserOn = true;
+    [SerializeField]  private bool _hLaserOn = true;
+    private Vector3 _tmpV3;
+    [SerializeField]   private float _raycastOffset;
 
     private void Start()
     {
@@ -81,7 +83,6 @@ public class HorizonalEnemy : MonoBehaviour
         {
             FireLaser();
         }
-
         CheckForPlayerInSights();
     }
     void CalculateMovement()
@@ -107,27 +108,29 @@ public class HorizonalEnemy : MonoBehaviour
     private void CheckForPlayerInSights()
     {
         if (_hLaserOn == true)
-        {
+         {
             if (_raycastShootLeft == true)
             {
-                _hit = Physics2D.Raycast(transform.position, Vector2.left, _raycastRange);
-                Debug.DrawRay(transform.position, Vector2.left * _raycastRange, Color.red);
+                _tmpV3 = new Vector3(transform.position.x - _raycastOffset, transform.position.y, transform.position.z);
+                _hit = Physics2D.Raycast(_tmpV3, Vector2.left, _raycastRange);
+                // Debug.DrawRay(_tmpV3, Vector2.left * _raycastRange, Color.red);
             }
 
             else if (_raycastShootLeft == false)
             {
-                _hit = Physics2D.Raycast(transform.position, Vector2.right, _raycastRange);
-                Debug.DrawRay(transform.position, Vector2.right * _raycastRange, Color.red);
-            }
-
-
+                _tmpV3 = new Vector3(transform.position.x + _raycastOffset, transform.position.y, transform.position.z);
+                _hit = Physics2D.Raycast(_tmpV3, Vector2.right, _raycastRange);
+                // Debug.DrawRay(_tmpV3, Vector2.right * _raycastRange, Color.red);
+        }
 
             // If it detects something...
-            if (_hit == true && _hit.collider.gameObject.tag == "Player")
+            if (_hit == true && _hit.collider.gameObject.tag == "Player" && _hLaserOn == true)
             {
+                _hLaserOn = false;
+                StartCoroutine(PauseHorizonalLaser());
                 FireHLaser();
             }
-        }
+         }
     }
 
     private void FireHLaser()
@@ -160,13 +163,10 @@ public class HorizonalEnemy : MonoBehaviour
 
         if (other.tag != "Player" &&  other.tag != "PlayerWeapon") return;
 
-        _hLaserOn = false;
-
-        Debug.Log($"shield status: {_shieldRenderer.enabled} collided with {other.tag}");
+        StartCoroutine(PauseHorizonalLaser());
 
         if (_shieldRenderer.enabled == true && other.tag == "PlayerWeapon")
         {
-            Debug.Log($"case shield enabled and hit by player weapon");
             _shieldRenderer.enabled = false;
             _shieldDownAudioSource.Play();
             _hLaserOn = true;
@@ -175,8 +175,6 @@ public class HorizonalEnemy : MonoBehaviour
 
         if (_shieldRenderer.enabled == true && other.tag == "Player")
         {
-            Debug.Log($"case shield enabled and hit by Player");
-            Debug.Break();
             _canFire = Time.time + _fireRate;
             _shieldRenderer.enabled = false;
             _shieldDownAudioSource.Play();
@@ -189,8 +187,6 @@ public class HorizonalEnemy : MonoBehaviour
         // code for when enemy shield is inactive
         if (other.tag == "PlayerWeapon")
         {
-            Debug.Log($"case shield off and hit by player weapon");
-            Debug.Break();
             gameObject.GetComponent<Collider2D>().enabled = false; // this prevents a tripleshot from getting double credit for destroying this
             _player.AddToScore(_enemyPointsValue);
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
@@ -201,24 +197,25 @@ public class HorizonalEnemy : MonoBehaviour
 
         if (other.tag == "Player")
         {
-            Debug.Log($"case shield off and hit by Player");
-            Debug.Break();
             _player.AddToScore(_enemyPointsValue);
             _spawnManager.GetComponent<SpawnManager>().WaveEnemyDefeated();
             _player.Damage();
             PlayEnemyDeathSequence();
             return;
         }
-
-
     }
 
+    IEnumerator PauseHorizonalLaser()
+    {
+        _hLaserOn = false;
+        yield return new WaitForSeconds(2);
+        _hLaserOn = true;
+    }
     void PlayEnemyDeathSequence()
     {
 
         _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _explosion.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        Debug.Break();
         Destroy(gameObject);
     }
 

@@ -244,6 +244,8 @@ MonoBehaviour:
   _raycastRange: 8
   _enemyHLaserPrefab: {fileID: 7487961015735838289, guid: 9e3fcba93b87fa940a6e5f3fde68e836,
     type: 3}
+  _hLaserOn: 1
+  _raycastOffset: 2.5
 --- !u!82 &150207832699074647
 AudioSource:
   m_ObjectHideFlags: 0

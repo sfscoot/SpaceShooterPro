@@ -83,7 +83,10 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _mechVdropTarget;
 
     private Player _player;
-
+    private GameObject[] _rogueEnemies;
+    private GameObject _explosion;
+    [SerializeField] private GameObject _explosionPreFab;
+    private Collider2D _tmp2DCollider;
     public void Start()
     {
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
@@ -126,6 +129,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (_waveEnemiesDefeated == _waveEnemiesToSpawn)
         {
+            KillRogueEnemies();
             _stopSpawning = true;
             _currentWave++;
 
@@ -140,6 +144,21 @@ public class SpawnManager : MonoBehaviour
             {
                 _bossLevelActive = true;
                 _bossWave = 1;
+            }
+        }
+    }
+
+    private void KillRogueEnemies()
+    {
+        _rogueEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < _rogueEnemies.Length; i++)
+        {
+            _tmp2DCollider = _rogueEnemies[i].GetComponent<Collider2D>();
+            if (_tmp2DCollider != null)
+            {
+                _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+                _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                Destroy(_rogueEnemies[i]);
             }
         }
     }
@@ -188,7 +207,6 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator WaveTransition()
     {
-        Debug.Log($"wave transition - {_currentWave}");
         yield return new WaitForSeconds(2);
         _uiManager.DisplayWaveOn(_currentWave);
         yield return new WaitForSeconds(_waveTransitionDelay);
@@ -203,6 +221,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator BossWave1()
     {
         _player.DisableWeapons();
+        _player.DisablePowerupWeapons();
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _boss.ClearSceneOfPlayerWeapons();
         _uiManager.DisplayBossWaveOn(1);  // turn on and bring in the boss
