@@ -14,7 +14,7 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] private GameObject _killCountDown;
     private int _currentWave;
-    private int _currentWaveIndex;
+    [SerializeField] private int _currentWaveIndex;
     private int _waveEnemiesToSpawn = 99;
     private int _waveEnemiesSpawned = 0;
     private int _waveEnemiesDefeated = 0;
@@ -142,6 +142,7 @@ public class SpawnManager : MonoBehaviour
 
             if (_currentWave == _bossLevel)
             {
+                _player.PlayerOnBossLevel();
                 _bossLevelActive = true;
                 _bossWave = 1;
             }
@@ -167,6 +168,7 @@ public class SpawnManager : MonoBehaviour
         if (_bossLevelActive == true && _bossWaveAttackActive == false)
         {
             _bossWaveAttackActive = true;
+            _player.DisablePowerupWeapons();
             switch (_bossWave)
             {
                 case 1:
@@ -191,6 +193,28 @@ public class SpawnManager : MonoBehaviour
                     Debug.LogWarning("bad switch case in boss controller");
                     break;
             }
+        }
+    }
+
+    public void BossGameOver()
+    {
+        switch (_bossWave)
+        {
+            case 1:
+                StopBossWave1();
+                break;
+            case 2:
+                StopBossWave2();
+                break;
+            case 3:
+                StopBossWave3();
+                break;
+            case 4:
+                StartCoroutine(StopBossWave4());
+                break;
+            default:
+                Debug.LogWarning("bad switch case in boss controller");
+                break;
         }
     }
     public void WaveInitialize()
@@ -239,6 +263,12 @@ public class SpawnManager : MonoBehaviour
         StartCoroutine("SpawnPowerUp");
     }
 
+    public void StopBossWave1()
+    {
+        _boss.StopSweepAndShoot();
+        StopCoroutine("SpawnPowerUp");
+        _boss.BossLeaves();
+    }
     IEnumerator BossWave2()
     {
         _stopSpawning = true;
@@ -260,6 +290,18 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(2);
     }
 
+    public void StopBossWave2()
+    {
+        _uiManager.GameBroadcastMessageOff();
+        _stopSpawning = true;
+        StopCoroutine(BossWave2());
+
+        _mechAttack.SetActive(false);
+        StartCoroutine(_mechAttackController.DestroyAllMechs());
+        _boss.BossRejoins();
+        _boss.BossLeaves();
+    }
+
     IEnumerator BossWave3()
     {
         _mechAttackController.MechsPositionsReset();
@@ -271,6 +313,17 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(2);
     }
 
+    public void StopBossWave3()
+    {
+        _uiManager.GameBroadcastMessageOff();
+        _stopSpawning = true;
+        StopCoroutine(BossWave2());
+
+        _mechAttack.SetActive(false);
+        StartCoroutine(_mechAttackController.DestroyAllMechs());
+        _boss.BossRejoins();
+        _boss.BossLeaves();
+    }
     IEnumerator BossWave4()
     {
         _mechAttackController.MechsPositionsReset();
@@ -287,6 +340,20 @@ public class SpawnManager : MonoBehaviour
         _uiManager.GameBroadcastMessage("Weapons back online, fire at will", 2);
         yield return new WaitForSeconds(4);
         _uiManager.GameBroadcastMessageOff();
+    }
+
+    IEnumerator StopBossWave4()
+    {
+        _mechAttackController.StopMechBounceAttack();
+        _uiManager.GameBroadcastMessageOff();
+        _stopSpawning = true;
+        StopCoroutine(BossWave4());
+        yield return new WaitForSeconds(4);
+        _boss.BossRejoins();
+        _boss.BossLeaves();
+        _bossLevelActive = false;
+
+
     }
     IEnumerator BossWave5() // final wave
     {
@@ -435,7 +502,7 @@ public class SpawnManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        _stopSpawning = true;        
+        _stopSpawning = true;
         foreach (Transform child in _enemyContainer.transform)
         {
             Destroy(child.gameObject);

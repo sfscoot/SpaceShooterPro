@@ -144,7 +144,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float _thrusterReloadDuration = 10.0f;
 
-    // private float _timeLeftOnThruster;
+    private bool _playerOnBossLevel = false;
 
     void Start()
     {
@@ -315,6 +315,7 @@ public class Player : MonoBehaviour
         _missilePowerupActive  = false;
         _mineLauncherActive = false;
         _homingMissileActive = false;
+        _uiManager.HomingMissileInactive();
     }
     public void DisableWeapons()
     {
@@ -589,6 +590,10 @@ public class Player : MonoBehaviour
 
         if (_lives == 0)
         {
+            if (_playerOnBossLevel)
+            {
+                _spawnManager.BossGameOver();
+            }
             _playerAnimator.SetTrigger("OnPlayerDeath");
             _spawnManager.OnPlayerDeath();
             _rightEngine.SetActive(false);
@@ -652,5 +657,10 @@ public class Player : MonoBehaviour
     {
         _score += points;
         _uiManager.UpdateScore(_score);
+    }
+
+    public void PlayerOnBossLevel()
+    {
+        _playerOnBossLevel = true;
     }
 }

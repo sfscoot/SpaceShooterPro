@@ -17,13 +17,17 @@ public class Mech : MonoBehaviour
     [SerializeField] private float _screenTop = 5.0f;
     [SerializeField] private GameObject _explosionPreFab;
     [SerializeField] private int _damagePoints = 5;
+    [SerializeField] private Player _player;
 
     private MechAttack _mechAttackRoutine;
     private bool _inPosition = false;
     private bool _mechAttack = false;
     private bool _mechBounceAttack = false;
+    private bool _stopMechBounce = false;
+    private bool _gameOver = false;
     private Boss _boss;
     private GameObject _explosion;
+
 
     private void Start()
     {
@@ -33,6 +37,7 @@ public class Mech : MonoBehaviour
         _mechAttackRoutine = GameObject.Find("MechAttack").GetComponent<MechAttack>();
         if (_mechAttackRoutine == null) Debug.LogError("MechAttack program not found");
         if (_explosionPreFab == null) Debug.LogError("Mech - explosion prefab not assigned");
+        if (_player == null) Debug.LogError("Player object not assigned");
     }
     private void Update()
     {
@@ -48,15 +53,39 @@ public class Mech : MonoBehaviour
 
         if (_mechBounceAttack == true) 
         {
+            if (_stopMechBounce != true)
+            {
+                transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed * _attackDirection);
+                if (transform.position.y < _screenBottom)
+                {
+                    _attackDirection = -1;
+                }
+                if (transform.position.y > _screenTop)
+                {
+                    _attackDirection = 1;
+                }
+            } else
+            {
+                Debug.Log($"stop mech bounce");
+
+                _screenBottom = -7;
+                transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed * _attackDirection);
+                if (transform.position.y < _screenBottom)
+                {
+                    Destroy(this);
+                }
+                if (transform.position.y > _screenTop)
+                {
+                    _attackDirection = 1;
+                }
+            }
+
+        }
+
+        if (_gameOver == true)
+        {
             transform.Translate(Vector3.down * Time.deltaTime * _attackSpeed * _attackDirection);
-            if (transform.position.y < _screenBottom)
-            {
-                _attackDirection = -1;
-            }
-            if (transform.position.y > _screenTop)
-            {
-                _attackDirection = 1;
-            }
+            if (transform.position.y < (_screenBottom - 2)) Destroy(this);
         }
 
     }
@@ -114,6 +143,17 @@ public class Mech : MonoBehaviour
     
     }
 
+    public void StopMechBounceAttack()
+    {
+        _stopMechBounce = true;
+        Debug.Log("stopping mech bounce attack");
+    }
+
+    public void SetGameOver()
+    {
+        _gameOver = true;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "PlayerWeapon")
@@ -123,6 +163,14 @@ public class Mech : MonoBehaviour
             _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
             _boss.BossDamage(_damagePoints);
             Destroy(this.gameObject);
+        }
+
+        if (other.tag == "Player")
+        {
+            _explosion = Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
+            _explosion.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            _player.Damage();
+
         }
     }
 }

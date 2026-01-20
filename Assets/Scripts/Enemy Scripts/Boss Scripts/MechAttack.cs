@@ -9,6 +9,7 @@ public class MechAttack : MonoBehaviour
     private float[] xTargets = { -9f, -6f, -3f, 0f, 3f, 6f, 9f };
     private float _tmpYPos;
     private bool _mechBounceAttackActive = false;
+    private bool _playerDead = false;
     [SerializeField] private float _attack1Interval;
     [SerializeField] private float _verticalDrop;
 
@@ -32,7 +33,7 @@ public class MechAttack : MonoBehaviour
         if (_mechBounceAttackActive == true)
         {
             _mechArmy = gameObject.GetComponentsInChildren<Mech>();
-            if (_mechArmy.Length == 0)
+            if (_mechArmy.Length == 0 && _playerDead == false)
             {
                 _mechBounceAttackActive = false;
                 _spawnManager.BossWaveComplete();
@@ -156,6 +157,24 @@ public class MechAttack : MonoBehaviour
         {
             _mechArmy[i].MechBounceAttack(attackSpeed);
             yield return new WaitForSeconds(_attack1Interval);
+        }
+    }
+
+    public void StopMechBounceAttack()
+    {
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            _mechArmy[i].StopMechBounceAttack();
+        }
+        _playerDead = true; 
+    }
+    public IEnumerator DestroyAllMechs()
+    {
+        yield return new WaitForSeconds(3);
+        _mechArmy = gameObject.GetComponentsInChildren<Mech>();
+        for (int i = 0; i < _mechArmy.Length; i++)
+        {
+            Destroy(_mechArmy[i]);
         }
     }
 }

@@ -160,6 +160,8 @@ public class Boss : MonoBehaviour
     public void StopSweepAndShoot()
     {
         StopCoroutine("SweepAndShoot");
+        _df.StopSweepAttack();
+        _dr.StopSweepAttack();
     }
 
     public void DreadnaughtGunsDead(string _frontOrRear)

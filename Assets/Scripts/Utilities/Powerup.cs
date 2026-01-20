@@ -90,7 +90,7 @@ public class Powerup : MonoBehaviour
                 switch (_powerupID)
                 {
                     case 0:
-                        
+                        _powerupAudioSource.Play();
                         player.TripleShotActive();
                         break;
                     case 1:

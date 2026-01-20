@@ -42,6 +42,12 @@ public class DreadnaughtRear : MonoBehaviour
         _sweepAttack = true;
         StartCoroutine(SweepAndShoot());
     }
+
+    public void StopSweepAttack()
+    {
+        _sweepAttack = false;
+        StopCoroutine(SweepAndShoot());
+    }
     IEnumerator SweepAndShoot()
     {
         _delayFire = false;
