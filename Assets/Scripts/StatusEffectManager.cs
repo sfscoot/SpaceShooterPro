@@ -11,7 +11,6 @@ public class StatusEffectManager : MonoBehaviour
     {
         _isEnergized = true;
         _energizedEffect.SetActive(true);
-        //_energizedEffect.GetComponent<RadialProgressBar>().ActivateCountdown(duration);
         _energizedEffect.transform.Find("Radial_Progress_Bar").GetComponent<RadialProgressBar>().ActivateCountdown(duration);
         StartCoroutine(EndEnergizedEffect(duration));
 

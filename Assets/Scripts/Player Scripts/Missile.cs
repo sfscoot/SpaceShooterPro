@@ -5,27 +5,20 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
-    [SerializeField]
-    private float _missileSpeed = 8;
-    [SerializeField]
-    private float _missileDistance;
-    [SerializeField]
-    private float _missileTimeDuration = 4.0f;
-    [SerializeField]
-    private float _missileBlastRadius = 9;
+    [SerializeField] private float _missileSpeed = 8;
+    [SerializeField] private float _missileDistance;
+    [SerializeField] private float _missileTimeDuration = 4.0f;
+    [SerializeField] private float _missileBlastRadius = 9;
 
-    [SerializeField]
-    private GameObject _explosionPreFab;
+    [SerializeField] private GameObject _explosionPreFab;
 
     private float _missileTimer;
 
-    // Start is called before the first frame update
     void Start()
     {
         _missileTimer = 0f;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         MoveUp();

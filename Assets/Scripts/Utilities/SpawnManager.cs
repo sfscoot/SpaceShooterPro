@@ -212,6 +212,9 @@ public class SpawnManager : MonoBehaviour
             case 4:
                 StartCoroutine(StopBossWave4());
                 break;
+            case 5:
+                StopBossWave5();
+                break;
             default:
                 Debug.LogWarning("bad switch case in boss controller");
                 break;
@@ -272,6 +275,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator BossWave2()
     {
         _stopSpawning = true;
+        StopCoroutine("SpawnPowerUp");
         _player.DisableWeapons();
         yield return new WaitForSeconds(2);
         _uiManager.DisplayBossWaveOn(2);  // turn on and bring in the boss
@@ -373,8 +377,14 @@ public class SpawnManager : MonoBehaviour
         _uiManager.DisplayWaveOff();
         _player.EnableWeapons();
         _stopSpawning = false;
+        StartCoroutine("SpawnPowerUp");
     }
 
+    public void StopBossWave5()
+    {
+        _boss.StopSweepAndShoot();
+        _boss.BossLeaves();
+    }
     private void ActivateBossWeapons()
     {
         _dreadnaughtFrontWeapons = _dreadnaughtFront.GetComponentsInChildren<Transform>(true);
@@ -404,6 +414,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator GameOverPlayerWins()
     {
+        _stopSpawning = true;
+        StopCoroutine("SpawnPowerUp");
         yield return new WaitForSeconds(1); // pause for dramatic effect
         _dreadnaughtFrontController.DreadnaughtDestruction();
         yield return new WaitForSeconds(1);

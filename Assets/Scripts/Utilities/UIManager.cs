@@ -41,8 +41,6 @@ public class UIManager : MonoBehaviour
     private bool _displayHomingMissileMessage = false;
     private bool _displayPowerupCollectActiveMessage = false;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         CheckTextObjectAssignments();
@@ -298,6 +296,8 @@ public class UIManager : MonoBehaviour
                 break;
             case 6:
                 _waveText.text = "Congratulations You Saved the Galaxy";
+                _gameManager.GameOver();
+                _gameRestartText.gameObject.SetActive(true);
                 break;
             default:
                 Debug.LogWarning("bad switch case in boss UImanager code");
@@ -322,12 +322,10 @@ public class UIManager : MonoBehaviour
     public void HomingMissileActive()
     {
         _displayHomingMissileMessage = true;
-        // StartCoroutine(HomingMissileMsgActive());
     }
 
     public void HomingMissileInactive()
     {
-        // _homingMissileActiveTxt.gameObject.SetActive(false);
         _displayHomingMissileMessage = false;
     }
 
@@ -347,7 +345,6 @@ public class UIManager : MonoBehaviour
 
     IEnumerator HomingMissileMsgFade(string mtext)
     {
-        // _homingMissileMessageTxt.gameObject.SetActive(false);
         _homingMissileMessageTxt.text = mtext;
         _homingMissileMessageTxt.color = Color.red;
 
@@ -360,26 +357,11 @@ public class UIManager : MonoBehaviour
     {
         _displayPowerupCollectActiveMessage = true;
         _powerupCollectActiveTxt.gameObject.SetActive(true);
-        // StartCoroutine(PowerupCollectMsgActive());
     }
 
     public void PowerupCollectInactive()
     {
-        // _homingMissileMessageTxt.gameObject.SetActive(false);
         _powerupCollectActiveTxt.gameObject.SetActive(false);
         _displayPowerupCollectActiveMessage = false;
     }
-
-    /*IEnumerator PowerupCollectMsgActive()
-    {
-        while (_displayHomingMissileActiveMessage == true)
-        {
-
-            yield return new WaitForSeconds(0.25f);
-            _powerupCollectActiveTxt.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.25f);
-            _powerupCollectActiveTxt.gameObject.SetActive(false);
-        }
-    }
-    */
 }

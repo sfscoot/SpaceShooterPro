@@ -58,17 +58,6 @@ public class Enemy : MonoBehaviour
         }
 
         CheckForPowerupsInSights();
-        /*
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up, _raycastRange);
-        Debug.DrawRay(transform.position, Vector2.down * _raycastRange, Color.red);
-
-        // If it detects something...
-        if (hit && hit.collider.gameObject.tag == "Powerup" && _raycastActive == true)
-        {
-            FireLaser();
-        }
-        */
     }
 
 
@@ -129,7 +118,6 @@ private void OnTriggerEnter2D(Collider2D other)
     {
         _enemyDestroyed = true;
         _enemyAnimator.SetTrigger("OnEnemyDeath");
-        // Instantiate(_explosionPreFab, transform.position, Quaternion.identity);
         _enemySpeed /= 1.25f;
         Destroy(GetComponent<Collider2D>());
         Destroy(GetComponent<Rigidbody2D>());
@@ -160,9 +148,9 @@ private void OnTriggerEnter2D(Collider2D other)
         }
     }
 
-    public void SetPlayerDestroyed()
-    {
-        Debug.Log("enemy - set player destroyed is called");
+    // public void SetPlayerDestroyed()
+    // {
+    //    Debug.Log("enemy - set player destroyed is called");
         // _playerDestroyed = true;
-    }
+    //}
 }

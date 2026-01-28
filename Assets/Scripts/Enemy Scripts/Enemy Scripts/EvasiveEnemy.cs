@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class EvasiveEnemy : MonoBehaviour
 {
-    // tmp vars
     private bool _canMove = true;
 
     [Header("Enemy Variables")]
@@ -24,11 +23,6 @@ public class EvasiveEnemy : MonoBehaviour
 
     private float _fireRate = 3.0f;
     private float _canFire = -1;
-
-    private bool _playerDestroyed;
-    private Quaternion _targetRotation;
-    private float _rotationSpeed = .05f;
-    private Transform _tmpTransform;
 
     private void Start()
     {
@@ -173,9 +167,4 @@ public class EvasiveEnemy : MonoBehaviour
         }
     }
 
-    public void SetPlayerDestroyed()
-    {
-        _playerDestroyed = true;
-
-    }
 }

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class HomingMissile_Player : MonoBehaviour
 {
-    //private bool _targetAcquired = false;
-    // private bool _targetReleased = false;
+
     [SerializeField] private float _trackingCooldown = 3.0f;
     private GameObject _player;
     [SerializeField] float _trackingTriggerDistance = 4.0f;

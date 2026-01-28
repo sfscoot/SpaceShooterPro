@@ -24,12 +24,7 @@ public class TrackingEnemy : MonoBehaviour
     [SerializeField] private GameObject _laserPrefab;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
-
-    private bool _playerDestroyed;
-    private Quaternion _targetRotation;
-    private float _rotationSpeed = .05f;
-    private Transform _tmpTransform;
-
+    
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -156,11 +151,5 @@ public class TrackingEnemy : MonoBehaviour
         {
             lasers[i].AssignEnemyLaser();
         }
-    }
-
-    public void SetPlayerDestroyed()
-    {
-        _playerDestroyed = true;
-
     }
 }

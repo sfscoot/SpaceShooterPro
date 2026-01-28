@@ -15,12 +15,9 @@ public class SpaceMine : MonoBehaviour
         _mineDeployDistance = Random.Range(3.0f, 4.3f);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (transform.position.y < _mineDeployDistance)    
-
-        // if (_mineCurrentDistance < _mineDeployDistance)
         {
             transform.Translate(Vector3.up * _mineDeploySpeed * Time.deltaTime);
         }

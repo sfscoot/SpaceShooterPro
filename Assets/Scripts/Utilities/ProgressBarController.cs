@@ -1,7 +1,4 @@
-﻿// opengameart.org
-// itch.io
-
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //using UnityEngine.UIElements;
@@ -22,7 +19,6 @@ public class ProgressBarController : MonoBehaviour
     public void IncrementProgress(float _progress)
     {
         transform.GetComponent<Slider>().value -= _progress;
-        Debug.Log("progress bar value " + transform.GetComponent<Slider>().value);
         if (transform.GetComponent<Slider>().value == 0)
         {
             gameObject.SetActive(false);

@@ -4041,7 +4041,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press the "R" key to restart the level
+  m_text: Press the "R" key to restart
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4050,7 +4050,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4286545791
   m_fontColor: {r: 0.49803925, g: 0.49803925, b: 0.49803925, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -5417,7 +5417,7 @@ MonoBehaviour:
   - name: HomingMissile
     powerupPrefab: {fileID: 5556103034255430727, guid: d43e8ebca150a8e4895c0889f266661c,
       type: 3}
-    powerUpType: 0
+    powerUpType: 1
     waveAvailable: 3
     frequency: 0.1
   _commonPowerUpsList: []
@@ -5459,7 +5459,7 @@ MonoBehaviour:
     waveAvailable: 4
     enemyPrefab: {fileID: 5139568104275189995, guid: 7872f65fd3aaf2845ba594c2b7dbcda1,
       type: 3}
-    _enemyType: 2
+    _enemyType: 1
     _enemyMovementType: 0
   - name: Evasive Enemy
     waveAvailable: 4

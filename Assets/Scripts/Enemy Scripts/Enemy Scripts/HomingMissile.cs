@@ -50,11 +50,7 @@ public class HomingMissile : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void TrackPlayer()
-    {
-        transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, _missileSpeed * Time.deltaTime);
-        transform.rotation = LocalLookAt2D(_player.transform.position, transform.position);
-    }
+
     public Quaternion LocalLookAt2D(Vector2 target, Vector2 center)
     {
         Vector3 diff = target - center; // gets a vector - distance and x/y direction 
@@ -80,22 +76,6 @@ public class HomingMissile : MonoBehaviour
             _targetAcquired = true;
             _targetReleased = false;
             StartCoroutine(MissileCooldown());
-        }
-    }
-    void MoveDown()
-    {
-        transform.Translate(Vector3.down * _missileSpeed * Time.deltaTime);
-
-        if (transform.position.y < -5.0)
-        {
-            Destroy(gameObject);
-            /*
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
-            Destroy(gameObject);
-            */
         }
     }
 
