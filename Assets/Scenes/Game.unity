@@ -1092,7 +1092,7 @@ PrefabInstance:
     - target: {fileID: 6415868439128519384, guid: d1f6cc6d58a0a3a4e8dbbd4ec1a047d3,
         type: 3}
       propertyPath: _damagePoints
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6415868439128519384, guid: d1f6cc6d58a0a3a4e8dbbd4ec1a047d3,
         type: 3}
@@ -6160,7 +6160,7 @@ MonoBehaviour:
   _bossSlider: {fileID: 2108418495}
   _bossSlider2: {fileID: 772518979}
   _bossDamage: 0
-  _maxBossDamage: 245
+  _maxBossDamage: 135
   _explosionPreFab: {fileID: 2799661141721419449, guid: a3a1e6c8c4300df43a70b0b39d21388f,
     type: 3}
   _dreadnaughtFront: {fileID: 473467236}
